@@ -1,4 +1,68 @@
-# Main entrypoint of the workflow. 
-# Please follow the best practices: 
-# https://snakemake.readthedocs.io/en/stable/snakefiles/best_practices.html,
-# in particular regarding the standardized folder structure mentioned there. 
+# Snakefile
+
+# Define parameters
+pvalue_threshold = 0.05
+pvalue_threshold_EU = -log10(0.05/2414)
+
+# Rule to generate the Manhattan plot
+rule manhattan_plot:
+    input:
+        script="manhattan_plots.R",
+        gene_data=expand("{input}", input=glob("*.tsv")),
+        pvalue_threshold=pvalue_threshold_EU
+    output:
+        "manhattan_plot.png"
+    script:
+        "Rscript {input.script} {wildcards} {params}"
+
+# Rule to run the gene enrichment analysis using pathfindR
+rule run_pathfindR:
+    input:
+        script="pathway_analysis.R",
+        gene_data=expand("{input}", input=glob("*.tsv")),
+        pvalue_threshold=pvalue_threshold
+    output:
+        "enrichment_results.tsv"
+    script:
+        "Rscript {input.script} {wildcards} {params}"
+
+# Rule to check the gene annotation databases
+rule check_databases:
+    input:
+        script="disease_database_annotation.R",
+        skat_results=expand("{input}", input=glob("*.tsv"))
+    output:
+        "database_results.txt"
+    script:
+        "Rscript {input.script} {wildcards} {params}"
+
+# Rule to perform SKAT analysis using skat_analysis.R
+rule skat_analysis:
+    input:
+        script="skat_analysis.R",
+        genotype_prefix=config["skat_analysis_genotype_prefix"],
+        gene_regions_file=config["skat_analysis_gene_regions_file"],
+        weights_file=config["skat_analysis_weights_file"],
+        genotype_path=config["skat_analysis_genotype_path"],
+        weights_type=config["skat_analysis_weights_type"],
+        chromosome=config["skat_analysis_chromosome"]
+    output:
+        "result_folder/skat_result_chr{chromosome}.txt"
+    script:
+        "Rscript {input.script} {wildcards} {params}"
+
+# Rule to clean SKAT intermediate files
+rule clean_skat:
+    input:
+        expand("path/to/genotype/{genotype_prefix}_{chr}.{ext}", ext=["bed", "bim", "fam"])
+    shell:
+        "rm -f {input}"
+
+# Rule to combine SKAT results
+rule combine_skat_results:
+    input:
+        expand("result_folder/skat_result_chr{chr}.txt", chr=["10", "11", "12"])
+    output:
+        "result_folder/combined_skat_results.txt"
+    script:
+        "combine_results.sh"
