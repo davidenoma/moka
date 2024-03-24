@@ -1,20 +1,8 @@
 # config.yaml
 
-manhattan_plot_input:
-  - "path/to/gene_data1.tsv"
-  - "path/to/gene_data2.tsv"
-
-run_pathfindR_input:
-  - "path/to/gene_data1.tsv"
-  - "path/to/gene_data2.tsv"
-
-check_databases_input:
-  - "path/to/skat_results1.tsv"
-  - "path/to/skat_results2.tsv"
-
-skat_analysis_genotype_prefix: "genotype_prefix"
-skat_analysis_gene_regions_file: "path/to/gene_regions.csv"
-skat_analysis_weights_file: "path/to/weights.csv"
-skat_analysis_genotype_path: "path/to/genotype/"
-skat_analysis_weights_type: "phylo"
-skat_analysis_chromosome: "chr10"
+genotype_prefix: "geno_EUR_SCZ"
+weights_type: "EQTL"
+genotype_file_path: "/Users/davidenoma/Desktop/PhD._BMB/LONG_LAB/Projects/Stability of kernel based methods/"
+weights_file: "/Users/davidenoma/Desktop/PhD._BMB/LONG_LAB/Projects/Stability of kernel based methods/eqtl_weights.csv"
+gene_regions_file: /path/to/gene_regions_file
+disgenet_reference_file: /path/to/ref_file

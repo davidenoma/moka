@@ -1,68 +1,70 @@
 # Snakefile
+# Define command-line arguments
+from snakemake.io import expand
 
-# Define parameters
-pvalue_threshold = 0.05
-pvalue_threshold_EU = -log10(0.05/2414)
+configfile: "config/config.yaml"
 
-# Rule to generate the Manhattan plot
-rule manhattan_plot:
+# Rule 1: Obtain eqtl weights from bim file
+rule obtain_eqtl_weights:
     input:
-        script="manhattan_plots.R",
-        gene_data=expand("{input}", input=glob("*.tsv")),
-        pvalue_threshold=pvalue_threshold_EU
+        bim=config["genotype_prefix"] + ".bim",
+        weights_source=config["weights_type"],
+        weights=config["weights_file"] + ".csv"
     output:
-        "manhattan_plot.png"
-    script:
-        "Rscript {input.script} {wildcards} {params}"
-
-# Rule to run the gene enrichment analysis using pathfindR
-rule run_pathfindR:
-    input:
-        script="pathway_analysis.R",
-        gene_data=expand("{input}", input=glob("*.tsv")),
-        pvalue_threshold=pvalue_threshold
-    output:
-        "enrichment_results.tsv"
-    script:
-        "Rscript {input.script} {wildcards} {params}"
-
-# Rule to check the gene annotation databases
-rule check_databases:
-    input:
-        script="disease_database_annotation.R",
-        skat_results=expand("{input}", input=glob("*.tsv"))
-    output:
-        "database_results.txt"
-    script:
-        "Rscript {input.script} {wildcards} {params}"
-
-# Rule to perform SKAT analysis using skat_analysis.R
-rule skat_analysis:
-    input:
-        script="skat_analysis.R",
-        genotype_prefix=config["skat_analysis_genotype_prefix"],
-        gene_regions_file=config["skat_analysis_gene_regions_file"],
-        weights_file=config["skat_analysis_weights_file"],
-        genotype_path=config["skat_analysis_genotype_path"],
-        weights_type=config["skat_analysis_weights_type"],
-        chromosome=config["skat_analysis_chromosome"]
-    output:
-        "result_folder/skat_result_chr{chromosome}.txt"
-    script:
-        "Rscript {input.script} {wildcards} {params}"
-
-# Rule to clean SKAT intermediate files
-rule clean_skat:
-    input:
-        expand("path/to/genotype/{genotype_prefix}_{chr}.{ext}", ext=["bed", "bim", "fam"])
+        weights_file=expand("output_weights/weight_file{chromosome}.csv", chromosome=range(1, 23))
     shell:
-        "rm -f {input}"
+        "python stability_of_kernel_based_methods/obtain_weights_from_bim.py {input.bim} {wildcards.chromosome} {output.weights_file} {input.weights}"
 
-# Rule to combine SKAT results
-rule combine_skat_results:
+# Rule 2: Merge weight files into one
+rule merge_eqtl_weights:
     input:
-        expand("result_folder/skat_result_chr{chr}.txt", chr=["10", "11", "12"])
+        eqtl_weights=expand("output_weights/weight_file{chromosome}.csv", chromosome=range(1, 23))
     output:
-        "result_folder/combined_skat_results.txt"
-    script:
-        "combine_results.sh"
+        merged_eqtl_weights=config["genotype_file_path"] + "_merged_weights.csv"
+    shell:
+        "echo 'SNP_ID,Chromosome,Position,Score' > {output.merged_eqtl_weights} && cat {input} >> {output.merged_eqtl_weights}"
+
+
+# Rule 3: Perform SKAT test on the genotype
+# rule skat_test:
+#     input:
+#         bfile="merged_Ilmn_ASD",
+#         weights=merged_eqtl_weights_file,
+#         gene_regions=gene_regions_file
+#     output:
+#         skat_result="skat_{chromosome}.prefix"
+#     shell:
+#         "Rscript stability_of_kernel_based_methods/skat.R {input.bfile} {input.gene_regions} {input.weights} ./ EQTL {wildcards.chromosome}"
+#
+# # Rule 4: Merge SKAT Chromosome Results into one
+# rule merge_skat_results:
+#     input:
+#         skat_prefix=skat_prefix_files
+#     output:
+#         merged_skat_results=merged_skat_results_file
+#     shell:
+#         "echo -e 'Gene_name\tGene_chromosome\tRegion_start\tRegion_end\tQ_test\tpvalue' > {output.merged_skat_results} && \
+#         for file in {input.skat_prefix}; do \
+#             if [ \"$file\" != \"{output.merged_skat_results}\" ]; then \
+#                 tail -n +2 \"$file\" >> {output.merged_skat_results}; \
+#             fi; \
+#         done"
+#
+# # Rule 5: Perform Disgenet disease annotation of SKAT results
+# rule disgenet_annotation:
+#     input:
+#         skat_results=merged_skat_results_file
+#     output:
+#         gene_annotation=gene_annotation_file
+#     shell:
+#         "Rscript obtain_genes_in_DGN.R {input.skat_results} > {output.gene_annotation}"
+#
+# # Rule 6: Analyse Signal noise ratio based on cutoff of the input weights
+# rule analyze_signal_noise_ratio:
+#     input:
+#         gene_annotation=gene_annotation_file,
+#         skat_results=merged_skat_results_file
+#     output:
+#         signal_noise_ratios=signal_noise_ratios_file
+#     shell:
+#         "python stability_of_kernel_based_methods/signal_noise_ratio_analysis.py {input.gene_annotation} {input.skat_results} > {output.signal_noise_ratios}"
