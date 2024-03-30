@@ -8,6 +8,6 @@ weights_file: "weights/eqtl_weights.csv"
 gene_regions_file: /path/to/gene_regions_file
 disgenet_reference_file: /path/to/ref_file
 chromosome: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]
-
+plink_path: "/Users/davidenoma/Documents"
 
 # Define chromosome in the configuration file
