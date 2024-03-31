@@ -6,3 +6,4 @@ logs/**
 result_folder/**
 output_weights/**
 genotype_data/**
+weights/**
