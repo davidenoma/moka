@@ -3,9 +3,9 @@ resources/**
 logs/**
 .snakemake
 .snakemake/**
-#result_folder/*
-#output_weights/*
-#genotype_data/*
-#weights/*
-#disease_database/*
+result_folder/*
+output_weights/*
+genotype_data/*
+weights/*
+disease_database/*
 Rplots.pdf
