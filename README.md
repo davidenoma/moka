@@ -37,9 +37,9 @@ snakemake --cores <num_cores>
 - **Input:** Annotated association test results.
 - **Output:** Visual representations of association test results.
 
-## 🛠️ Dependencies
-- **Software:** Snakemake, Python, R
-- **Data Files:** Genotype data, metadata, additional resources required for association testing
+## Dependencies
+- **Software:** Snakemake, R, Python, PLINK
+- **Data Files:** BIM file, weights file, gene regions file, DisGeNET reference file
 
 ## 📋 Configuration
 - **genotype_prefix:** Prefix for genotype data files.
