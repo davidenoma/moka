@@ -1,21 +1,53 @@
-# Snakemake workflow: `<name>`
+# 🌉 Bridged Association Studies (BAS) Pipeline
 
-[![Snakemake](https://img.shields.io/badge/snakemake-≥6.3.0-brightgreen.svg)](https://snakemake.github.io)
-[![GitHub actions status](https://github.com/<owner>/<repo>/workflows/Tests/badge.svg?branch=main)](https://github.com/<owner>/<repo>/actions?query=branch%3Amain+workflow%3ATests)
+## Introduction
+Bridged Association Studies (BAS) aims to implement a Snakemake pipeline to automate data bridge kernel-based association tests. This pipeline offers flexibility for various types of association studies beyond traditional eQTL analysis.
+
+## 🚀 Usage
+To run the BAS pipeline:
+1. Install **Snakemake** and any required dependencies.
+2. Configure the pipeline parameters in the `config.yaml` file.
+3. Execute the pipeline using the command:
+
+snakemake --cores <num_cores>
 
 
-A Snakemake workflow for `WKAS`
+## 📚 Rules
+### Rule: obtain_weights
+- **Input:** Genotype data and relevant metadata.
+- **Output:** Weight files for association tests.
 
+### Rule: preprocess_data
+- **Input:** Raw data files.
+- **Output:** Preprocessed data ready for association testing.
 
-## Usage
+### Rule: association_test
+- **Input:** Preprocessed data and weight files.
+- **Output:** Results of association tests.
 
-The usage of this workflow is described in the [Snakemake Workflow Catalog](https://snakemake.github.io/snakemake-workflow-catalog/?usage=<owner>%2F<repo>).
+### Rule: merge_results
+- **Input:** Individual association test results.
+- **Output:** Merged association test results.
 
-If you use this workflow in a paper, don't forget to give credits to the authors by citing the URL of this (original) <repo>sitory and its DOI (see above).
+### Rule: annotate_results
+- **Input:** Merged association test results.
+- **Output:** Annotated association test results.
 
-# TODO
+### Rule: visualize_results
+- **Input:** Annotated association test results.
+- **Output:** Visual representations of association test results.
 
-* Replace `<owner>` and `<repo>` everywhere in the template (also under .github/workflows) with the correct `<repo>` name and owning user or organization.
-* Replace `<name>` with the workflow name (can be the same as `<repo>`).
-* Replace `<description>` with a description of what the workflow does.
-* The workflow will occur in the snakemake-workflow-catalog once it has been made public. Then the link under "Usage" will point to the usage instructions if `<owner>` and `<repo>` were correctly set.
+## 🛠️ Dependencies
+- **Software:** Snakemake, Python, R
+- **Data Files:** Genotype data, metadata, additional resources required for association testing
+
+## 📋 Configuration
+- **genotype_prefix:** Prefix for genotype data files.
+- **analysis_type:** Type of association test to perform (e.g., eQTL, GWAS).
+- **genotype_file_path:** Path to genotype data files.
+- **weight_file:** Path to weight files used for association tests.
+- **metadata_file:** Path to metadata files required for preprocessing.
+- **output_folder:** Output directory for results.
+
+## 📖 Additional Information
+For more information on the BAS pipeline and its usage, refer to the documentation provided in the repository or contact the project maintainers.
