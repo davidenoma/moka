@@ -5,5 +5,6 @@ weights_type: "EQTL"
 genotype_file_path: "genotype_data/"
 weights_file: "weights/eqtl_weights.csv"
 gene_regions_file: "helper/gene_regions.csv"
-disgenet_reference_file: "helper/C0036341_disease_gda_summary.tsv"
+disgenet_reference_file: "disease_database/C0036341_disease_gda_summary.tsv"
 plink_path: "/Users/davidenoma/Documents"
+sample_size: 2414

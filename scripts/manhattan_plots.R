@@ -39,28 +39,16 @@ library(qqman)
 
 # Example of usage
 # Set the p-value threshold for labeling genes
-pvalue_threshold <- 0.05/1735
-pvalue_threshold_EU <- 0.05/2414
+# pvalue_threshold <- 0.05/1735
+# pvalue_threshold_EU <- 0.05/2414
 
 # create_manhattan_plot(gene_data, pvalue_threshold_EU)
 
 # genes <- read.csv("/Users/davidenoma/Desktop/genes_test.txt", header = FALSE, sep="\t", col.names = c("SNP", "CHR", "BP", "P"))
 # Read the gene data from the tab-delimited file
-gene_data <- read.table(
-  "/Users/davidenoma/Desktop/PhD._BMB/LONG_LAB/Projects/EDAS/EDAS/Invert_data/Phylo/EUR/EUR_17phylo_inv.tsv",
-  sep = "\t",  # Specify tab as the separator
-  header = TRUE,  # Use the first row as column names
-  col.names = c("Gene_name", "Gene_chromosome", "Region_start", "Region_end", "Q_test", "pvalue")
-)
 
-elected_gene_data <- gene_data[, c("Gene_name", "Gene_chromosome", "Region_start", "pvalue")]
-colnames(selected_gene_data) <- c("SNP", "CHR", "BP", "P")
 # genes <- read.csv("/Users/davidenoma/Desktop/genes_test.txt",header = FALSE,sep="\t",col.names = )
-manhattan(selected_gene_data, chr="CHR", bp="BP", snp="SNP", 
-          p="P",col=c("grey", "skyblue","pink"),
-          annotatePval = pvalue_threshold_EU, annotateTop = FALSE, 
-          genomewideline = -log10(pvalue_threshold_EU),suggestiveline = FALSE,
-          logp = TRUE)
+
 
 # Process command-line arguments
 args <- commandArgs(trailingOnly = TRUE)
@@ -74,6 +62,18 @@ if (length(args) == 0) {
 # Assign values to arguments
 file_path <- args[1]
 pvalue_threshold <- as.numeric(args[2])
-
+cat("P-value threshold:",pvalue_threshold)
+gene_data <- read.table(
+  file_path,
+  sep = "\t",  # Specify tab as the separator
+  header = TRUE,  # Use the first row as column names
+  col.names = c("Gene_name", "Gene_chromosome", "Region_start", "Region_end", "Q_test", "pvalue")
+)
+selected_gene_data <- gene_data[, c("Gene_name", "Gene_chromosome", "Region_start", "pvalue")]
+colnames(selected_gene_data) <- c("SNP", "CHR", "BP", "P")
 # Call the function to create Manhattan plot
-create_manhattan_plot(file_path, pvalue_threshold)
+manhattan(selected_gene_data, chr="CHR", bp="BP", snp="SNP",
+          p="P",col=c("grey", "skyblue","pink"),
+          annotatePval = pvalue_threshold, annotateTop = FALSE,
+          genomewideline = -log10(pvalue_threshold),suggestiveline = FALSE,
+          logp = TRUE)

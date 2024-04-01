@@ -5,7 +5,7 @@ from snakemake.io import expand
 
 configfile: "config/config.yaml"
 
-# Rule: Obtain eqtl weights from bim file
+# # Rule: Obtain eqtl weights from bim file
 rule obtain_eqtl_weights:
     input:
         bim = expand("{genotype_file_path}{genotype_prefix}.bim",genotype_file_path=config["genotype_file_path"],
@@ -26,9 +26,9 @@ rule obtain_eqtl_weights:
             python scripts/obtain_weights_from_bim.py $bim $chr $weights_file $weights
         done
         """
-#Rule 2: Merge weight files into one
-#
-#
+# #Rule 2: Merge weight files into one
+# #
+# #
 rule merge_eqtl_weights:
     input:
         eqtl_weights=expand("output_weights/{weight_source}_weight_file_{i}.csv",i=range(1,23),weight_source=config["weights_type"]),
@@ -47,9 +47,9 @@ rule merge_eqtl_weights:
             tail -n +2 "$file" >> {params.merged_eqtl_weights}
         done
         """
-
 #
-# Rule 3: Perform SKAT test on the genotypeD
+# #
+# # Rule 3: Perform SKAT test on the genotypeD
 rule skat_test:
     input:
         merged_eqtl_weights= expand("{file_path}{weight_source}_merged_weights.csv",file_path=config["genotype_file_path"],weight_source=config["weights_type"]),
@@ -68,8 +68,7 @@ rule skat_test:
         Rscript scripts/skat.R {params.genotype} {input.gene_regions} {input.merged_eqtl_weights} {params.genotype_path} {params.weights_source} $chr
         done
         """
-
-# Rule 4: Merge SKAT Chromosome Results into zone
+# # Rule 4: Merge SKAT Chromosome Results into zone
 rule merge_skat_results:
     input:
         skat_results=expand("result_folder/{prefix}_{i}_{weight_source}_result_chr_{i}.txt",i=range(1,23),weight_source=config["weights_type"],prefix=config["genotype_prefix"])
@@ -82,29 +81,27 @@ rule merge_skat_results:
                 tail -n +2 \"$file\" >> {params.merged_skat_results}; \
             fi; \
         done"
-
 # Rule 5: Perform Disgenet disease annotation of SKAT results
 rule disgenet_annotation:
     input:
-
         merged_skat_results=expand("result_folder/merged_{prefix}_{weight_source}_SKAT.txt",prefix=config[
         "genotype_prefix"],weight_source=config["weights_type"])
     params:
         gene_annotation=config["disgenet_reference_file"]
     shell:
         """
-         Rscript obtain_genes_in_DGN.R {input.merged_skat_results}{params.gene_annotation} 0.01
-         Rscript obtain_genes_in_DGN.R {input.merged_skat_results}{params.gene_annotation} 0.05
+         Rscript scripts/obtain_genes_in_DGN.R {input.merged_skat_results} {params.gene_annotation} 0.01
+         Rscript scripts/obtain_genes_in_DGN.R {input.merged_skat_results} {params.gene_annotation} 0.05
         """
-
-#
-# Rule 6: Analyse Signal noise ratio based on cutoff of the input weights
 rule manhattan_plots:
     input:
-        gene_annotation=gene_annotation_file,
-        skat_results=merged_skat_results_file
-    output:
-        signal_noise_ratios=signal_noise_ratios_file
+        merged_skat_results = expand("result_folder/merged_{prefix}_{weight_source}_SKAT.txt",prefix=config[
+    "genotype_prefix"],weight_source=config["weights_type"]),
+    params:
+        pval_thresh = 0.05/int(config["sample_size"])
     shell:
-        "python stability_of_kernel_based_methods/signal_noise_ratio_analysis.py {input.gene_annotation} {input.skat_results} > {output.signal_noise_ratios}"
+        """
+        Rscript scripts/manhattan_plots.R {input.merged_skat_results} {params.pval_thresh}
+        """
+
 

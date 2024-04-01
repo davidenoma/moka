@@ -1,12 +1,25 @@
 # 🌉 Bridged Association Studies (BAS) Pipeline
 
+[![Snakemake](https://img.shields.io/badge/snakemake-≥6.3.0-brightgreen.svg)](https://snakemake.github.io)
+[![GitHub actions status](https://github.com/<owner>/<repo>/workflows/Tests/badge.svg?branch=main)](https://github.com/<owner>/<repo>/actions?query=branch%3Amain+workflow%3ATests)
+
+
 ## Introduction
 Bridged Association Studies (BAS) aims to implement a Snakemake pipeline to automate data bridge kernel-based association tests. This pipeline offers flexibility for various types of association studies with different bridge weights.
 
 ## 🚀 Usage
 To run the BAS pipeline:
+
 1. Install **Snakemake** and any required dependencies.
-2. Configure the pipeline parameters in the `config.yaml` file.
+   - [Snakemake Installation Guide](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html)
+     ```bash
+     conda install -n base -c conda-forge mamba
+     mamba create -c conda-forge -c bioconda -n snakemake snakemake
+     mamba activate snakemake
+     snakemake --help
+     ```
+2. Install R dependencies 
+3. Configure the pipeline parameters in the `config.yaml` file.
 3. Execute the pipeline using the command:
 
 snakemake --cores <num_cores>
@@ -38,8 +51,35 @@ snakemake --cores <num_cores>
 - **Output:** Visual representations of association test results.
 
 ## Dependencies
-- **Software:** Snakemake, R, Python, PLINK
+
+### Software
+
+- **Snakemake**
+- **R**
+- **Python**
+- **PLINK**
+- **Rscript**
+
+### Data Files
+
+- BIM file
+- Weights file
+- Gene regions file
+- DisGeNET reference file
+
+### R Packages
+
+- **manhattan:** R package for creating manhattan plots, commonly used in genome-wide association studies (GWAS).
+- **SKAT:** R package for SKAT (Sequence Kernel Association Test) which is a powerful gene-based association test.
+- **PARALLEL:** R package for parallel computing capabilities in R.
+- **QQMAN:** R package for creating QQ (Quantile-Quantile) plots, commonly used in GWAS to assess whether observed p-values deviate from the expected distribution under the null hypothesis.
+- **GGPLOT:** R package for creating highly customizable plots and graphics.
+
+### Other
+
+- **PLINK:** PLINK is a widely used software toolset for genome-wide association studies (GWAS) and analysis of DNA sequencing data.
 - **Data Files:** BIM file, weights file, gene regions file, DisGeNET reference file
+
 
 ## 📋 Configuration
 - **genotype_prefix:** Prefix for genotype data files.

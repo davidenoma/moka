@@ -2,8 +2,6 @@ import subprocess
 import argparse
 
 
-
-
 def read_gene_score_file(score_file_path):
     # Create a dictionary to store SNP_ID and Chromosome as keys and Score as values
     score_dict = {}

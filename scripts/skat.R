@@ -118,17 +118,18 @@ prepare_SKAT_files_per_chr <- function(genotype_path, genotype_prefix)  {
 }
 
 remove_SKAT_files_per_chr <- function(genotype_path, genotype_prefix)  {
-  old_file_name_bed <- paste0(genotype_path,genotype_prefix,".bed")
+  # old_file_name_bed <- paste0(genotype_path,genotype_prefix,".bed")
   new_file_name_bed <- paste0(genotype_path,genotype_prefix,"_",chr,".bed")
   system(paste("rm ",old_file_name_bed,new_file_name_bed))
 
-  old_file_name_bim <- paste0(genotype_path,genotype_prefix,".bim")
+  # old_file_name_bim <- paste0(genotype_path,genotype_prefix,".bim")
   new_file_name_bim <- paste0(genotype_path,genotype_prefix,"_",chr,".bim")
   system(paste("cp ",old_file_name_bim,new_file_name_bim))
 
-  old_file_name_fam <- paste0(genotype_path,genotype_prefix,".fam")
+  # old_file_name_fam <- paste0(genotype_path,genotype_prefix,".fam")
   new_file_name_fam <- paste0(genotype_path,genotype_prefix,"_",chr,".fam")
   system(paste("cp ",old_file_name_fam,new_file_name_fam))
+
 
 }
 
@@ -187,4 +188,4 @@ extract_weights_for_snvs_and_skat_chr(genotype_prefix, gene_regions_file, weight
 #rm skatfiles.
 
 cat("Done with SKAT analysis\n")
-
+remove_SKAT_files_per_chr(genotype_path,genotype_prefix)
