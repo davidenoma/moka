@@ -83,11 +83,12 @@ snakemake --cores <num_cores>
 
 ## 📋 Configuration
 - **genotype_prefix:** Prefix for genotype data files.
-- **analysis_type:** Type of association test to perform (e.g., eQTL, GWAS).
+- **weights_type:** Type of bridge weights to be used such as EQTL, Imaging, Conservation, Representation etc.
 - **genotype_file_path:** Path to genotype data files.
 - **weight_file:** Path to weight files used for association tests.
-- **metadata_file:** Path to metadata files required for preprocessing.
-- **output_folder:** Output directory for results.
-
+- **disgenet_reference_file:** Disease database specific weights from https://disgenet.org
+- **Plink:** Path to plink installation
+- **sample size:** Sample size of GWAS Cohort
+  
 ## 📖 Additional Information
 For more information on the BAS pipeline and its usage, refer to the documentation provided in the repository or contact the project maintainers.
