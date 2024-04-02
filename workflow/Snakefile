@@ -52,20 +52,19 @@ rule merge_eqtl_weights:
 # # Rule 3: Perform SKAT test on the genotypeD
 rule skat_test:
     input:
-        merged_eqtl_weights= expand("{file_path}{weight_source}_merged_weights.csv",file_path=config["genotype_file_path"],weight_source=config["weights_type"]),
+        merged_weights=config["weights_file"],
+        # merged_weights=expand("{file_path}{weight_source}_merged_weights.csv",file_path=config["genotype_file_path"],weight_source=config["weights_type"]),
         gene_regions = "helper/gene_regions.csv"
     params:
         genotype = config["genotype_prefix"],
         weights_source = config["weights_type"],
-        merged_eqtl_weights= expand("{file_path}{weight_source}_merged_weights.csv",file_path=config[
-        "genotype_file_path"],weight_source=config["weights_type"]),
         genotype_path=config["genotype_file_path"],
         plink_path=config["plink_path"]
     shell:
         """
         export PATH=$PATH:{params.plink_path}
         for chr in {{1..22}}; do
-        Rscript scripts/skat.R {params.genotype} {input.gene_regions} {input.merged_eqtl_weights} {params.genotype_path} {params.weights_source} $chr
+        Rscript scripts/skat.R {params.genotype} {input.gene_regions} {input.merged_weights} {params.genotype_path} {params.weights_source} $chr
         done
         """
 # # Rule 4: Merge SKAT Chromosome Results into zone
