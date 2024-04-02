@@ -26,14 +26,6 @@ snakemake --cores <num_cores>
 
 
 ## 📚 Rules
-### Rule: obtain_weights
-- **Input:** Genotype data and relevant metadata.
-- **Output:** Weight files for association tests.
-
-### Rule: preprocess_data
-- **Input:** Raw data files.
-- **Output:** Preprocessed data ready for association testing.
-
 ### Rule: association_test
 - **Input:** Preprocessed data and weight files.
 - **Output:** Results of association tests.
