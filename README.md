@@ -52,13 +52,6 @@ snakemake --cores <num_cores>
 - **PLINK**
 - **Rscript**
 
-### Data Files
-
-- BIM file
-- Weights file
-- Gene regions file
-- DisGeNET reference file
-
 ### R Packages
 
 - **manhattan:** R package for creating manhattan plots, commonly used in genome-wide association studies (GWAS).
@@ -70,7 +63,7 @@ snakemake --cores <num_cores>
 ### Other
 
 - **PLINK:** PLINK is a widely used software toolset for genome-wide association studies (GWAS) and analysis of DNA sequencing data.
-- **Data Files:** BIM file, weights file, gene regions file, DisGeNET reference file
+- **Data Files:** Plink genotyped Bim, Bed & Fam files, bridge weights file, gene regions file, DisGeNET reference file
 
 
 ## 📋 Configuration
