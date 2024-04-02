@@ -188,4 +188,4 @@ extract_weights_for_snvs_and_skat_chr(genotype_prefix, gene_regions_file, weight
 #rm skatfiles.
 
 cat("Done with SKAT analysis\n")
-remove_SKAT_files_per_chr(genotype_path,genotype_prefix,chr)
+remove_SKAT_files_per_chr(genotype_path,genotype_prefix)
