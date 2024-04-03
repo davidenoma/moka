@@ -5,7 +5,7 @@ from snakemake.io import expand
 
 configfile: "config/config.yaml"
 
-# #
+
 # # Rule 3: Perform SKAT test on the genotypeD
 rule skat_test:
     input:
@@ -31,12 +31,17 @@ rule merge_skat_results:
     params:
         merged_skat_results=expand("result_folder/merged_{prefix}_{weight_source}_SKAT.txt",prefix=config["genotype_prefix"],weight_source=config["weights_type"])
     shell:
-        "echo -e 'Gene_name\tGene_chromosome\tRegion_start\tRegion_end\tQ_test\tpvalue' > {params.merged_skat_results} && \
+        """
+        if [ -f "{params.merged_skat_results}" ]; then
+                rm "{params.merged_skat_results}"
+        fi
+        echo -e 'Gene_name\tGene_chromosome\tRegion_start\tRegion_end\tQ_test\tpvalue' > {params.merged_skat_results} && \
         for file in {input.skat_results}; do \
             if [ \"$file\" != \"{params.merged_skat_results}\" ]; then \
                 tail -n +2 \"$file\" >> {params.merged_skat_results}; \
             fi; \
-        done"
+        done
+        """
 # Rule 5: Perform Disgenet disease annotation of SKAT results
 rule disgenet_annotation:
     input:
