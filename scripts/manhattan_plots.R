@@ -75,7 +75,7 @@ colnames(selected_gene_data) <- c("SNP", "CHR", "BP", "P")
 # Save the Manhattan plot
 file_name <- basename(file_path)  # Extract file name without extension
 png_file_path <- paste0("output_plots/manhattan_", gsub("\\..*$", "", file_name), ".png")  # Construct PNG file path
-png(filename = png_file_path, width = 4000, height = 3200, units = "px", pointsize = 22)
+png(filename = png_file_path, width = 2940, height = 1782, units = "px", pointsize = 22)
 # png(filename = png_file_path, width = 2000, height = 1600, units = "px", pointsize = 16)
 # Call the function to create Manhattan plot
 manhattan(selected_gene_data, chr = "CHR", bp = "BP", snp = "SNP",
