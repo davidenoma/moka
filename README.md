@@ -82,3 +82,5 @@ snakemake --cores all -R --until manhattan_plots
   
 ## 📖 Additional Information
 For more information on the BAS pipeline and its usage, refer to the documentation provided in the repository or contact the project maintainers.
+david.enoma@ucalgary.ca 
+
