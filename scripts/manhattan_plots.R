@@ -71,7 +71,7 @@ gene_data <- read.table(
 )
 selected_gene_data <- gene_data[, c("Gene_name", "Gene_chromosome", "Region_start", "pvalue")]
 colnames(selected_gene_data) <- c("SNP", "CHR", "BP", "P")
-dev.off()
+
 # Call the function to create Manhattan plot
 manhattan(selected_gene_data, chr="CHR", bp="BP", snp="SNP",
           p="P",col=c("grey", "skyblue","pink"),
