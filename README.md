@@ -26,22 +26,27 @@ To run the BAS pipeline:
 ### Rule: association_test
 - **Input:** Preprocessed data and weight files.
 - **Output:** Results of association tests.
+
 snakemake --cores <num_cores>
 
 ### Rule: merge_results
 - **Input:** Individual association test results.
 - **Output:** Merged association test results.
-- 
+
 snakemake --cores all -R --until merge_skat_results
 
 ### Rule: annotate_results
 - **Input:** Merged association test results.
 - **Output:** Annotated association test results.
+
 snakemake --cores all -R --until disgenet_annotation
+
 ### Rule: visualize_results
 - **Input:** Annotated association test results.
 - **Output:** Visual representations of association test results.
+
 snakemake --cores all -R --until manhattan_plots
+
 ## Dependencies
 
 ### Software
