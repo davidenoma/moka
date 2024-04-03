@@ -76,4 +76,4 @@ manhattan(selected_gene_data, chr="CHR", bp="BP", snp="SNP",
           p="P",col=c("grey", "skyblue","pink"),
           annotatePval = pvalue_threshold, annotateTop = FALSE,
           genomewideline = -log10(pvalue_threshold),suggestiveline = FALSE,
-          logp = TRUE,cat("manhattan",file_path))
+          logp = TRUE,cat("manhattan",file_path,".png"))
