@@ -76,4 +76,7 @@ manhattan(selected_gene_data, chr="CHR", bp="BP", snp="SNP",
           p="P",col=c("grey", "skyblue","pink"),
           annotatePval = pvalue_threshold, annotateTop = FALSE,
           genomewideline = -log10(pvalue_threshold),suggestiveline = FALSE,
-          logp = TRUE,cat("manhattan",file_path,".png"))
+          logp = TRUE)
+# Save the Manhattan plot
+png(filename = paste0("manhattan", file_path, ".png"), width = 1000, height = 800, units = "px")
+dev.off()
