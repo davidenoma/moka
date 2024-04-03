@@ -76,7 +76,7 @@ snakemake --cores all -R --until manhattan_plots
 - **weights_type:** Type of bridge weights to be used such as EQTL, Imaging, Conservation, Representation etc.
 - **genotype_file_path:** Path to genotype data files.
 - **weight_file:** Path to weight files used for association tests.
-- **disgenet_reference_file:** Disease database specific weights from https://disgenet.org
+- **disgenet_reference_file:** Disease database specific weights from https://disgenet.org [For gene disease associations only!]
 - **Plink:** Path to plink installation
 - **sample size:** Sample size of GWAS Cohort
   
