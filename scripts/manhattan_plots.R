@@ -72,12 +72,17 @@ gene_data <- read.table(
 selected_gene_data <- gene_data[, c("Gene_name", "Gene_chromosome", "Region_start", "pvalue")]
 colnames(selected_gene_data) <- c("SNP", "CHR", "BP", "P")
 
-# Call the function to create Manhattan plot
-manhattan(selected_gene_data, chr="CHR", bp="BP", snp="SNP",
-          p="P",col=c("grey", "skyblue","pink"),
-          annotatePval = pvalue_threshold, annotateTop = FALSE,
-          genomewideline = -log10(pvalue_threshold),suggestiveline = FALSE,
-          logp = TRUE)
 # Save the Manhattan plot
-png(filename = paste0("output_plots/manhattan", file_path, ".png"), width = 1000, height = 800, units = "px")
+file_name <- basename(file_path)  # Extract file name without extension
+png_file_path <- paste0("output_plots/manhattan_", gsub("\\..*$", "", file_name), ".png")  # Construct PNG file path
+
+png(filename = png_file_path, width = 1000, height = 800, units = "px")
+# Call the function to create Manhattan plot
+manhattan(selected_gene_data, chr = "CHR", bp = "BP", snp = "SNP",
+          p = "P", col = c("grey", "skyblue", "pink"),
+          annotatePval = pvalue_threshold, annotateTop = FALSE,
+          genomewideline = -log10(pvalue_threshold), suggestiveline = FALSE,
+          logp = TRUE)
+
+# Close the PNG device
 dev.off()
