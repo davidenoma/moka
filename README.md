@@ -1,7 +1,6 @@
 # 🌉 Bridged Association Studies (BAS) Pipeline
 
 [![Snakemake](https://img.shields.io/badge/snakemake-≥6.3.0-brightgreen.svg)](https://snakemake.github.io)
-[![GitHub actions status](https://github.com/<owner>/<repo>/workflows/Tests/badge.svg?branch=main)](https://github.com/<owner>/<repo>/actions?query=branch%3Amain+workflow%3ATests)
 
 
 ## Introduction
@@ -27,22 +26,27 @@ To run the BAS pipeline:
 ### Rule: association_test
 - **Input:** Preprocessed data and weight files.
 - **Output:** Results of association tests.
+
 snakemake --cores <num_cores>
 
 ### Rule: merge_results
 - **Input:** Individual association test results.
 - **Output:** Merged association test results.
-- 
+
 snakemake --cores all -R --until merge_skat_results
 
 ### Rule: annotate_results
 - **Input:** Merged association test results.
 - **Output:** Annotated association test results.
+
 snakemake --cores all -R --until disgenet_annotation
+
 ### Rule: visualize_results
 - **Input:** Annotated association test results.
 - **Output:** Visual representations of association test results.
+
 snakemake --cores all -R --until manhattan_plots
+
 ## Dependencies
 
 ### Software
@@ -72,9 +76,11 @@ snakemake --cores all -R --until manhattan_plots
 - **weights_type:** Type of bridge weights to be used such as EQTL, Imaging, Conservation, Representation etc.
 - **genotype_file_path:** Path to genotype data files.
 - **weight_file:** Path to weight files used for association tests.
-- **disgenet_reference_file:** Disease database specific weights from https://disgenet.org
+- **disgenet_reference_file:** Disease database specific weights from https://disgenet.org [For gene disease associations only!]
 - **Plink:** Path to plink installation
 - **sample size:** Sample size of GWAS Cohort
   
 ## 📖 Additional Information
 For more information on the BAS pipeline and its usage, refer to the documentation provided in the repository or contact the project maintainers.
+david.enoma@ucalgary.ca 
+
