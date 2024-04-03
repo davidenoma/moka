@@ -9,3 +9,4 @@ genotype_data/*
 weights/*
 disease_database/*
 Rplots.pdf
+config/config.yaml
