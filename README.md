@@ -22,26 +22,27 @@ To run the BAS pipeline:
 3. Configure the pipeline parameters in the `config.yaml` file.
 3. Execute the pipeline using the command:
 
-snakemake --cores <num_cores>
-
 
 ## 📚 Rules
 ### Rule: association_test
 - **Input:** Preprocessed data and weight files.
 - **Output:** Results of association tests.
+snakemake --cores <num_cores>
 
 ### Rule: merge_results
 - **Input:** Individual association test results.
 - **Output:** Merged association test results.
+- 
+snakemake --cores all -R --until merge_skat_results
 
 ### Rule: annotate_results
 - **Input:** Merged association test results.
 - **Output:** Annotated association test results.
-
+snakemake --cores all -R --until disgenet_annotation
 ### Rule: visualize_results
 - **Input:** Annotated association test results.
 - **Output:** Visual representations of association test results.
-
+snakemake --cores all -R --until manhattan_plots
 ## Dependencies
 
 ### Software
@@ -63,7 +64,7 @@ snakemake --cores <num_cores>
 ### Other
 
 - **PLINK:** PLINK is a widely used software toolset for genome-wide association studies (GWAS) and analysis of DNA sequencing data.
-- **Data Files:** Plink genotyped Bim, Bed & Fam files, bridge weights file, gene regions file, DisGeNET reference file
+- **Data Files:** Plink genotyped Bim, Bed & Fam files, bridge weights file (format is specified), gene regions file, DisGeNET reference file 
 
 
 ## 📋 Configuration
