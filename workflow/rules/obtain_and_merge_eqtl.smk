@@ -9,6 +9,8 @@ rule obtain_eqtl_weights:
         weights = config["weights_file"]
     params:
         weights_source = config["weights_type"]
+    dependencies:
+        ""
     shell:
         """
         mkdir -p output_weights
