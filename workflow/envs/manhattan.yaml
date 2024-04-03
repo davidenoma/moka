@@ -1,5 +1,8 @@
 channels:
  - r
+ - conda-forge
+ - bioconda
+ - defaults
 
 dependencies:
  - r-base=4.2.0

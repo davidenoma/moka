@@ -6,7 +6,7 @@ from snakemake.io import expand
 configfile: "config/config.yaml"
 
 
-# # Rule 3: Perform SKAT test on the genotypeD
+    # Rule 3: Perform SKAT test on the genotypeD
 rule skat_test:
     input:
         merged_weights=config["weights_file"],
@@ -17,6 +17,9 @@ rule skat_test:
         weights_source = config["weights_type"],
         genotype_path=config["genotype_file_path"],
         plink_path=config["plink_path"]
+    log:
+        stdout="logs/wkas.stdout",
+        stderr="logs/wkas.stderr"
     conda:
         "envs/skat.yaml"
     shell:
@@ -32,6 +35,11 @@ rule merge_skat_results:
         skat_results=expand("result_folder/{prefix}_{i}_{weight_source}_result_chr_{i}.txt",i=range(1,23),weight_source=config["weights_type"],prefix=config["genotype_prefix"])
     params:
         merged_skat_results=expand("result_folder/merged_{prefix}_{weight_source}_SKAT.txt",prefix=config["genotype_prefix"],weight_source=config["weights_type"])
+    conda:
+        "envs/merge_skat_results.yaml"
+    log:
+        stdout="logs/wkas.stdout",
+        stderr="logs/wkas.stderr"
     shell:
         """
         if [ -f "{params.merged_skat_results}" ]; then
@@ -51,6 +59,10 @@ rule disgenet_annotation:
         "genotype_prefix"],weight_source=config["weights_type"])
     params:
         gene_annotation=config["disgenet_reference_file"]
+    log:
+        stdout="logs/wkas.stdout",stderr="logs/wkas.stderr"
+    conda:
+        "envs/disgenet.yaml"
     shell:
         """
          Rscript scripts/obtain_genes_in_DGN.R {input.merged_skat_results} {params.gene_annotation} 0.01
@@ -62,6 +74,9 @@ rule manhattan_plots:
     "genotype_prefix"],weight_source=config["weights_type"]),
     params:
         pval_thresh = 0.05/int(config["sample_size"])
+    log:
+        stdout="logs/wkas.stdout",stderr="logs/wkas.stderr"
+
     conda:
         "envs/manhattan.yaml"
     shell:

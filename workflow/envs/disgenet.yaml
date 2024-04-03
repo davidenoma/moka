@@ -1,0 +1,5 @@
+channels:
+ - r
+
+dependencies:
+ - r-base=4.2.0

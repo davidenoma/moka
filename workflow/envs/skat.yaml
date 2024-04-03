@@ -1,6 +1,9 @@
 channels:
  - r
+ - conda-forge
+ - bioconda
+ - defaults
 dependencies:
- - r-base=4.2.0
+ - r=4.2.0
  - r-parallel=4.3.2
  - r-SKAT=2.2.5
