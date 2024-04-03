@@ -1,10 +1,11 @@
 # config.yaml
-
-genotype_prefix: "geno_EUR_SCZ"
-weights_type: "EQTL"
+#Replace with your configuration
+genotype_prefix: ""
+weights_type: ""
 genotype_file_path: "genotype_data/"
-weights_file: "weights/eqtl_weights.csv"
+#Your weights file must follow te format of the sample
+weights_file: "weights/weights.csv"
 gene_regions_file: "helper/gene_regions.csv"
-disgenet_reference_file: "disease_database/C0036341_disease_gda_summary.tsv"
-plink_path: "/Users/davidenoma/Documents"
+disgenet_reference_file: "disease_database/{}.tsv"
+plink_path: ""
 sample_size: 2414
