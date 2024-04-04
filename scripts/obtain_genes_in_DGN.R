@@ -40,3 +40,17 @@ cat("P-value threshold: ",pvalue_threshold, "\n")
 cat("Number of common genes in Disgenet: " , length(common_genes_dgn), "\n")
 cat("Validation ratio as Number of genes in DGN/Number of significant genes: ",length(common_genes_dgn)/length(genes), "\n")
 cat("\n")
+
+
+# Prepare output text
+output_text <- paste("P-value threshold: ", pvalue_threshold, "\n",
+                     "Number of common genes in Disgenet: ", length(common_genes_dgn), "\n",
+                     "Validation ratio as Number of genes in DGN/Number of significant genes: ",
+                     length(common_genes_dgn)/length(genes), "\n\n")
+
+# Write output to a text file
+file_name <- basename(skat_results_path)  # Extract file name without extension
+output_file <- paste0("output_plots/output_results_", gsub("\\..*$", "", file_name), ".txt")  # Construct output file path
+writeLines(output_text, output_file)
+
+cat("Output written to:", output_file, "\n")
