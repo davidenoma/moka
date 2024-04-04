@@ -28,6 +28,7 @@ To run the BAS pipeline:
 - **Output:** Results of association tests.
 
 snakemake --cores <num_cores>
+
 If you have all the dependencies with R configured on conda, utilize with:
 
 **snakemake --cores <num_cores> --use-conda**
