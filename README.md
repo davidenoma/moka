@@ -28,6 +28,9 @@ To run the BAS pipeline:
 - **Output:** Results of association tests.
 
 snakemake --cores <num_cores>
+If you have all the dependencies with R configured on conda, utilize with:
+
+**snakemake --cores <num_cores> --use-conda**
 
 ### Rule: merge_results
 - **Input:** Individual association test results.
@@ -50,7 +53,7 @@ snakemake --cores all -R --until manhattan_plots
 ## Dependencies
 
 ### Software
-
+**They must be configured on your path**
 - **Snakemake**
 - **R**
 - **Python**
