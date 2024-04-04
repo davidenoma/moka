@@ -32,7 +32,6 @@ if (length(args) != 3) {
 skat_results_path <- args[1]
 disgenet_path <- args[2]
 pvalue_threshold <- as.numeric(args[3])
-
 genes <- get_gene_from_SKAT(skat_results_path, pvalue_threshold)
 common_genes_dgn <- get_intersect_dgn(genes, disgenet_path)
 cat("P-value threshold: ",pvalue_threshold, "\n")
