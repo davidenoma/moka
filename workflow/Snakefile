@@ -53,22 +53,34 @@ rule merge_skat_results:
         done
         """
 # Rule 5: Perform Disgenet disease annotation of SKAT results
-rule disgenet_annotation:
+rule disgenet_annotation_001:
     input:
-        merged_skat_results=expand("result_folder/merged_{prefix}_{weight_source}_SKAT.txt",prefix=config[
-        "genotype_prefix"],weight_source=config["weights_type"])
+        merged_skat_results=expand("result_folder/merged_{prefix}_{weight_source}_SKAT.txt", prefix=config["genotype_prefix"], weight_source=config["weights_type"])
     params:
         gene_annotation=config["disgenet_reference_file"]
     log:
-        stdout="logs/wkas.stdout",stderr="logs/wkas.stderr"
+        stdout="logs/wkas_0.01.stdout", stderr="logs/wkas_0.01.stderr"
     conda:
         "envs/disgenet.yaml"
     shell:
         """
-         Rscript scripts/obtain_genes_in_DGN.R {input.merged_skat_results} {params.gene_annotation} 0.01
-         
-         Rscript scripts/obtain_genes_in_DGN.R {input.merged_skat_results} {params.gene_annotation} 0.05
+        Rscript scripts/obtain_genes_in_DGN.R {input.merged_skat_results} {params.gene_annotation} 0.01
         """
+
+rule disgenet_annotation_005:
+    input:
+        merged_skat_results=expand("result_folder/merged_{prefix}_{weight_source}_SKAT.txt", prefix=config["genotype_prefix"], weight_source=config["weights_type"])
+    params:
+        gene_annotation=config["disgenet_reference_file"]
+    log:
+        stdout="logs/wkas_0.05.stdout", stderr="logs/wkas_0.05.stderr"
+    conda:
+        "envs/disgenet.yaml"
+    shell:
+        """
+        Rscript scripts/obtain_genes_in_DGN.R {input.merged_skat_results} {params.gene_annotation} 0.05
+        """
+
 rule manhattan_plots:
     input:
         merged_skat_results = expand("result_folder/merged_{prefix}_{weight_source}_SKAT.txt",prefix=config[
