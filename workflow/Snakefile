@@ -66,6 +66,7 @@ rule disgenet_annotation:
     shell:
         """
          Rscript scripts/obtain_genes_in_DGN.R {input.merged_skat_results} {params.gene_annotation} 0.01
+         
          Rscript scripts/obtain_genes_in_DGN.R {input.merged_skat_results} {params.gene_annotation} 0.05
         """
 rule manhattan_plots:
