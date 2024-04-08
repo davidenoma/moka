@@ -11,3 +11,4 @@ weights/*
 disease_database/*
 Rplots.pdf
 config/config.yaml
+.DS_Store
