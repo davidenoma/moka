@@ -53,11 +53,9 @@ pvalue_threshold_str <- gsub("\\.", "_", as.character(pvalue_threshold))  # Repl
 output_file <- paste0("output_plots/output_results_", pvalue_threshold_str, "_", gsub("\\..*$", "", file_name), ".txt")  # Construct output file path
 # Open the file for writing
 file_conn <- file(output_file, "w")
-
 # Write the output text to the file
 writeLines(output_text, file_conn)
 # Close the file connection
 close(file_conn)
-
 cat("Output written to:", output_file, "\n")
 rm(list = ls())
