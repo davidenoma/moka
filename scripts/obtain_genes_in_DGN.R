@@ -42,7 +42,7 @@ cat("\n")
 
 
 # Prepare output text
-output_text <- cat("P-value threshold: ", pvalue_threshold, "\n",
+output_text <- paste0("P-value threshold: ", pvalue_threshold, "\n",
                      "Number of common genes in Disgenet: ", length(common_genes_dgn), "\n",
                      "Validation ratio as Number of genes in DGN/Number of significant genes: ",
                      length(common_genes_dgn)/length(genes), "\n\n",)
