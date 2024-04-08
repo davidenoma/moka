@@ -29,6 +29,7 @@ if (length(args) != 3) {
   cat("Usage: Rscript script.R skat_results_path disgenet_path pvalue_threshold\n")
   quit(status = 1)
 }
+
 skat_results_path <- args[1]
 disgenet_path <- args[2]
 pvalue_threshold <- as.numeric(args[3])
@@ -53,3 +54,4 @@ output_file <- paste0("output_plots/output_results_", pvalue_threshold_str, "_",
 
 
 cat("Output written to:", output_file, "\n")
+rm(list = ls())
