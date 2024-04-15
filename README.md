@@ -44,6 +44,7 @@ snakemake --cores all -R --until merge_skat_results
 - **Output:** Annotated association test results.
 
 snakemake --cores all -R --until disgenet_annotation_001
+
 snakemake --cores all -R --until disgenet_annotation_005
 
 ### Rule: visualize_results
