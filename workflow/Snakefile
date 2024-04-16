@@ -89,12 +89,40 @@ rule manhattan_plots:
         pval_thresh = 0.05/int(config["sample_size"])
     log:
         stdout="logs/wkas.stdout",stderr="logs/wkas.stderr"
-
     conda:
         "envs/manhattan.yaml"
     shell:
         """
         Rscript scripts/manhattan_plots.R {input.merged_skat_results} {params.pval_thresh}
         """
+rule kegg_pathway_analysis:
+    input:
+        merged_skat_results = expand("result_folder/merged_{prefix}_{weight_source}_SKAT.txt",prefix=config[
+    "genotype_prefix"],weight_source=config["weights_type"]),
+    params:
+        pval_thresh = 0.05
+    log:
+        stdout="logs/wkas.stdout",stderr="logs/wkas.stderr"
+    conda:
+        "envs/kegg_pathway.yaml"
+    shell:
+        """
+        Rscript scripts/pathfindR_KEGG.R {input.merged_skat_results} {params.pval_thresh}
+        """
+rule go_analysis:
+    input:
+        merged_skat_results = expand("result_folder/merged_{prefix}_{weight_source}_SKAT.txt",prefix=config[
+    "genotype_prefix"],weight_source=config["weights_type"]),
+    params:
+        pval_thresh = 0.05
+    log:
+        stdout="logs/wkas.stdout",stderr="logs/wkas.stderr"
+    conda:
+        "envs/go_analysis.yaml"
+    shell:
+        """
+        Rscript scripts/GO_analysis.R {input.merged_skat_results} {params.pval_thresh}
+        """
+
 
 
