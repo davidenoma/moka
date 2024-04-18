@@ -36,22 +36,46 @@ If you have all the dependencies with R configured on conda, utilize with:
 ### Rule: merge_results
 - **Input:** Individual association test results.
 - **Output:** Merged association test results.
-
+- 
+```bash
 snakemake --cores all -R --until merge_skat_results
+```
+Got it! Here's the updated README with the rules for `go_analysis` and `kegg_pathway_analysis` in the same format as the provided rules:
+
+---
 
 ### Rule: annotate_results
 - **Input:** Merged association test results.
 - **Output:** Annotated association test results.
 
+```bash
 snakemake --cores all -R --until disgenet_annotation_001
-
 snakemake --cores all -R --until disgenet_annotation_005
+```
 
 ### Rule: visualize_results
-- **Input:** Annotated association test results.
+- **Input:** Merged association test results.
 - **Output:** Visual representations of association test results.
 
+```bash
 snakemake --cores all -R --until manhattan_plots
+```
+
+### Rule: go_analysis
+- **Input:** Merged association test results.
+- **Output:** GO analysis results.
+
+```bash
+snakemake --cores all -R --until go_analysis
+```
+
+### Rule: kegg_pathway_analysis
+- **Input:** Merged association test results.
+- **Output:** KEGG pathway analysis results.
+
+```bash
+snakemake --cores all -R --until kegg_pathway_analysis
+```
 
 ## Dependencies
 
@@ -70,6 +94,9 @@ snakemake --cores all -R --until manhattan_plots
 - **PARALLEL:** R package for parallel computing capabilities in R.
 - **QQMAN:** R package for creating QQ (Quantile-Quantile) plots, commonly used in GWAS to assess whether observed p-values deviate from the expected distribution under the null hypothesis.
 - **GGPLOT:** R package for creating highly customizable plots and graphics.
+- **gprofiler2:** R package for gene set enrichment analysis (GO analysis).
+- **pathfindR:** R package for pathway analysis, including KEGG pathway analysis.
+
 
 ### Other
 
