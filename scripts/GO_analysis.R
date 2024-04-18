@@ -32,7 +32,7 @@ colnames(gene_and_p_values) <- c("GENE", "p_value")
 GO_png_file_path <- paste0("output_plots/GO_", gsub("\\..*$", "", basename(file_path)), ".png")
 
 # Generate KEGG pathway plot
-png(filename = GO_png_file_path, width = 1560, height = 1750, units = "px",res = 150)
+png(filename = GO_png_file_path, width = 1600, height = 1750, units = "px",res = 150)
 
 # Perform GO enrichment analysis
 gost_res <- gost(
