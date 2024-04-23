@@ -7,4 +7,4 @@ dependencies:
  - r-essentials
  - r-base=4.2.0
  - r-parallelly
- - r-skat
+# - r-skat
