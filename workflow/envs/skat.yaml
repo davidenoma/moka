@@ -6,5 +6,5 @@ channels:
 dependencies:
  - r-essentials
  - r-base=4.2.0
- - r-parallely
+ - r-parallelly
  - r-skat
