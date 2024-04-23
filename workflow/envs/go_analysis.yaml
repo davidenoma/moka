@@ -4,5 +4,5 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - r-base=4.1.2
+  - r-base
   - r-gprofiler2
