@@ -40,9 +40,12 @@ If you have all the dependencies with R configured on conda, utilize with:
 ```bash
 snakemake --cores all -R --until merge_skat_results
 ```
-Got it! Here's the updated README with the rules for `go_analysis` and `kegg_pathway_analysis` in the same format as the provided rules:
 
----
+
+### Rule: unweighted skat
+- **Input:** Genotype
+- **Output:** Unweighted association mapping
+
 
 ### Rule: annotate_results
 - **Input:** Merged association test results.
