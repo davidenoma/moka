@@ -64,7 +64,7 @@ output_text <- paste0("P-value threshold: ", pvalue_threshold, "\n",
                       "Number of significant genes not in Disgenet: ", length(diff_genes), "\n",
                       "Validation ratio as Number of genes in DGN/Number of significant genes: ", validation_ratio_dgn, "\n",
                       "Validation ratio as Number of significant genes not in DGN/Number of significant genes: ", validation_ratio_diff, "\n\n")
-
+cat(output_text)
 # Write output to a text file
 file_name <- basename(skat_results_path)  # Extract file name without extension
 pvalue_threshold_str <- gsub("\\.", "_", as.character(pvalue_threshold))  # Replace dot with underscore for valid filename
