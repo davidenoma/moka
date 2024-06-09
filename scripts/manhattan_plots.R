@@ -31,6 +31,25 @@ library(qqman)
 #   scale_x_discrete(labels = 1:22)
 # }
 
+
+# Ensure the "pvalue" column is numeric
+# gene_data$pvalue <- as.numeric(gene_data$pvalue)
+# Calculate the negative logarithm (base 10) of the p-values
+# gene_data$neg_log_pvalue <- -log10(gene_data$pvalue)
+
+# Example of usage
+# Set the p-value threshold for labeling genes
+# pvalue_threshold <- 0.05/1735
+# pvalue_threshold_EU <- 0.05/2414
+
+# create_manhattan_plot(gene_data, pvalue_threshold_EU)
+
+# genes <- read.csv("/Users/davidenoma/Desktop/genes_test.txt", header = FALSE, sep="\t", col.names = c("SNP", "CHR", "BP", "P"))
+# Read the gene data from the tab-delimited file
+
+# genes <- read.csv("/Users/davidenoma/Desktop/genes_test.txt",header = FALSE,sep="\t",col.names = )
+
+
 # Process command-line arguments
 args <- commandArgs(trailingOnly = TRUE)
 
@@ -56,7 +75,7 @@ colnames(selected_gene_data) <- c("SNP", "CHR", "BP", "P")
 # Save the Manhattan plot
 file_name <- basename(file_path)  # Extract file name without extension
 png_file_path <- paste0("output_plots/manhattan_", gsub("\\..*$", "", file_name), ".png")  # Construct PNG file path
-png(filename = png_file_path, width = 2940, height = 1782, units = "px", pointsize = 22)
+png(filename = png_file_path, width = 2940, height = 1782, units = "px", pointsize = 22,res = 150)
 # png(filename = png_file_path, width = 2000, height = 1600, units = "px", pointsize = 16)
 # Call the function to create Manhattan plot
 manhattan(selected_gene_data, chr = "CHR", bp = "BP", snp = "SNP",
