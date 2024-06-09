@@ -32,6 +32,7 @@ perform_skat_test <- function(gene_name, gene_chromosome, region_start, region_e
     # Perform SKAT test
     genotype_fam <- paste0(genotype_prefix, ".fam")
     FAM <- Read_Plink_FAM(genotype_fam, Is.binary = TRUE)
+     # FAM_cov <- Read_Plink_FAM(paste0(genotype_prefix, ".fam"), paste0(genotype_prefix, ".Cov"), Is.binary = FALSE)
     y <- FAM$Phenotype
     obj <- SKAT_Null_Model(y ~ 1, out_type = "D")
     genotype_ssd <- paste0(genotype_prefix, ".ssd")
