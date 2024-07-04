@@ -31,10 +31,13 @@ perform_skat_test <- function(gene_name, gene_chromosome, region_start, region_e
     Generate_SSD_SetID(genotype_bed, paste0(genotype_prefix, ".bim"), paste0(genotype_prefix, ".fam"), paste0(genotype_prefix, ".setid"), paste0(genotype_prefix, ".ssd"), paste0(genotype_prefix, ".info"))
     # Perform SKAT test
     genotype_fam <- paste0(genotype_prefix, ".fam")
-    FAM <- Read_Plink_FAM(genotype_fam, Is.binary = TRUE)
-     # FAM_cov <- Read_Plink_FAM(paste0(genotype_prefix, ".fam"), paste0(genotype_prefix, ".Cov"), Is.binary = FALSE)
-    y <- FAM$Phenotype
-    obj <- SKAT_Null_Model(y ~ 1, out_type = "D")
+    genotype_cov <- paste0(genotype_prefix,".cov")
+    # FAM <- Read_Plink_FAM(genotype_fam, Is.binary = TRUE)
+    FAM_cov <- Read_Plink_FAM_Cov(genotype_fam, genotype_cov, Is.binary = FALSE)
+    age <- FAM_cov$age
+    sex <- FAM_cov$sex
+    y <- FAM_cov$Phenotype
+    obj <- SKAT_Null_Model(y ~ age + sex, out_type = "D")
     genotype_ssd <- paste0(genotype_prefix, ".ssd")
     SSD.INFO <- Open_SSD(genotype_ssd, paste0(genotype_prefix, ".info"))
     id <- 1
