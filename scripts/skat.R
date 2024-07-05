@@ -122,6 +122,10 @@ prepare_SKAT_files_per_chr <- function(genotype_path, genotype_prefix)  {
   new_file_name_fam <- paste0(genotype_path,genotype_prefix,"_",chr,".fam")
   system(paste("cp ",old_file_name_fam,new_file_name_fam))
 
+    old_file_name_cov <- paste0(genotype_path,genotype_prefix,".cov")
+  new_file_name_cov <- paste0(genotype_path,genotype_prefix,"_",chr,".cov")
+  system(paste("cp ",old_file_name_cov,new_file_name_cov))
+
 }
 
 remove_SKAT_files_per_chr <- function(genotype_path, genotype_prefix)  {
@@ -136,6 +140,10 @@ remove_SKAT_files_per_chr <- function(genotype_path, genotype_prefix)  {
   old_file_name_fam <- paste0(genotype_path,genotype_prefix,".fam")
   new_file_name_fam <- paste0(genotype_path,genotype_prefix,"_",chr,".fam")
   system(paste("rm ",old_file_name_fam,new_file_name_fam))
+
+  old_file_name_cov <- paste0(genotype_path,genotype_prefix,".cov")
+  new_file_name_cov <- paste0(genotype_path,genotype_prefix,"_",chr,".cov")
+  system(paste("rm ",old_file_name_cov,new_file_name_cov))
 
 
 }
