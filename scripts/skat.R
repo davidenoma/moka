@@ -15,10 +15,13 @@ perform_skat_test <- function(gene_name, gene_chromosome, region_start, region_e
     system(paste(
       "plink --bfile",
       genotype_prefix,
+      '--covar ',
+      paste0(genotype_prefix,".cov"),
       "--extract",
       paste0(genotype_path,"snp_list_", weights_type, chr,".txt"),
       "--make-bed",
       "--silent",
+
       "--allow-no-sex",
       "--out",
       paste0(genotype_prefix, "_SKAT")
