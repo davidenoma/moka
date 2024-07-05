@@ -39,7 +39,7 @@ perform_skat_test <- function(gene_name, gene_chromosome, region_start, region_e
     age <- FAM_cov$Age
     sex <- FAM_cov$Sex
     y <- FAM_cov$Phenotype
-    obj <- SKAT_Null_Model(y ~ age + sex, out_type = "C")
+    obj <- SKAT_Null_Model(y ~ age + sex, out_type = "D")
     genotype_ssd <- paste0(genotype_prefix, ".ssd")
     SSD.INFO <- Open_SSD(genotype_ssd, paste0(genotype_prefix, ".info"))
     id <- 1
