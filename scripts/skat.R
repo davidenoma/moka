@@ -36,11 +36,11 @@ perform_skat_test <- function(gene_name, gene_chromosome, region_start, region_e
     genotype_fam <- paste0(genotype_prefix, ".fam")
     genotype_cov <- paste0(genotype_prefix,".cov")
     # FAM <- Read_Plink_FAM(genotype_fam, Is.binary = TRUE)
-    FAM_cov <- Read_Plink_FAM_Cov(genotype_fam, genotype_cov, Is.binary = FALSE)
+    FAM_cov <- Read_Plink_FAM_Cov(genotype_fam, genotype_cov, Is.binary = FALSE,cov_header=TRUE)
     age <- FAM_cov$Age
     sex <- FAM_cov$Sex
     y <- FAM_cov$Phenotype
-    obj <- SKAT_Null_Model(y ~ age + sex, out_type = "D")
+    obj <- SKAT_Null_Model(y ~ age + sex, out_type = "C")
     genotype_ssd <- paste0(genotype_prefix, ".ssd")
     SSD.INFO <- Open_SSD(genotype_ssd, paste0(genotype_prefix, ".info"))
     id <- 1
@@ -122,7 +122,7 @@ prepare_SKAT_files_per_chr <- function(genotype_path, genotype_prefix)  {
   new_file_name_fam <- paste0(genotype_path,genotype_prefix,"_",chr,".fam")
   system(paste("cp ",old_file_name_fam,new_file_name_fam))
 
-    old_file_name_cov <- paste0(genotype_path,genotype_prefix,".cov")
+  old_file_name_cov <- paste0(genotype_path,genotype_prefix,".cov")
   new_file_name_cov <- paste0(genotype_path,genotype_prefix,"_",chr,".cov")
   system(paste("cp ",old_file_name_cov,new_file_name_cov))
 
