@@ -99,7 +99,9 @@ snakemake --cores all -R --until kegg_pathway_analysis
 - **GGPLOT:** R package for creating highly customizable plots and graphics.
 - **gprofiler2:** R package for gene set enrichment analysis (GO analysis).
 - **pathfindR:** R package for pathway analysis, including KEGG pathway analysis.
-
+```R
+install.packages(c("manhattan", "SKAT", "parallel", "qqman", "ggplot2", "gprofiler2", "pathfindR"))
+```
 
 ### Other
 
