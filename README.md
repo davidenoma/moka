@@ -13,7 +13,7 @@ To run the BAS pipeline:
    - [Snakemake Installation Guide](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html)
      ```bash
      conda install -n base -c conda-forge mamba
-     mamba create -c conda-forge -c bioconda -n snakemake snakemake
+     mamba create -c conda-forge -c bioconda -n snakemake 
      mamba activate snakemake
      snakemake --help
      ```
@@ -99,7 +99,13 @@ snakemake --cores all -R --until kegg_pathway_analysis
 - **GGPLOT:** R package for creating highly customizable plots and graphics.
 - **gprofiler2:** R package for gene set enrichment analysis (GO analysis).
 - **pathfindR:** R package for pathway analysis, including KEGG pathway analysis.
+```R
+install.packages("BiocManager")
 
+install.packages(c("manhattan", "parallel", "qqman", "ggplot2"))
+
+BiocManager::install(c( "gprofiler2", "pathfindR","manhattan"))
+```
 
 ### Other
 
