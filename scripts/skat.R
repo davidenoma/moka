@@ -13,7 +13,7 @@ perform_skat_test <- function(gene_name, gene_chromosome, region_start, region_e
     snp_list <- read.table(paste0(genotype_path,"snp_list_", weights_type, chr,".txt"), header = FALSE, col.names = "SNP")
 
     system(paste(
-      "plink --bfile",
+      "plink --bfile ",
       genotype_prefix,
       # "--covar",
       # paste0(genotype_prefix,".cov"),
