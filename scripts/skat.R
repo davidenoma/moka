@@ -49,7 +49,7 @@ perform_skat_test <- function(gene_name, gene_chromosome, region_start, region_e
 
     # Use 'gene_snps' as the subset of SNPs for SKAT test
     skat_test <- SKAT(Z, obj, kernel = "linear.weighted", weights = gene_snps$Weight)
-
+    Close_SSD()
     # Append SKAT test results to result file
     ss2 <- c(gene_name, gene_chromosome, region_start, region_end, toString(skat_test$Q), toString(skat_test$p.value))
     write(ss2, file = result_file, append = TRUE, ncol = 6, sep = '\t')
