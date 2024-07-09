@@ -69,6 +69,11 @@ gene_data <- read.table(
   header = TRUE,  # Use the first row as column names
   col.names = c("Gene_name", "Gene_chromosome", "Region_start", "Region_end", "Q_test", "pvalue")
 )
+# Calculate the p-value threshold
+num_rows <- nrow(gene_data)
+pvalue_threshold <- 0.05 / num_rows
+cat("P-value threshold:", pvalue_threshold, "\n")
+
 selected_gene_data <- gene_data[, c("Gene_name", "Gene_chromosome", "Region_start", "pvalue")]
 colnames(selected_gene_data) <- c("SNP", "CHR", "BP", "P")
 
