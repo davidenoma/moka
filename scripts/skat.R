@@ -15,8 +15,8 @@ perform_skat_test <- function(gene_name, gene_chromosome, region_start, region_e
     system(paste(
       "plink --bfile",
       genotype_prefix,
-      "--covar",
-      paste0(genotype_prefix,".cov"),
+      # "--covar",
+      # paste0(genotype_prefix,".cov"),
       "--extract",
       paste0(genotype_path,"snp_list_", weights_type, chr,".txt"),
       "--make-bed",
@@ -34,13 +34,14 @@ perform_skat_test <- function(gene_name, gene_chromosome, region_start, region_e
     # Perform SKAT test
     genotype_fam <- paste0(genotype_prefix, ".fam")
     genotype_cov <- paste0(genotype_prefix,".cov")
-    # FAM <- Read_Plink_FAM(genotype_fam, Is.binary = TRUE)
-    FAM_cov <- Read_Plink_FAM_Cov(genotype_fam, genotype_cov, Is.binary = FALSE,cov_header=TRUE)
-    age <- FAM_cov$Age
-    sex <- FAM_cov$Sex
-    y <- FAM_cov$Phenotype
+    FAM <- Read_Plink_FAM(genotype_fam, Is.binary = TRUE)
+    # FAM_cov <- Read_Plink_FAM_Cov(genotype_fam, genotype_cov, Is.binary = FALSE,cov_header=TRUE)
+    # age <- FAM_cov$Age
+    # sex <- FAM_cov$Sex
+    # y <- FAM_cov$Phenotype
+    y <- FAM$Phenotype
     y <- ifelse(y == 1, 0, ifelse(y == 2, 1, y))
-    obj <- SKAT_Null_Model(y ~ age + sex, out_type = "D")
+    obj <- SKAT_Null_Model(y ~ 1, out_type = "D")
     genotype_ssd <- paste0(genotype_prefix, ".ssd")
     SSD.INFO <- Open_SSD(genotype_ssd, paste0(genotype_prefix, ".info"))
     id <- 1
