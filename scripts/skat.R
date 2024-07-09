@@ -33,8 +33,8 @@ perform_skat_test <- function(gene_name, gene_chromosome, region_start, region_e
     Generate_SSD_SetID(genotype_bed, paste0(genotype_prefix, ".bim"), paste0(genotype_prefix, ".fam"), paste0(genotype_prefix, ".setid"), paste0(genotype_prefix, ".ssd"), paste0(genotype_prefix, ".info"))
     # Perform SKAT test
     genotype_fam <- paste0(genotype_prefix, ".fam")
-    genotype_cov <- paste0(genotype_prefix,".cov")
-    FAM <- Read_Plink_FAM(genotype_fam, Is.binary = TRUE)
+    # genotype_cov <- paste0(genotype_prefix,".cov")
+    FAM <- Read_Plink_FAM(genotype_fam, Is.binary = FALSE)
     # FAM_cov <- Read_Plink_FAM_Cov(genotype_fam, genotype_cov, Is.binary = FALSE,cov_header=TRUE)
     # age <- FAM_cov$Age
     # sex <- FAM_cov$Sex
