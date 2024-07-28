@@ -13,8 +13,10 @@ perform_skat_test <- function(gene_name, gene_chromosome, region_start, region_e
     snp_list <- read.table(paste0(genotype_path,"snp_list_", weights_type, chr,".txt"), header = FALSE, col.names = "SNP")
 
     system(paste(
-      "plink --bfile",
+      "plink --bfile ",
       genotype_prefix,
+      # "--covar",
+      # paste0(genotype_prefix,".cov"),
       "--extract",
       paste0(genotype_path,"snp_list_", weights_type, chr,".txt"),
       "--make-bed",
@@ -31,8 +33,14 @@ perform_skat_test <- function(gene_name, gene_chromosome, region_start, region_e
     Generate_SSD_SetID(genotype_bed, paste0(genotype_prefix, ".bim"), paste0(genotype_prefix, ".fam"), paste0(genotype_prefix, ".setid"), paste0(genotype_prefix, ".ssd"), paste0(genotype_prefix, ".info"))
     # Perform SKAT test
     genotype_fam <- paste0(genotype_prefix, ".fam")
-    FAM <- Read_Plink_FAM(genotype_fam, Is.binary = TRUE)
+    # genotype_cov <- paste0(genotype_prefix,".cov")
+    FAM <- Read_Plink_FAM(genotype_fam, Is.binary = FALSE)
+    # FAM_cov <- Read_Plink_FAM_Cov(genotype_fam, genotype_cov, Is.binary = FALSE,cov_header=TRUE)
+    # age <- FAM_cov$Age
+    # sex <- FAM_cov$Sex
+    # y <- FAM_cov$Phenotype
     y <- FAM$Phenotype
+    y <- ifelse(y == 1, 0, ifelse(y == 2, 1, y))
     obj <- SKAT_Null_Model(y ~ 1, out_type = "D")
     genotype_ssd <- paste0(genotype_prefix, ".ssd")
     SSD.INFO <- Open_SSD(genotype_ssd, paste0(genotype_prefix, ".info"))
@@ -45,7 +53,7 @@ perform_skat_test <- function(gene_name, gene_chromosome, region_start, region_e
     # Append SKAT test results to result file
     ss2 <- c(gene_name, gene_chromosome, region_start, region_end, toString(skat_test$Q), toString(skat_test$p.value))
     write(ss2, file = result_file, append = TRUE, ncol = 6, sep = '\t')
-
+     Close_SSD()
 
     # Clean up temporary files
     file.remove(paste0(genotype_prefix, "_SKAT.bed"), paste0(genotype_prefix, "_SKAT.bim"), paste0(genotype_prefix, "_SKAT.fam"), paste0(genotype_prefix, ".setid"), paste0(genotype_prefix, ".ssd"), paste0(genotype_prefix, ".info"))
@@ -115,6 +123,10 @@ prepare_SKAT_files_per_chr <- function(genotype_path, genotype_prefix)  {
   new_file_name_fam <- paste0(genotype_path,genotype_prefix,"_",chr,".fam")
   system(paste("cp ",old_file_name_fam,new_file_name_fam))
 
+  # old_file_name_cov <- paste0(genotype_path,genotype_prefix,".cov")
+  # new_file_name_cov <- paste0(genotype_path,genotype_prefix,"_",chr,".cov")
+  # system(paste("cp ",old_file_name_cov,new_file_name_cov))
+
 }
 
 remove_SKAT_files_per_chr <- function(genotype_path, genotype_prefix)  {
@@ -129,6 +141,10 @@ remove_SKAT_files_per_chr <- function(genotype_path, genotype_prefix)  {
   old_file_name_fam <- paste0(genotype_path,genotype_prefix,".fam")
   new_file_name_fam <- paste0(genotype_path,genotype_prefix,"_",chr,".fam")
   system(paste("rm ",old_file_name_fam,new_file_name_fam))
+  #
+  # old_file_name_cov <- paste0(genotype_path,genotype_prefix,".cov")
+  # new_file_name_cov <- paste0(genotype_path,genotype_prefix,"_",chr,".cov")
+  # system(paste("rm ",old_file_name_cov,new_file_name_cov))
 
 
 }
