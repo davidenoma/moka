@@ -42,7 +42,7 @@ enrichment_plot <- enrichment_chart(enrichment_res, top_terms = 10) +
   theme(
     text = element_text(size = 18),          # Increase font size for all text
     axis.title = element_text(size = 20),    # Font size for axis titles
-    axis.text = element_text(size = 16),     # Font size for axis labels
+    axis.text = element_text(size = 24),     # Font size for axis labels
     plot.title = element_text(size = 24, face = "bold"),  # Font size for the plot title
     legend.text = element_text(size = 16),   # Font size for legend text
     legend.title = element_text(size = 18)   # Font size for legend title
