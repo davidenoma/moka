@@ -48,14 +48,14 @@ p <- gostplot(
   gostres = gost_res,
   pal = c(`GO:MF` = "#dc3912", `GO:BP` = "#ff9900", `GO:CC` = "#109618"),
   interactive = FALSE,
-  capped = FALSE
+  capped = TRUE
 )
 
 # Increase font size by modifying the plot object
 p <- p + theme(
-  text = element_text(size = 20),  # Adjust font size for all text
+  text = element_text(size = 24),  # Adjust font size for all text
   axis.title = element_text(size = 20),  # Font size for axis titles
-  axis.text = element_text(size = 16)  # Font size for axis labels
+  axis.text = element_text(size = 20)  # Font size for axis labels
 )
 
 # Sort gostres$result dataframe by p_value column from lowest to highest
