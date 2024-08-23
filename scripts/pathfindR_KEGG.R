@@ -37,12 +37,14 @@ kegg_png_file_path <- paste0("output_plots/kegg_pathway_", gsub("\\..*$", "", ba
 # Open the PNG device
 png(filename = kegg_png_file_path, width = 1500, height = 1000, units = "px", pointsize = 22, res = 150)
 
+
 # Create the enrichment chart and customize font size
 enrichment_plot <- enrichment_chart(enrichment_res, top_terms = 10) +
   theme(
     text = element_text(size = 18),          # Increase font size for all text
     axis.title = element_text(size = 20),    # Font size for axis titles
-    axis.text = element_text(size = 24),     # Font size for axis labels
+    axis.text.y = element_text(size = 20),  # Increase font size of the pathway names
+    axis.text.x = element_text(size = 20),  # Adjust x-axis font size if needed
     plot.title = element_text(size = 24, face = "bold"),  # Font size for the plot title
     legend.text = element_text(size = 16),   # Font size for legend text
     legend.title = element_text(size = 18)   # Font size for legend title
