@@ -1,4 +1,5 @@
 library(gprofiler2)
+library(ggplot2)  
 
 # Process command-line arguments
 args <- commandArgs(trailingOnly = TRUE)
@@ -27,12 +28,11 @@ gene_and_p_values <- subset(gene_data, pvalue < pvalue_threshold)
 gene_and_p_values <- gene_and_p_values[, c("Gene_name", "pvalue")]
 colnames(gene_and_p_values) <- c("GENE", "p_value")
 
-
-# Specify the PNG file for the KEGG pathway plot
+# Specify the PNG file for the GO pathway plot
 GO_png_file_path <- paste0("output_plots/GO_", gsub("\\..*$", "", basename(file_path)), ".png")
 
-# Generate KEGG pathway plot
-png(filename = GO_png_file_path, width = 1700, height = 1800, units = "px",res = 150)
+# Generate GO pathway plot
+png(filename = GO_png_file_path, width = 1700, height = 1800, units = "px", res = 150)
 
 # Perform GO enrichment analysis
 gost_res <- gost(
@@ -51,6 +51,7 @@ p <- gostplot(
   capped = FALSE
 )
 
+# Increase font size by modifying the plot object
 p <- p + theme(
   text = element_text(size = 20),  # Adjust font size for all text
   axis.title = element_text(size = 20),  # Font size for axis titles
@@ -65,8 +66,5 @@ lowest_10 <- sorted_gostres[1:10, ]
 
 # Publish GO enrichment plot with the lowest 10 terms highlighted
 publish_gostplot(p, highlight_terms = lowest_10$term_id)
-
-# Publish GO enrichment plot
-# publish_gostplot(p, highlight_terms = gost_res$result$term_id[1:10])
 
 dev.off()
