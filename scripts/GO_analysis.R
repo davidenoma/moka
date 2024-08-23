@@ -31,8 +31,7 @@ colnames(gene_and_p_values) <- c("GENE", "p_value")
 # Specify the PNG file for the GO pathway plot
 GO_png_file_path <- paste0("output_plots/GO_", gsub("\\..*$", "", basename(file_path)), ".png")
 
-# Generate GO pathway plot
-png(filename = GO_png_file_path, width = 1700, height = 1800, units = "px", res = 150)
+
 
 # Perform GO enrichment analysis
 gost_res <- gost(
@@ -67,9 +66,13 @@ lowest_10 <- sorted_gostres[1:10, ]
 # Publish GO enrichment plot with the lowest 10 terms highlighted and larger text in the table
 publish_gostplot(p, highlight_terms = lowest_10$term_id) +
   theme(
-    text = element_text(size = 18),  # Increase text size for table content
+    text = element_text(size = 20),  # Increase text size for table content
     axis.title = element_text(size = 20),  # Adjust axis titles if needed
     axis.text = element_text(size = 16)    # Adjust axis text if needed
   )
+
+# Generate GO pathway plot
+png(filename = GO_png_file_path, width = 1700, height = 1800, units = "px", res = 150)
+
 
 dev.off()
