@@ -28,11 +28,6 @@ gene_and_p_values <- subset(gene_data, pvalue < pvalue_threshold)
 gene_and_p_values <- gene_and_p_values[, c("Gene_name", "pvalue")]
 colnames(gene_and_p_values) <- c("GENE", "p_value")
 
-# Specify the PNG file for the GO pathway plot
-GO_png_file_path <- paste0("output_plots/GO_", gsub("\\..*$", "", basename(file_path)), ".png")
-
-
-
 # Perform GO enrichment analysis
 gost_res <- gost(
   query = gene_and_p_values$GENE,
@@ -42,37 +37,31 @@ gost_res <- gost(
   evcodes = TRUE
 )
 
-# Generate GO enrichment plot
-p <- gostplot(
-  gostres = gost_res,
-  pal = c(`GO:MF` = "#dc3912", `GO:BP` = "#ff9900", `GO:CC` = "#109618"),
-  interactive = FALSE,
-  capped = TRUE
-)
-
-# Increase font size by modifying the plot object
-p <- p + theme(
-  text = element_text(size = 24),  # Adjust font size for all text
-  axis.title = element_text(size = 20),  # Font size for axis titles
-  axis.text = element_text(size = 20)  # Font size for axis labels
-)
-
 # Sort gostres$result dataframe by p_value column from lowest to highest
 sorted_gostres <- gost_res$result[order(gost_res$result$p_value), ]
 
 # Get the lowest 10 rows
 lowest_10 <- sorted_gostres[1:10, ]
 
-# Publish GO enrichment plot with the lowest 10 terms highlighted and larger text in the table
-publish_gostplot(p, highlight_terms = lowest_10$term_id) +
-  theme(
-    text = element_text(size = 20),  # Increase text size for table content
-    axis.title = element_text(size = 20),  # Adjust axis titles if needed
-    axis.text = element_text(size = 16)    # Adjust axis text if needed
-  )
-
 # Generate GO pathway plot
+GO_png_file_path <- paste0("output_plots/GO_", gsub("\\..*$", "", basename(file_path)), ".png")
 png(filename = GO_png_file_path, width = 1700, height = 1800, units = "px", res = 150)
 
+# Generate GO enrichment plot
+p <- gostplot(
+  gostres = gost_res,
+  pal = c(`GO:MF` = "#dc3912", `GO:BP` = "#ff9900", `GO:CC` = "#109618"),
+  interactive = FALSE,
+  capped = TRUE
+) +
+  theme(
+    text = element_text(size = 24),  # Adjust font size for all text
+    axis.title = element_text(size = 20),  # Font size for axis titles
+    axis.text = element_text(size = 20)  # Font size for axis labels
+  )
 
+# Publish GO enrichment plot with the lowest 10 terms highlighted
+publish_gostplot(p, highlight_terms = lowest_10$term_id)
+
+# Close the PNG device to save the plot
 dev.off()
