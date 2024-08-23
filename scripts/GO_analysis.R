@@ -13,7 +13,7 @@ if (length(args) < 2) {
 # Assign values to arguments
 file_path <- args[1]
 pvalue_threshold <- as.numeric(args[2])
-cat("P-value threshold:", pvalue_threshold)
+cat("P-value threshold:", pvalue_threshold, "\n")
 
 # Read data from the specified file
 gene_data <- read.table(
@@ -64,7 +64,12 @@ sorted_gostres <- gost_res$result[order(gost_res$result$p_value), ]
 # Get the lowest 10 rows
 lowest_10 <- sorted_gostres[1:10, ]
 
-# Publish GO enrichment plot with the lowest 10 terms highlighted
-publish_gostplot(p, highlight_terms = lowest_10$term_id)
+# Publish GO enrichment plot with the lowest 10 terms highlighted and larger text in the table
+publish_gostplot(p, highlight_terms = lowest_10$term_id) +
+  theme(
+    text = element_text(size = 18),  # Increase text size for table content
+    axis.title = element_text(size = 20),  # Adjust axis titles if needed
+    axis.text = element_text(size = 16)    # Adjust axis text if needed
+  )
 
 dev.off()
