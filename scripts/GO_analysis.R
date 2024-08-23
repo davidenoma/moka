@@ -50,6 +50,13 @@ p <- gostplot(
   interactive = FALSE,
   capped = FALSE
 )
+
+p <- p + theme(
+  text = element_text(size = 20),  # Adjust font size for all text
+  axis.title = element_text(size = 20),  # Font size for axis titles
+  axis.text = element_text(size = 16)  # Font size for axis labels
+)
+
 # Sort gostres$result dataframe by p_value column from lowest to highest
 sorted_gostres <- gost_res$result[order(gost_res$result$p_value), ]
 
