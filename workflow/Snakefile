@@ -6,7 +6,7 @@ from snakemake.io import expand
 configfile: "config/config.yaml"
 
 
-    # Rule 3: Perform SKAT test on the genotypeD
+    # Rule 3: Perform SKAT test on the genotype
 rule skat_test:
     input:
         merged_weights=config["weights_file"],
@@ -17,7 +17,7 @@ rule skat_test:
         weights_source = config["weights_type"],
         genotype_path=config["genotype_file_path"],
         plink_path=config["plink_path"],
-        threads=22
+    threads: 22
     log:
         stdout="logs/wkas.stdout",
         stderr="logs/wkas.stderr"
@@ -26,7 +26,7 @@ rule skat_test:
     shell:
         """
         export PATH=$PATH:{params.plink_path}
-        seq 1 22 | parallel -j $(nproc) --verbose Rscript scripts/skat.R {params.genotype} {input.gene_regions} {input.merged_weights} {params.genotype_path} {params.weights_source} {{}}
+        seq 1 22 | parallel -j {threads} --verbose Rscript scripts/skat.R {params.genotype} {input.gene_regions} {input.merged_weights} {params.genotype_path} {params.weights_source} {{}}
         """
 # # Rule 4: Merge SKAT Chromosome Results into zone
 rule merge_skat_results:
