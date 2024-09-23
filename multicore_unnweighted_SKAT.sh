@@ -12,7 +12,7 @@ base_dir=$2
 genotype_folder=$3
 
 # Create output directory if it doesn't exist
-output_dir="output_association"
+output_dir="${base_dir}/output_association"
 mkdir -p $output_dir
 
 # Get the number of available cores
@@ -27,12 +27,14 @@ seq 1 22 | parallel -j $num_cores --verbose Rscript ${base_dir}/scripts/skat_unw
 # Confirm that all jobs are complete
 echo "All parallel jobs are complete. Proceeding to merge results."
 
-# Merge all results into a single file
-echo -e "Gene_name\tGene_chromosome\tRegion_start\tRegion_end\tQ_test\tpvalue" > "${genotype_prefix}_assoc_test.tsv"
+# Merge all results into a single file inside the output directory
+merged_output="${output_dir}/${genotype_prefix}_assoc_test.tsv"
+echo -e "Gene_name\tGene_chromosome\tRegion_start\tRegion_end\tQ_test\tpvalue" > "$merged_output"
+
 for file in "${output_dir}/${genotype_prefix}"*; do
-  if [ "$file" != "${genotype_prefix}_assoc_test.tsv" ]; then
-    tail -n +2 "$file" >> "${genotype_prefix}_assoc_test.tsv"
+  if [ "$file" != "$merged_output" ]; then
+    tail -n +2 "$file" >> "$merged_output"
   fi
 done
 
-echo "Merging complete."
+echo "Merging complete. Results saved to $merged_output."
