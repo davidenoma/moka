@@ -21,7 +21,7 @@ num_cores=$(nproc)
 echo "Using $num_cores cores for parallel processing."
 
 # Run Rscript in parallel for chromosomes 1 to 22
-seq 1 22 | parallel -j $num_cores Rscript ${base_dir}/scripts/skat_unweighted.R $genotype_prefix ${base_dir}/helper/gene_regions.csv ./ {} $output_dir/
+seq 1 22 | parallel -j $num_cores --verbose Rscript ${base_dir}/scripts/skat_unweighted.R $genotype_prefix ${base_dir}/helper/gene_regions.csv ./ {} $output_dir/
 
 # Merge all results into a single file
 echo -e "Gene_name\tGene_chromosome\tRegion_start\tRegion_end\tQ_test\tpvalue" > "${genotype_prefix}_assoc_test.tsv"
