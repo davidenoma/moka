@@ -25,9 +25,7 @@ rule skat_test:
     shell:
         """
         export PATH=$PATH:{params.plink_path}
-        for chr in {{1..22}}; do
-        Rscript scripts/skat.R {params.genotype} {input.gene_regions} {input.merged_weights} {params.genotype_path} {params.weights_source} $chr
-        done
+        seq 1 22 | parallel Rscript scripts/skat.R {params.genotype} {input.gene_regions} {input.merged_weights} {params.genotype_path} {params.weights_source} {}
         """
 # # Rule 4: Merge SKAT Chromosome Results into zone
 rule merge_skat_results:
