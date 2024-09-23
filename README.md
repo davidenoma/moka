@@ -26,12 +26,13 @@ To run the BAS pipeline:
 ### Rule: association_test
 - **Input:** Preprocessed data and weight files.
 - **Output:** Results of association tests.
-
+```bash
 snakemake --cores <num_cores>
-
+```
 If you have all the dependencies with R configured on conda, utilize with:
-
-**snakemake --cores <num_cores> --use-conda**
+```bash
+snakemake --cores <num_cores> --use-conda
+```
 
 ### Rule: merge_results
 - **Input:** Individual association test results.
@@ -110,6 +111,12 @@ BiocManager::install(c( "gprofiler2", "pathfindR","manhattan"))
 ### Other
 
 - **PLINK:** PLINK is a widely used software toolset for genome-wide association studies (GWAS) and analysis of DNA sequencing data.
+- **Parallel:** Linux Parallel GNU : https://www.gnu.org/software/parallel/
+```bash
+apt intall parallel
+brew install paallel 
+```
+### Input file format
 - **Data Files:** Plink genotyped Bim, Bed & Fam files, bridge weights file (format is specified), gene regions file, DisGeNET reference file 
 
 
