@@ -26,7 +26,7 @@ rule skat_test:
     shell:
         """
         export PATH=$PATH:{params.plink_path}
-        seq 1 22 | parallel -j ${snakemake[threads]} --verbose Rscript scripts/skat.R {params.genotype} {input.gene_regions} {input.merged_weights} {params.genotype_path} {params.weights_source} {}
+        seq 1 22 | parallel -j ${threads} --verbose Rscript scripts/skat.R {params.genotype} {input.gene_regions} {input.merged_weights} {params.genotype_path} {params.weights_source} {}
         """
 # # Rule 4: Merge SKAT Chromosome Results into zone
 rule merge_skat_results:
