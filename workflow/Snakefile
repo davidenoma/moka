@@ -25,7 +25,6 @@ rule skat_test:
         "envs/skat.yaml"
     shell:
         """
-        num_cores=$(nproc)
         export PATH=$PATH:{params.plink_path}
         seq 1 22 | parallel -j ${snakemake[threads]} --verbose Rscript scripts/skat.R {params.genotype} {input.gene_regions} {input.merged_weights} {params.genotype_path} {params.weights_source} {}
         """
