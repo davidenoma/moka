@@ -101,7 +101,7 @@ snakemake --cores all -R --until kegg_pathway_analysis
 - **gprofiler2:** R package for gene set enrichment analysis (GO analysis).
 - **pathfindR:** R package for pathway analysis, including KEGG pathway analysis.
 ```R
-install.packages("BiocManager")
+install.packages("BiocManager","SKAT")
 
 install.packages(c("manhattan", "parallel", "qqman", "ggplot2"))
 
