@@ -30,12 +30,6 @@ gene_data$adjusted_pvalue <- p.adjust(gene_data$pvalue, method = "fdr")
 gene_and_p_values <- subset(gene_data, adjusted_pvalue < pvalue_threshold)
 gene_and_p_values <- gene_and_p_values[, c("Gene_name", "adjusted_pvalue")]
 colnames(gene_and_p_values) <- c("GENE", "p_value")
-
-# Save the adjusted p-values to a new file
-output_file <- paste0("output_plots/adjusted_", gsub("\\..*$", "", basename(file_path)), ".csv")
-write.csv(gene_and_p_values, output_file, row.names = FALSE)
-cat("Adjusted p-values saved to:", output_file, "\n")
-
 # Specify the PNG file for the GO pathway plot
 GO_png_file_path <- paste0("output_plots/GO_", gsub("\\..*$", "", basename(file_path)), ".png")
 
