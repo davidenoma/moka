@@ -23,7 +23,7 @@ gene_data <- read.table(
   col.names = c("Gene_name", "Gene_chromosome", "Region_start", "Region_end", "Q_test", "pvalue")
 )
 # Adjust p-values using the Benjamini-Hochberg method
-gene_data$adjusted_pvalue <- p.adjust(gene_data$pvalue, method = "fdr")
+gene_data$adjusted_pvalue <- p.adjust(gene_data$pvalue, method = "fdr",n=length(gene_data$pvalue))
 
 # Filter data based on the p-value threshold
 gene_and_p_values <- subset(gene_data, adjusted_pvalue < pvalue_threshold)
