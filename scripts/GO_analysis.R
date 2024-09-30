@@ -23,13 +23,11 @@ gene_data <- read.table(
   col.names = c("Gene_name", "Gene_chromosome", "Region_start", "Region_end", "Q_test", "pvalue")
 )
 
-# Adjust p-values using the Benjamini-Hochberg method
-gene_data$adjusted_pvalue <- p.adjust(gene_data$pvalue, method = "fdr")
-
-# Filter data based on the adjusted p-value threshold
-gene_and_p_values <- subset(gene_data, adjusted_pvalue < pvalue_threshold)
-gene_and_p_values <- gene_and_p_values[, c("Gene_name", "adjusted_pvalue")]
+# Filter data based on the p-value threshold
+gene_and_p_values <- subset(gene_data, pvalue < pvalue_threshold)
+gene_and_p_values <- gene_and_p_values[, c("Gene_name", "pvalue")]
 colnames(gene_and_p_values) <- c("GENE", "p_value")
+
 # Specify the PNG file for the GO pathway plot
 GO_png_file_path <- paste0("output_plots/GO_", gsub("\\..*$", "", basename(file_path)), ".png")
 
