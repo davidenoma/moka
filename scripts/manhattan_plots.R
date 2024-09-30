@@ -55,9 +55,12 @@ args <- commandArgs(trailingOnly = TRUE)
 
 # Check if there are arguments passed
 if (length(args) == 0) {
-  cat("Usage: Rscript script_name.R <file_path>\n")
+  cat("Usage: Rscript script_name.R <file_path> \n")
   quit(status = 1)
 }
+
+# Assign values to arguments
+file_path <- args[1]
 
 gene_data <- read.table(
   file_path,
