@@ -55,14 +55,10 @@ args <- commandArgs(trailingOnly = TRUE)
 
 # Check if there are arguments passed
 if (length(args) == 0) {
-  cat("Usage: Rscript script_name.R <file_path> <pvalue_threshold>\n")
+  cat("Usage: Rscript script_name.R <file_path>\n")
   quit(status = 1)
 }
 
-# Assign values to arguments
-file_path <- args[1]
-pvalue_threshold <- as.numeric(args[2])
-cat("P-value threshold:",pvalue_threshold)
 gene_data <- read.table(
   file_path,
   sep = "\t",  # Specify tab as the separator
