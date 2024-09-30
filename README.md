@@ -43,9 +43,6 @@ snakemake --cores all -R --until merge_skat_results
 ```
 
 
-### Rule: unweighted skat
-- **Input:** Genotype
-- **Output:** Unweighted association mapping
 
 
 ### Rule: annotate_results
@@ -80,7 +77,13 @@ snakemake --cores all -R --until go_analysis
 ```bash
 snakemake --cores all -R --until kegg_pathway_analysis
 ```
+### Rule: unweighted skat
+- **Input:** Genotype
+- **Output:** Unweighted association mapping, folder: output_association/
+```bash
+bash  <genotype_prefix> <bas_pipeline_directory> genotype_data/"
 
+```
 ## Dependencies
 
 ### Software
@@ -100,12 +103,11 @@ snakemake --cores all -R --until kegg_pathway_analysis
 - **GGPLOT:** R package for creating highly customizable plots and graphics.
 - **gprofiler2:** R package for gene set enrichment analysis (GO analysis).
 - **pathfindR:** R package for pathway analysis, including KEGG pathway analysis.
+
 ```R
-install.packages("BiocManager","SKAT")
+install.packages("BiocManager","SKAT","ggplot2")
 
-install.packages(c("manhattan", "parallel", "qqman", "ggplot2"))
-
-BiocManager::install(c( "gprofiler2", "pathfindR","manhattan"))
+BiocManager::install(c( "gprofiler2", "pathfindR","manhattan","qqman"))
 ```
 
 ### Other
@@ -113,8 +115,8 @@ BiocManager::install(c( "gprofiler2", "pathfindR","manhattan"))
 - **PLINK:** PLINK is a widely used software toolset for genome-wide association studies (GWAS) and analysis of DNA sequencing data.
 - **Parallel:** Linux Parallel GNU : https://www.gnu.org/software/parallel/
 ```bash
-apt intall parallel
-brew install paallel 
+apt install parallel
+brew install parallel 
 ```
 ### Input file format
 - **Data Files:** Plink genotyped Bim, Bed & Fam files, bridge weights file (format is specified), gene regions file, DisGeNET reference file 
@@ -127,7 +129,6 @@ brew install paallel
 - **weight_file:** Path to weight files used for association tests.
 - **disgenet_reference_file:** Disease database specific weights from https://disgenet.org [For gene disease associations only!]
 - **Plink:** Path to plink installation
-- **sample size:** Sample size of GWAS Cohort
   
 ## 📖 Additional Information
 For more information on the BAS pipeline and its usage, refer to the documentation provided in the repository or contact the project maintainers.
