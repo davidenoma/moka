@@ -23,10 +23,20 @@ gene_data <- read.table(
   col.names = c("Gene_name", "Gene_chromosome", "Region_start", "Region_end", "Q_test", "pvalue")
 )
 
+# Adjust p-values using the Benjamini-Hochberg method
+gene_data$adjusted_pvalue <- p.adjust(gene_data$pvalue, method = "fdr",n=length(gene_data$pvalue))
+
 # Filter data based on the p-value threshold
-gene_and_p_values <- subset(gene_data, pvalue < pvalue_threshold)
-gene_and_p_values <- gene_and_p_values[, c("Gene_name", "pvalue")]
+gene_and_p_values <- subset(gene_data, adjusted_pvalue < pvalue_threshold)
+gene_and_p_values <- gene_and_p_values[, c("Gene_name", "adjusted_pvalue")]
 colnames(gene_and_p_values) <- c("GENE", "p_value")
+
+
+if (nrow(gene_and_p_values) == 0) {
+  cat("No genes passed the p-value threshold after adjustment. Exiting.\n")
+  quit(status = 0)
+}
+
 
 # Run pathfindR with the filtered data
 enrichment_res <- run_pathfindR(gene_and_p_values)
