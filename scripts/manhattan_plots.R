@@ -1,6 +1,6 @@
-# Load the necessary libraries
-library(ggplot2)
-library(qqman)
+# # Load the necessary libraries
+# library(ggplot2)
+# library(qqman)
 
 
 # create_manhattan_plot <- function(data, threshold) {
@@ -50,6 +50,10 @@ library(qqman)
 # genes <- read.csv("/Users/davidenoma/Desktop/genes_test.txt",header = FALSE,sep="\t",col.names = )
 
 
+# Load the necessary libraries
+library(ggplot2)
+library(qqman)
+
 # Process command-line arguments
 args <- commandArgs(trailingOnly = TRUE)
 
@@ -62,31 +66,44 @@ if (length(args) == 0) {
 # Assign values to arguments
 file_path <- args[1]
 
+# Read the gene data from the tab-delimited file
 gene_data <- read.table(
   file_path,
   sep = "\t",  # Specify tab as the separator
   header = TRUE,  # Use the first row as column names
   col.names = c("Gene_name", "Gene_chromosome", "Region_start", "Region_end", "Q_test", "pvalue")
 )
-# Calculate the p-value threshold
+
+# Calculate the p-value threshold using Bonferroni correction
 num_rows <- nrow(gene_data)
 pvalue_threshold <- 0.05 / num_rows
 cat("P-value threshold:", pvalue_threshold, "\n")
 
+# Prepare data for the Manhattan plot
 selected_gene_data <- gene_data[, c("Gene_name", "Gene_chromosome", "Region_start", "pvalue")]
 colnames(selected_gene_data) <- c("SNP", "CHR", "BP", "P")
 
 # Save the Manhattan plot
 file_name <- basename(file_path)  # Extract file name without extension
 png_file_path <- paste0("output_plots/manhattan_", gsub("\\..*$", "", file_name), ".png")  # Construct PNG file path
-png(filename = png_file_path, width = 2940, height = 1782, units = "px", pointsize = 22,res = 150)
-# png(filename = png_file_path, width = 2000, height = 1600, units = "px", pointsize = 16)
-# Call the function to create Manhattan plot
-manhattan(selected_gene_data, chr = "CHR", bp = "BP", snp = "SNP",
-          p = "P", col = c("grey", "skyblue", "pink"),
-          annotatePval = pvalue_threshold, annotateTop = FALSE,
-          genomewideline = -log10(pvalue_threshold), suggestiveline = FALSE,
-          logp = TRUE)
+
+# Create the Manhattan plot
+png(filename = png_file_path, width = 2940, height = 1782, units = "px", pointsize = 22, res = 150)
+manhattan(
+  selected_gene_data,
+  chr = "CHR",
+  bp = "BP",
+  snp = "SNP",
+  p = "P",
+  col = c("grey", "skyblue", "pink"),
+  annotatePval = pvalue_threshold,
+  annotateTop = FALSE,
+  genomewideline = -log10(pvalue_threshold),
+  suggestiveline = FALSE,
+  logp = TRUE
+)
 
 # Close the PNG device
 dev.off()
+cat("Manhattan plot saved to:", png_file_path, "\n")
+
