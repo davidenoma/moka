@@ -30,6 +30,12 @@ gene_and_p_values <- subset(gene_data, adjusted_pvalue < pvalue_threshold)
 gene_and_p_values <- gene_and_p_values[, c("Gene_name", "adjusted_pvalue")]
 colnames(gene_and_p_values) <- c("GENE", "p_value")
 
+
+if (nrow(gene_and_p_values) == 0) {
+  cat("No genes passed the p-value threshold after adjustment. Exiting.\n")
+  quit(status = 0)
+}
+
 # Specify the PNG file for the GO pathway plot
 GO_png_file_path <- paste0("output_plots/GO_", gsub("\\..*$", "", basename(file_path)), ".png")
 
