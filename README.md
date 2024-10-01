@@ -17,7 +17,7 @@ To run the BAS pipeline:
      mamba activate snakemake
      snakemake --help
      ```
-2. Install R dependencies 
+2. Install R dependencies and Rscript
 3. Configure the pipeline parameters in the `config.yaml` file.
 3. Execute the pipeline using the command:
 
@@ -29,10 +29,13 @@ To run the BAS pipeline:
 ```bash
 snakemake --cores <num_cores>
 ```
-   If you have all the dependencies with R configured on conda, utilize with:
+
+   If you do not have all the dependencies with R you can get it configured on conda, utilize with:
+
    ```bash
    snakemake --cores <num_cores> --use-conda
    ```
+However, some R packages are not available to best to be installed R package manager.
 
 ### Rule: merge_results
 - **Input:** Individual association test results.
