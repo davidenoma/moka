@@ -47,7 +47,7 @@ snakemake --cores all -R --until merge_skat_results
 
 ### Rule: annotate_results
 - **Input:** Merged association test results.
-- **Output:** Annotated association test results.
+- **Output:** Annotated association test results with DisGeNet database
 
 ```bash
 snakemake --cores all -R --until disgenet_annotation_005
@@ -55,7 +55,7 @@ snakemake --cores all -R --until disgenet_annotation_005
 
 ### Rule: visualize_results
 - **Input:** Merged association test results.
-- **Output:** Visual representations of association test results.
+- **Output:** Manhattan plots with visual representations of association test results.
 
 ```bash
 snakemake --cores all -R --until manhattan_plots
@@ -105,7 +105,6 @@ bash  <genotype_prefix> <bas_pipeline_directory> genotype_data/"
 
 ```R
 install.packages("BiocManager","SKAT","ggplot2")
-
 BiocManager::install(c( "gprofiler2", "pathfindR","manhattan","qqman"))
 ```
 
@@ -118,7 +117,7 @@ apt install parallel
 brew install parallel 
 ```
 ### Input file format
-- **Data Files:** Plink genotyped Bim, Bed & Fam files, bridge weights file (format is specified), gene regions file, DisGeNET reference file 
+- **Data Files:** Plink genotyped Bim, Bed & Fam files, bridge weights file (format is specified), gene regions file, DisGeNET gene disease daatabse reference file 
 
 
 ## 📋 Configuration
