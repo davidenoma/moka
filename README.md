@@ -29,10 +29,10 @@ To run the BAS pipeline:
 ```bash
 snakemake --cores <num_cores>
 ```
-If you have all the dependencies with R configured on conda, utilize with:
-```bash
-snakemake --cores <num_cores> --use-conda
-```
+   If you have all the dependencies with R configured on conda, utilize with:
+   ```bash
+   snakemake --cores <num_cores> --use-conda
+   ```
 
 ### Rule: merge_results
 - **Input:** Individual association test results.
@@ -41,8 +41,6 @@ snakemake --cores <num_cores> --use-conda
 ```bash
 snakemake --cores all -R --until merge_skat_results
 ```
-
-
 
 
 ### Rule: annotate_results
