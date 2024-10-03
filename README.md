@@ -105,7 +105,7 @@ bash  <genotype_prefix> <bas_pipeline_directory> genotype_data/"
 - **pathfindR:** R package for pathway analysis, including KEGG pathway analysis.
 
 ```R
-install.packages("BiocManager","SKAT","ggplot2")
+install.packages(c("BiocManager","SKAT","ggplot2"))
 BiocManager::install(c( "gprofiler2", "pathfindR","manhattan","qqman"))
 ```
 
