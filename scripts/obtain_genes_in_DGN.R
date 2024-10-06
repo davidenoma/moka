@@ -8,7 +8,7 @@ get_gene_from_SKAT <- function(skat_results_path, pvalue_threshold) {
   gene_result <- read.csv(skat_results_path, sep = "\t")
 
   # Apply the Benjamini-Hochberg correction
-  gene_result$adjusted_pvalue <- as.numeric(p.adjust(gene_result$pvalue, method = "fdr",,n=length(gene_result$pvalue)))
+  gene_result$adjusted_pvalue <- as.numeric(p.adjust(gene_result$pvalue, method = "fdr",n=length(gene_result$pvalue)))
   # gene_result$pvalue = as.numeric(adjusted_p_values)
   # Subset genes based on the adjusted p-value threshold
   gene_result <- subset(gene_result, adjusted_pvalue < pvalue_threshold)
