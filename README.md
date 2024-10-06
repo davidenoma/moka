@@ -17,7 +17,7 @@ To run the BAS pipeline:
      mamba activate snakemake
      snakemake --help
      ```
-2. Install R dependencies 
+2. Install R dependencies and Rscript
 3. Configure the pipeline parameters in the `config.yaml` file.
 3. Execute the pipeline using the command:
 
@@ -29,10 +29,13 @@ To run the BAS pipeline:
 ```bash
 snakemake --cores <num_cores>
 ```
-If you have all the dependencies with R configured on conda, utilize with:
-```bash
-snakemake --cores <num_cores> --use-conda
-```
+
+   If you do not have all the dependencies with R you can get it configured on conda, utilize with:
+
+   ```bash
+   snakemake --cores <num_cores> --use-conda
+   ```
+However, some R packages are not available to best to be installed R package manager.
 
 ### Rule: merge_results
 - **Input:** Individual association test results.
@@ -43,20 +46,17 @@ snakemake --cores all -R --until merge_skat_results
 ```
 
 
-
-
 ### Rule: annotate_results
 - **Input:** Merged association test results.
-- **Output:** Annotated association test results.
+- **Output:** Annotated association test results with DisGeNet database
 
 ```bash
-snakemake --cores all -R --until disgenet_annotation_001
 snakemake --cores all -R --until disgenet_annotation_005
 ```
 
 ### Rule: visualize_results
 - **Input:** Merged association test results.
-- **Output:** Visual representations of association test results.
+- **Output:** Manhattan plots with visual representations of association test results.
 
 ```bash
 snakemake --cores all -R --until manhattan_plots
@@ -105,8 +105,7 @@ bash  <genotype_prefix> <bas_pipeline_directory> genotype_data/"
 - **pathfindR:** R package for pathway analysis, including KEGG pathway analysis.
 
 ```R
-install.packages("BiocManager","SKAT","ggplot2")
-
+install.packages(c("BiocManager","SKAT","ggplot2"))
 BiocManager::install(c( "gprofiler2", "pathfindR","manhattan","qqman"))
 ```
 
@@ -119,7 +118,7 @@ apt install parallel
 brew install parallel 
 ```
 ### Input file format
-- **Data Files:** Plink genotyped Bim, Bed & Fam files, bridge weights file (format is specified), gene regions file, DisGeNET reference file 
+- **Data Files:** Plink genotyped Bim, Bed & Fam files, bridge weights file (format is specified), gene regions file, DisGeNET gene disease daatabse reference file 
 
 
 ## 📋 Configuration
