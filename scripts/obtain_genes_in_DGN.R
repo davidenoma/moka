@@ -67,7 +67,7 @@ validation_ratio_diff <- length(diff_genes) / length(genes)
 
 # Prepare output text
 output_text <- paste0("P-value threshold (adjusted): ", pvalue_threshold, "\n",
-                      "Number of genes in SKAT results: ", length(genes), "\n",
+                      "Number of significant genes in FDR SKAT results: ", length(genes), "\n",
                       "Number of common genes in Disgenet: ", length(common_genes_dgn), "\n",
                       "Number of significant genes not in Disgenet: ", length(diff_genes), "\n",
                       "Validation ratio as Number of genes in DGN/Number of significant genes: ", validation_ratio_dgn, "\n",
