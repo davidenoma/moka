@@ -1,12 +1,7 @@
-# Load necessary libraries
-if (!requireNamespace("stats", quietly = TRUE)) {
-  install.packages("stats")
-}
 
 # Obtain the gene names from SKAT results with Benjamini-Hochberg correction
 get_gene_from_SKAT <- function(skat_results_path, pvalue_threshold) {
   gene_result <- read.csv(skat_results_path, sep = "\t")
-
   # Apply the Benjamini-Hochberg correction
   gene_result$adjusted_pvalue <- as.numeric(p.adjust(gene_result$pvalue, method = "fdr")
   # gene_result$pvalue = as.numeric(adjusted_p_values)
