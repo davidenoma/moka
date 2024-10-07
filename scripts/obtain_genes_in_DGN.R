@@ -1,4 +1,7 @@
-
+# Load necessary libraries
+if (!requireNamespace("stats", quietly = TRUE)) {
+  install.packages("stats")
+}
 
 # Obtain the gene names from SKAT results with Benjamini-Hochberg correction
 get_gene_from_SKAT <- function(skat_results_path, pvalue_threshold) {
