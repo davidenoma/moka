@@ -134,11 +134,11 @@ rule unweighted_skat:
         stdout="logs/unweighted_skat.stdout",
         stderr="logs/unweighted_skat.stderr"
     conda:
-        "envs/unweighted_skat.yaml"
+        "envs/skat.yaml"
     shell:
         """
         mkdir -p {params.output_dir}
-        seq 1 22 | parallel -j {threads} --verbose Rscript scripts/skat_unweighted.R {params.genotype_prefix} {input.gene_regions} {input.genotype_file} {params.output_dir} {}
+        seq 1 22 | parallel -j {threads} --verbose Rscript scripts/skat_unweighted.R {params.genotype_prefix} {input.gene_regions} {input.genotype_file} {params.output_dir} {{}}
         """
 
 # Rule: merge_unweighted_results
