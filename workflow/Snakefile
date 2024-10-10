@@ -121,5 +121,60 @@ rule go_analysis:
         Rscript scripts/GO_analysis.R {input.merged_skat_results} {params.pval_thresh}
         """
 
+# Rule: unweighted_skat
+rule unweighted_skat:
+    input:
+        genotype_file=config["genotype_file_path"],
+        gene_regions="helper/gene_regions.csv"
+    params:
+        genotype_prefix=config["genotype_prefix"],
+        output_dir="result_folder/unweighted/"
+    threads: 22
+    log:
+        stdout="logs/unweighted_skat.stdout",
+        stderr="logs/unweighted_skat.stderr"
+    conda:
+        "envs/unweighted_skat.yaml"
+    shell:
+        """
+        mkdir -p {params.output_dir}
+        seq 1 22 | parallel -j {threads} --verbose Rscript scripts/skat_unweighted.R {params.genotype_prefix} {input.gene_regions} {input.genotype_file} {params.output_dir} {}
+        """
+
+# Rule: merge_unweighted_results
+rule merge_unweighted_results:
+    input:
+        unweighted_skat_results=expand("result_folder/unweighted/{prefix}_unweighted_assoc_test_chr_{i}.tsv", i=range(1, 23), prefix=config["genotype_prefix"])
+    params:
+        merged_unweighted_results=expand("result_folder/merged_{prefix}_unweighted_SKAT.txt", prefix=config["genotype_prefix"])
+    log:
+        stdout="logs/merge_unweighted.stdout",
+        stderr="logs/merge_unweighted.stderr"
+    shell:
+        """
+        if [ -f "{params.merged_unweighted_results}" ]; then
+            rm "{params.merged_unweighted_results}"
+        fi
+        echo -e 'Gene_name\tGene_chromosome\tRegion_start\tRegion_end\tQ_test\tpvalue' > {params.merged_unweighted_results} && \
+        for file in {input.unweighted_skat_results}; do \
+            tail -n +2 "$file" >> {params.merged_unweighted_results}; \
+        done
+        """
+
+# Rule: unweighted_disgenet_annotation_005
+rule unweighted_disgenet_annotation_005:
+    input:
+        merged_unweighted_results=expand("result_folder/merged_{prefix}_unweighted_SKAT.txt", prefix=config["genotype_prefix"])
+    params:
+        gene_annotation=config["disgenet_reference_file"]
+    log:
+        stdout="logs/unweighted_disgenet_0.05.stdout",
+        stderr="logs/unweighted_disgenet_0.05.stderr"
+    conda:
+        "envs/disgenet.yaml"
+    shell:
+        """
+        Rscript scripts/obtain_genes_in_DGN.R {input.merged_unweighted_results} {params.gene_annotation} 0.05
+        """
 
 

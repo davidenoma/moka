@@ -3,5 +3,5 @@
   <component name="Black">
     <option name="sdkName" value="snakemake" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="snakemake" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="/opt/homebrew/Caskroom/miniconda/base" project-jdk-type="Python SDK" />
 </project>

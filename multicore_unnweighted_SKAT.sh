@@ -12,7 +12,7 @@ base_dir=$2
 genotype_folder=$3
 
 # Create output directory if it doesn't exist
-output_dir="${base_dir}/output_association"
+output_dir="${base_dir}/result_folder/unweighted"
 mkdir -p $output_dir
 
 # Get the number of available cores
