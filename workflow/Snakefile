@@ -124,11 +124,12 @@ rule go_analysis:
 # Rule: unweighted_skat
 rule unweighted_skat:
     input:
-        genotype_file=config["genotype_file_path"],
         gene_regions="helper/gene_regions.csv"
     params:
         genotype_prefix=config["genotype_prefix"],
-        output_dir="result_folder/unweighted/"
+        genotype_path=config["genotype_file_path"],
+        output_dir="result_folder/unweighted/",
+        plink_path=config["plink_path"],
     threads: 22
     log:
         stdout="logs/unweighted_skat.stdout",
@@ -137,8 +138,9 @@ rule unweighted_skat:
         "envs/skat.yaml"
     shell:
         """
+        export PATH=$PATH:{params.plink_path}
         mkdir -p {params.output_dir}
-        seq 1 22 | parallel -j {threads} --verbose Rscript scripts/skat_unweighted.R {params.genotype_prefix} {input.gene_regions} {input.genotype_file} {params.output_dir} {{}}
+        seq 1 22 | parallel -j {threads} --verbose Rscript scripts/skat_unweighted.R {params.genotype_prefix} {input.gene_regions} {params.genotype_path} {params.output_dir} {{}}
         """
 
 # Rule: merge_unweighted_results
