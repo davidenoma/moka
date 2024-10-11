@@ -32,14 +32,15 @@ perform_skat_test <- function(gene_name, gene_chromosome, region_start, region_e
     genotype_fam <- paste0(genotype_prefix, ".fam")
     FAM <- Read_Plink_FAM(genotype_fam, Is.binary = TRUE) 
     y <- FAM$Phenotype
+    
     obj <- SKAT_Null_Model(y ~ 1, out_type = "D")
     genotype_ssd <- paste0(genotype_prefix, ".ssd")
     SSD.INFO <- Open_SSD(genotype_ssd, paste0(genotype_prefix, ".info"))
     id <- 1
     # Z <- Get_Genotypes_SSD(SSD.INFO, id)
-    
+    SetID <- SSD.INFO$SetInfo$SetID[id]
     # Use 'gene_snps' as the subset of SNPs for SKAT test
-    skat_test <- SKAT.SSD.OneSet(SSD.INFO,id=paste0(genotype_prefix,".setid"),obj, kernel = "linear.weighted", obj.SNPWeight=NULL)
+    skat_test <- SKAT.SSD.OneSet(SSD.INFO,SetID,obj, kernel = "linear.weighted", obj.SNPWeight=NULL)
     
     # Append SKAT test results to result file
     ss2 <- c(gene_name, gene_chromosome, region_start, region_end, toString(skat_test$Q), toString(skat_test$p.value))
