@@ -146,7 +146,7 @@ rule unweighted_skat:
 # Rule: merge_unweighted_results
 rule merge_unweighted_results:
     input:
-        unweighted_skat_results=expand("result_folder/unweighted/{prefix}_{i}_result_chr_{i}.tsv", i=range(1, 23), prefix=config["genotype_prefix"])
+        unweighted_skat_results=expand("result_folder/unweighted/{prefix}_{i}_result_chr_{i}.txt", i=range(1, 23), prefix=config["genotype_prefix"])
     params:
         merged_unweighted_results=expand("result_folder/merged_{prefix}_unweighted_SKAT.txt", prefix=config["genotype_prefix"])
     log:
