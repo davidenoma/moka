@@ -36,10 +36,10 @@ perform_skat_test <- function(gene_name, gene_chromosome, region_start, region_e
     genotype_ssd <- paste0(genotype_prefix, ".ssd")
     SSD.INFO <- Open_SSD(genotype_ssd, paste0(genotype_prefix, ".info"))
     id <- 1
-    Z <- Get_Genotypes_SSD(SSD.INFO, id)
+    # Z <- Get_Genotypes_SSD(SSD.INFO, id)
     
     # Use 'gene_snps' as the subset of SNPs for SKAT test
-    skat_test <- SKAT.SSD.OneSet(Z, obj, kernel = "linear.weighted", obj.SNPWeight=NULL)
+    skat_test <- SKAT.SSD.OneSet(SSD.INFO,id,obj, kernel = "linear.weighted", obj.SNPWeight=NULL)
     
     # Append SKAT test results to result file
     ss2 <- c(gene_name, gene_chromosome, region_start, region_end, toString(skat_test$Q), toString(skat_test$p.value))
