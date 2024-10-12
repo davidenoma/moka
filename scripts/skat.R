@@ -38,21 +38,27 @@ perform_skat_test <- function(gene_name, gene_chromosome, region_start, region_e
     SSD.INFO <- Open_SSD(genotype_ssd, paste0(genotype_prefix, ".info"))
     
     id <- 1
-    Z <- Get_Genotypes_SSD(SSD.INFO, id)
-    
-    obj.SNPWeight <- Read_SNP_WeightFile()
-    SKAT.SSD.All()
+    # Z <- Get_Genotypes_SSD(SSD.INFO, id)
+    # 
+    # obj.SNPWeight <- Read_SNP_WeightFile()
+    # SKAT.SSD.All()
+    SetID <- SSD.INFO$SetInfo$SetID[id]
     # Use 'gene_snps' as the subset of SNPs for SKAT test
-    skat_test <- SKAT.SSD.OneSet(Z, obj, kernel = "linear.weighted", weights = gene_snps$Weight)
+    skat_test <- SKAT.SSD.OneSet(SSD.INFO, SetID, obj,kernel = "linear.weighted", weights = gene_snps$Weight)
 
     # Append SKAT test results to result file
     ss2 <- c(gene_name, gene_chromosome, region_start, region_end, toString(skat_test$Q), toString(skat_test$p.value))
     write(ss2, file = result_file, append = TRUE, ncol = 6, sep = '\t')
-
-
-    # Clean up temporary files
-    file.remove(paste0(genotype_prefix, "_SKAT.bed"), paste0(genotype_prefix, "_SKAT.bim"), paste0(genotype_prefix, "_SKAT.fam"), paste0(genotype_prefix, ".setid"), paste0(genotype_prefix, ".ssd"), paste0(genotype_prefix, ".info"))
-
+    file.remove(paste0(genotype_prefix, "_SKAT.bed"))
+    file.remove (paste0(genotype_prefix, "_SKAT.bim"))
+    file.remove(paste0(genotype_prefix, "_SKAT.fam"))
+    file.remove(paste0(genotype_prefix, "_SKAT.log"))
+    file.remove ( paste0(genotype_prefix, ".setid"))
+    file.remove(paste0(genotype_prefix, ".ssd"))
+    file.remove(paste0(genotype_prefix, ".info"))
+    file.remove (paste0(genotype_prefix, ".ssd_LOG.txt"))
+    file.remove (paste0(genotype_prefix, ".info.TEMP.txt"))
+    
     }, error = function(e) {
     cat("Error in SKAT analysis for gene:", gene_name, "\n")
     cat("Error message:", e$message, "\n")
@@ -102,6 +108,11 @@ extract_weights_for_snvs_and_skat_chr <- function(genotype_prefix, gene_regions_
       print("Not found for gene region")
     }
   }
+  #Inlcude the code to remove the chromosome created for each genotype 
+  
+  # Clean up temporary files
+
+  
   print(paste("Done with SKAT analysis for chromosome", chr))
 }
 
@@ -122,31 +133,66 @@ prepare_SKAT_files_per_chr <- function(genotype_path, genotype_prefix)  {
 
 remove_SKAT_files_per_chr <- function(genotype_path, genotype_prefix)  {
   old_file_name_bed <- paste0(genotype_path,genotype_prefix,".bed")
-  new_file_name_bed <- paste0(genotype_path,genotype_prefix,"_",chr,".bed")
-  system(paste("rm ",old_file_name_bed,new_file_name_bed))
+  # new_file_name_bed <- paste0(genotype_path,genotype_prefix,"_","SKAT",".bed")
+  system(paste("rm ",old_file_name_bed))
 
   old_file_name_bim <- paste0(genotype_path,genotype_prefix,".bim")
-  new_file_name_bim <- paste0(genotype_path,genotype_prefix,"_",chr,".bim")
-  system(paste("rm ",old_file_name_bim,new_file_name_bim))
+  # new_file_name_bim <- paste0(genotype_path,genotype_prefix,"_","SKAT",".bim")
+  system(paste("rm ",old_file_name_bim))
 
   old_file_name_fam <- paste0(genotype_path,genotype_prefix,".fam")
-  new_file_name_fam <- paste0(genotype_path,genotype_prefix,"_",chr,".fam")
-  system(paste("rm ",old_file_name_fam,new_file_name_fam))
+  # new_file_name_fam <- paste0(genotype_path,genotype_prefix,"_","SKAT",".fam")
+  system(paste("rm ",old_file_name_fam))
+  
+  # old_file_name_log <- paste0(genotype_path,genotype_prefix,".log")
+  new_file_name_log <- paste0(genotype_path,genotype_prefix,"_","SKAT",".log")
+  # file.re
+  system(paste("rm ",new_file_name_log))
+  # 
+  # old_file_name_log <- paste0(genotype_path,genotype_prefix,".info")
+  # new_file_name_log <- paste0(genotype_path,genotype_prefix,"_","SKAT",".log")
+  # system(paste("rm ",old_file_name_fam,new_file_name_fam))
 
 
 }
-
-combine_skat_results <- function(genotype_prefix, result_folder) {
+combine_skat_results <- function(genotype_prefix, result_folder,weights_type) {
   # Define the output file name
-  output_file <- paste0(genotype_prefix, "_combined_association.tsv")
-
-  # Execute shell commands to combine SKAT files
-  system(paste('echo -e "Gene_name\tGene_chromosome\tRegion_start\tRegion_end\tQ_test\tpvalue" >', file.path(result_folder, output_file)))
-  system(paste('for file in', file.path(result_folder, paste0("*", genotype_prefix, "*")), '; do if [ "$file" !=', file.path(result_folder, output_file), ']; then tail -n +2 "$file" >>', file.path(result_folder, output_file), '; fi; done'))
-
+  output_file <- file.path(result_folder, paste0(genotype_prefix, weights_type, "_combined_association.tsv"))
+  
+  # Check if the result folder exists
+  if (!dir.exists(result_folder)) {
+    stop("Result folder does not exist.")
+  }
+  
+  # Write the header to the combined results file
+  write.table(matrix(c("Gene_name", "Gene_chromosome", "Region_start", "Region_end", "Q_test", "pvalue"), nrow=1), 
+              file = output_file, quote = FALSE, row.names = FALSE, col.names = FALSE, sep = "\t")
+  
+  # Combine SKAT results files
+  result_files <- list.files(result_folder, pattern = paste0(genotype_prefix, "_", weights_type, "_result_chr_"), full.names = TRUE)
+  for (file in result_files) {
+    if (file != output_file) {
+      # Append the content of each result file, skipping the header
+      write.table(read.table(file, header = TRUE, sep = "\t"), 
+                  file = output_file, quote = FALSE, append = TRUE, row.names = FALSE, col.names = FALSE, sep = "\t")
+    }
+  }
+  
   # Optional: Print message indicating completion
-  cat("SKAT association results combined successfully.\n")
+  cat("SKAT association results combined successfully into:", output_file, "\n")
 }
+
+# combine_skat_results <- function(genotype_prefix, result_folder) {
+#   # Define the output file name
+#   output_file <- paste0(genotype_prefix, "_combined_association.tsv")
+# 
+#   # Execute shell commands to combine SKAT files
+#   system(paste('echo -e "Gene_name\tGene_chromosome\tRegion_start\tRegion_end\tQ_test\tpvalue" >', file.path(result_folder, output_file)))
+#   system(paste('for file in', file.path(result_folder, paste0("*", genotype_prefix, "*")), '; do if [ "$file" !=', file.path(result_folder, output_file), ']; then tail -n +2 "$file" >>', file.path(result_folder, output_file), '; fi; done'))
+# 
+#   # Optional: Print message indicating completion
+#   cat("SKAT association results combined successfully.\n")
+# }
 
 
 
@@ -187,7 +233,8 @@ prepare_SKAT_files_per_chr(genotype_path, genotype_prefix)
 print("done creating skat genotype")
 genotype_prefix <- paste0(genotype_prefix,"_",chr)
 extract_weights_for_snvs_and_skat_chr(genotype_prefix, gene_regions_file, weights_file, genotype_path, weights_type, result_folder, chr)
-
+# Combine the SKAT results
+# combine_skat_results(genotype_prefix, result_folder,weights_type)
 #rm skatfiles.
 
 cat("Done with SKAT analysis\n")
