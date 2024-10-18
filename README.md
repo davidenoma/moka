@@ -81,7 +81,7 @@ snakemake --cores all -R --until kegg_pathway_analysis
 - **Input:** Genotype
 - **Output:** Unweighted association mapping, folder: output_association/
 ```bash
-bash  <genotype_prefix> <bas_pipeline_directory> genotype_data/"
+snakemake --cores 1 unweighted_skat
 
 ```
 ## Dependencies
