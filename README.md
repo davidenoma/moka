@@ -18,7 +18,11 @@ To run the BAS pipeline:
      snakemake --help
      ```
 2. Install R dependencies and Rscript
-3. Configure the pipeline parameters in the `config.yaml` file.
+3. Download and install package
+```bash
+git clone https://github.com/davidenoma/bas_pipeline/ 
+```
+5. Configure the pipeline parameters in the `config.yaml` file.
 3. Execute the pipeline using the command:
 
 
