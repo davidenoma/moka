@@ -38,7 +38,7 @@ colnames(selected_gene_data) <- c("SNP", "CHR", "BP", "P")
 # Create output directory if it doesn't exist
 if (!dir.exists("output_plots")) dir.create("output_plots")
 file_name <- basename(file_path)  
-png_file_path <- paste0("output_plots/manhattan_", gsub("\\..*$", "", file_name), ".png")  
+png_file_path <- paste0("output_plots/manhattan_", sub("\\.[^.]*$", "", file_name), ".png")
 
 # Create the Manhattan plot using CairoPNG
 CairoPNG(filename = png_file_path, width = 2940, height = 1782, units = "px", pointsize = 22, res = 150)
