@@ -152,6 +152,8 @@ rule merge_unweighted_results:
     log:
         stdout="logs/merge_unweighted.stdout",
         stderr="logs/merge_unweighted.stderr"
+    conda:
+        "envs/skat.yaml"
     shell:
         """
         if [ -f "{params.merged_unweighted_results}" ]; then
