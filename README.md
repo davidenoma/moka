@@ -47,7 +47,7 @@ However, some R packages are not available to best to be installed R package man
 - **Output:** Merged association test results.
 - 
 ```bash
-snakemake --cores all -R --until merge_skat_results
+snakemake --cores 1 merge_skat_results
 ```
 
 
@@ -56,7 +56,7 @@ snakemake --cores all -R --until merge_skat_results
 - **Output:** Annotated association test results with DisGeNet database
 
 ```bash
-snakemake --cores all -R --until disgenet_annotation_005
+snakemake --cores 1 disgenet_annotation_005
 ```
 
 ### Rule: visualize_results
@@ -64,7 +64,7 @@ snakemake --cores all -R --until disgenet_annotation_005
 - **Output:** Manhattan plots with visual representations of association test results.
 
 ```bash
-snakemake --cores all -R --until manhattan_plots
+snakemake --cores 1 manhattan_plots
 ```
 
 ### Rule: go_analysis
@@ -72,7 +72,7 @@ snakemake --cores all -R --until manhattan_plots
 - **Output:** GO analysis results.
 
 ```bash
-snakemake --cores all -R --until go_analysis
+snakemake --cores 1 go_analysis
 ```
 
 ### Rule: kegg_pathway_analysis
@@ -80,13 +80,13 @@ snakemake --cores all -R --until go_analysis
 - **Output:** KEGG pathway analysis results.
 
 ```bash
-snakemake --cores all -R --until kegg_pathway_analysis
+snakemake --cores 1 kegg_pathway_analysis
 ```
 ### Rule: unweighted skat
 - **Input:** Genotype
 - **Output:** Unweighted association mapping, folder: output_association/
 ```bash
-snakemake --cores all unweighted_skat
+snakemake --cores 22 unweighted_skat
 
 ```
 ## Dependencies
