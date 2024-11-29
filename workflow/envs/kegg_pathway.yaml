@@ -3,8 +3,8 @@ channels:
   - conda-forge
   - bioconda
   - defaults
-  - bioconductor
 dependencies:
   - r-base=4.1.2
   - r-pathfindr
   - r-ggraph
+  - bioconductor-pathfindr
