@@ -5,5 +5,5 @@ channels:
   - defaults
 dependencies:
   - r-base
-  - conda-forge::r-ggraph
+  - r-ggraph
   - r-pathfindr
