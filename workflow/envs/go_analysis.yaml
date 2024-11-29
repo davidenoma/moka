@@ -3,6 +3,7 @@ channels:
   - conda-forge
   - bioconda
   - defaults
+  - bioconductor
 dependencies:
   - r-base
   - r-gprofiler2
