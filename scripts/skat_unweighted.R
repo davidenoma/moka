@@ -201,7 +201,7 @@ prepare_SKAT_files_per_chr(genotype_path, genotype_prefix)
 print("done creating skat genotype")
 genotype_prefix <- paste0(genotype_prefix,"_",chr)
 snvs_and_skat_chr(genotype_prefix, gene_regions_file, genotype_path, chr, result_folder)
-combine_skat_results(genotype_prefix, result_folder)
+# combine_skat_results(genotype_prefix, result_folder)
 #rm skatfiles.
 
 
