@@ -59,7 +59,9 @@ manhattan(
   logp = TRUE
 ) + theme(
   plot.margin = margin(0, 0, 0, 0),  # Remove space around the plot
-  panel.border = element_rect(color = "black", size = 1)  # Add a border around the plot
+  panel.border = element_rect(color = "black", linewidth = 1),  # Use linewidth instead of size
+  axis.text.x = element_text(margin = margin(t = 10)),  # Adjust the text margin if needed
+  scale_x_continuous(expand = c(0, 0))  # Remove space on the x-axis between 0 and 1
 )
 dev.off()
 cat("Manhattan plot saved to:", png_file_path, "\n")
