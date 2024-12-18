@@ -35,6 +35,9 @@ cat("P-value threshold:", pvalue_threshold, "\n")
 selected_gene_data <- gene_data[, c("Gene_name", "Gene_chromosome", "Region_start", "pvalue")]
 colnames(selected_gene_data) <- c("SNP", "CHR", "BP", "P")
 
+# Remove the first data point (row)
+selected_gene_data <- selected_gene_data[-1,]
+
 # Create output directory if it doesn't exist
 if (!dir.exists("output_plots")) dir.create("output_plots")
 file_name <- basename(file_path)  
@@ -53,8 +56,10 @@ manhattan(
   annotateTop = FALSE,
   genomewideline = -log10(pvalue_threshold),
   suggestiveline = -log10(10e-5),
-  logp = TRUE,
-
+  logp = TRUE
+) + theme(
+  plot.margin = margin(0, 0, 0, 0),  # Remove space around the plot
+  panel.border = element_rect(color = "black", size = 1)  # Add a border around the plot
 )
 dev.off()
 cat("Manhattan plot saved to:", png_file_path, "\n")
