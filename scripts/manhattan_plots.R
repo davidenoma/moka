@@ -57,12 +57,20 @@ manhattan(
   genomewideline = -log10(pvalue_threshold),
   suggestiveline = -log10(10e-5),
   logp = TRUE,
-   xlim = c(1,22),
-) + theme(
-  plot.margin = margin(0, 0, 0, 0),  # Remove space around the plot
-  panel.border = element_rect(color = "black", linewidth = 1),  # Use linewidth instead of size
-  axis.text.x = element_text(margin = margin(t = 10)),  # Adjust the text margin if needed
-  scale_x_continuous(expand = c(0, 0))  # Remove space on the x-axis between 0 and 1
+  main = "Manhattan Plot",
+  cex.axis = 0.7,  # Adjust axis labels to fit better
+  cex.lab = 1,    # Adjust axis titles
+  cex.main = 1.2,  # Adjust main title size
+  xaxt = "n",      # Remove x-axis to manually control the space
+  yaxt = "n"       # Remove y-axis to manually control the space
 )
+
+# Add the custom axis to remove space and adjust tick marks
+axis(1, at = seq(1, max(selected_gene_data$CHR), by = 1), labels = as.character(seq(1, max(selected_gene_data$CHR), by = 1)), las = 2, cex.axis = 0.7)  # X-axis without gaps
+axis(2, at = seq(0, 10, by = 2), las = 2, cex.axis = 0.7)  # Y-axis
+
+# Draw a border around the plot manually
+rect(0, 0, 21, 10, border = "black", lwd = 2)
+
 dev.off()
 cat("Manhattan plot saved to:", png_file_path, "\n")
