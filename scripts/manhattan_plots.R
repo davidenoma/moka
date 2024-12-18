@@ -53,7 +53,9 @@ manhattan(
   annotateTop = FALSE,
   genomewideline = -log10(pvalue_threshold),
   suggestiveline = FALSE,
-  logp = TRUE
+  logp = TRUE,
+   xlim = c(1,
+    22),
 )
 dev.off()
 cat("Manhattan plot saved to:", png_file_path, "\n")
