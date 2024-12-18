@@ -57,6 +57,7 @@ manhattan(
   genomewideline = -log10(pvalue_threshold),
   suggestiveline = -log10(10e-5),
   logp = TRUE
+   xlim = c(1,22),
 ) + theme(
   plot.margin = margin(0, 0, 0, 0),  # Remove space around the plot
   panel.border = element_rect(color = "black", linewidth = 1),  # Use linewidth instead of size
