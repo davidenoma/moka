@@ -1,8 +1,10 @@
 channels:
-  - r
   - conda-forge
   - bioconda
+  - r
   - defaults
 dependencies:
-  - r-base=4.1.2
+  - r-base
+  - r-essentials
+  - r-ggraph
   - r-pathfindr
