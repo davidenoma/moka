@@ -7,16 +7,17 @@ configfile: "config/config.yaml"
 
 
     # Rule 3: Perform SKAT test on the genotype
+# Rule 3: Perform SKAT test on the genotype
 rule skat_test:
     input:
         merged_weights=config["weights_file"],
-        # merged_weights=expand("{file_path}{weight_source}_merged_weights.csv",file_path=config["genotype_file_path"],weight_source=config["weights_type"]),
         gene_regions = "helper/gene_regions.csv"
     params:
         genotype = config["genotype_prefix"],
         weights_source = config["weights_type"],
         genotype_path=config["genotype_file_path"],
         plink_path=config["plink_path"],
+        is_binary = config["is_binary"]  # Pass the is_binary value
     threads: 22
     log:
         stdout="logs/wkas.stdout",
@@ -26,7 +27,7 @@ rule skat_test:
     shell:
         """
         export PATH=$PATH:{params.plink_path}
-        seq 1 22 | parallel -j {threads} --verbose Rscript scripts/skat.R {params.genotype} {input.gene_regions} {input.merged_weights} {params.genotype_path} {params.weights_source} {{}}
+        seq 1 22 | parallel -j {threads} --verbose Rscript scripts/skat.R {params.genotype} {input.gene_regions} {input.merged_weights} {params.genotype_path} {params.weights_source} {params.is_binary} {{}}
         """
 # # Rule 4: Merge SKAT Chromosome Results into zone
 rule merge_skat_results:
