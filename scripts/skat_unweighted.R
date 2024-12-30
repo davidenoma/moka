@@ -183,7 +183,7 @@ genotype_prefix <- paste0(genotype_prefix, "_", chr)
 snvs_and_skat_chr(genotype_prefix, gene_regions_file, genotype_path, chr, output_folder, is_binary)
 
 # Combine results from all chromosomes
-combine_skat_results(genotype_prefix, output_folder)
+# combine_skat_results(genotype_prefix, output_folder)
 
 # Clean up SKAT files after analysis
 remove_SKAT_files_per_chr(genotype_path, genotype_prefix)
