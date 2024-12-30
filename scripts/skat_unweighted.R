@@ -176,6 +176,10 @@ chr <- args[4]
 output_folder <- args[5]
 is_binary <- ifelse(length(args) > 5, as.logical(args[6]), TRUE)
 
+chr <- gsub("chr", "", chr)
+#work on code for result folder
+result_folder <- output_folder
+
 # Perform SKAT analysis for the given chromosome
 prepare_SKAT_files_per_chr(genotype_path, genotype_prefix)
 print("Done creating SKAT genotype")

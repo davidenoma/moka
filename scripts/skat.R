@@ -181,6 +181,7 @@ genotype_path <- args[4]
 weights_type <- args[5]
 chr <- args[6]
 is_binary <- ifelse(length(args) > 6, as.logical(args[7]), TRUE)
+chr <- gsub("chr", "", chr)
 
 result_folder <- "result_folder"
 prepare_SKAT_files_per_chr(genotype_path, genotype_prefix)
