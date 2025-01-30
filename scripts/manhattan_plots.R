@@ -35,6 +35,15 @@ cat("P-value threshold:", pvalue_threshold, "\n")
 selected_gene_data <- gene_data[, c("Gene_name", "Gene_chromosome", "Region_start", "pvalue")]
 colnames(selected_gene_data) <- c("SNP", "CHR", "BP", "P")
 
+# Ensure p-values are finite and non-zero
+selected_gene_data <- selected_gene_data[!is.na(selected_gene_data$P) & selected_gene_data$P > 0, ]
+
+# Check if there are valid p-values left
+if (nrow(selected_gene_data) == 0) {
+  cat("Error: No valid p-values found after filtering.\n")
+  quit(status = 1)
+}
+
 # Create output directory if it doesn't exist
 if (!dir.exists("output_plots")) dir.create("output_plots")
 file_name <- basename(file_path)  
