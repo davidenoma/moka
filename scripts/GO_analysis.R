@@ -1,5 +1,6 @@
 library(gprofiler2)
 library(ggplot2)
+library(Cairo)
 
 # Process command-line arguments
 args <- commandArgs(trailingOnly = TRUE)
