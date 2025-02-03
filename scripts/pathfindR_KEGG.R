@@ -1,6 +1,6 @@
 library(pathfindR)
 library(ggplot2)  # Required for customizing the plot
-
+library(Cairo)
 # Process command-line arguments
 args <- commandArgs(trailingOnly = TRUE)
 
