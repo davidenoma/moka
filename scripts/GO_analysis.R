@@ -41,7 +41,7 @@ if (nrow(gene_and_p_values) == 0) {
 GO_png_file_path <- paste0("output_plots/GO_", gsub("\\..*$", "", basename(file_path)), ".png")
 
 # Generate GO pathway plot
-png(filename = GO_png_file_path, width = 1700, height = 1800, units = "px", res = 150)
+CairoPNG(filename = GO_png_file_path, width = 1700, height = 1800, units = "px", res = 150)
 
 # Perform GO enrichment analysis
 gost_res <- gost(
