@@ -49,6 +49,7 @@ gost_res <- gost(
   organism = "hsapiens",
   sources = c("GO:MF", "GO:BP", "GO:CC"),
   highlight = TRUE,
+  significant = FALSE,
   evcodes = TRUE
 )
 
@@ -57,7 +58,7 @@ p <- gostplot(
   gostres = gost_res,
   pal = c(`GO:MF` = "#dc3912", `GO:BP` = "#ff9900", `GO:CC` = "#109618"),
   interactive = FALSE,
-  significant = FALSE,
+  
   capped = TRUE
 )
 
