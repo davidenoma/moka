@@ -57,6 +57,7 @@ p <- gostplot(
   gostres = gost_res,
   pal = c(`GO:MF` = "#dc3912", `GO:BP` = "#ff9900", `GO:CC` = "#109618"),
   interactive = FALSE,
+  significant = FALSE,
   capped = TRUE
 )
 
