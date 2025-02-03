@@ -45,7 +45,7 @@ enrichment_res <- run_pathfindR(gene_and_p_values)
 kegg_png_file_path <- paste0("output_plots/kegg_pathway_", gsub("\\..*$", "", basename(file_path)), ".png")
 
 # Open the PNG device
-png(filename = kegg_png_file_path, width = 1500, height = 1000, units = "px", pointsize = 22, res = 150)
+CairoPNG(filename = kegg_png_file_path, width = 1500, height = 1000, units = "px", pointsize = 22, res = 150)
 
 
 # Create the enrichment chart and customize font size
