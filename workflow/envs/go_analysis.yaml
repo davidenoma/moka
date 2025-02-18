@@ -6,3 +6,4 @@ channels:
 dependencies:
   - r-base
   - r-gprofiler2
+  - r-cairo
