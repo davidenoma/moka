@@ -8,3 +8,4 @@ dependencies:
   - r-essentials
   - r-ggraph
   - r-pathfindr
+  - r-Cairo
