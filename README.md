@@ -38,7 +38,7 @@ cd moka_pipeline
 snakemake --cores <num_cores>
 ```
 
-   If you do not have all the dependencies with R you can get it configured on conda, utilize with:
+   If you do not have all the dependencies with Python and R you can get it configured on conda, utilize with:
 
    ```bash
    snakemake --cores <num_cores> --use-conda
