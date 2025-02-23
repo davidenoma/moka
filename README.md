@@ -1,10 +1,10 @@
-# 🌉 Bridged Association Studies (BAS) Pipeline
+# 🌉 Multi-omics bridged SNP-set kernel association test (MOKA) Pipeline
 
 [![Snakemake](https://img.shields.io/badge/snakemake-≥6.3.0-brightgreen.svg)](https://snakemake.github.io)
 
 
 ## Introduction
-Bridged Association Studies (BAS) aims to implement a Snakemake pipeline to automate data bridge kernel-based association tests. This pipeline offers flexibility for various types of association studies with different bridge weights.
+Multi-Omics bridged SNP-set Kernel Association test (MOKA) aims to implement a Snakemake pipeline to automate data bridge kernel-based association tests. This pipeline offers flexibility for various types of association studies with different bridge weights.
 
 ## 🚀 Usage
 To run the BAS pipeline:
@@ -20,8 +20,8 @@ To run the BAS pipeline:
 2. Install R dependencies and Rscript
 3. Download and install package
 ```bash
-git clone https://github.com/davidenoma/bas_pipeline/
-cd bas_pipeline
+git clone https://github.com/davidenoma/moka_pipeline/
+cd moka_pipeline
 ```
 5. Configure the pipeline parameters in the `config.yaml` file.
 3. Execute the pipeline using the command:
