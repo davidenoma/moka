@@ -16,7 +16,7 @@ To run the BAS pipeline:
    - [Snakemake Installation Guide](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html)
      ```bash
      conda install -n base -c conda-forge mamba
-     mamba create -c conda-forge -c bioconda -n snakemake  snakemake
+     mamba create -c conda-forge -c bioconda -n snakemake
      mamba activate snakemake
      snakemake --help
      ```
