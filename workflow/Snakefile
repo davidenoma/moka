@@ -18,7 +18,7 @@ rule moka_test:
         genotype_path=config["genotype_file_path"],
         plink_path=config["plink_path"],
         is_binary = config["is_binary"]  # Pass the is_binary value
-    threads: min(22, workflow.cores)
+    threads: 22
     log:
         stdout="logs/wkas.stdout",
         stderr="logs/wkas.stderr"
@@ -27,7 +27,7 @@ rule moka_test:
     shell:
         """
         export PATH=$PATH:{params.plink_path}
-        #Rscript scripts/moka.R {params.genotype} {input.gene_regions} {input.merged_weights} {params.genotype_path} {params.weights_source} {wildcards.chr} {params.is_binary}
+       # Rscript scripts/moka.R {params.genotype} {input.gene_regions} {input.merged_weights} {params.genotype_path} {params.weights_source} {wildcards.chr} {params.is_binary}
         seq 1 22 | parallel -j {threads} --verbose Rscript scripts/moka.R {params.genotype} {input.gene_regions} {input.merged_weights} {params.genotype_path} {params.weights_source}  {{}} {params.is_binary}
         """
 # # Rule 4: Merge MOKA Chromosome Results into zone
