@@ -27,7 +27,7 @@ rule moka_test:
     shell:
         """
         export PATH=$PATH:{params.plink_path}
-        seq 1 22 | parallel {threads} --verbose Rscript scripts/moka.R {params.genotype} {input.gene_regions} {input.merged_weights} {params.genotype_path} {params.weights_source}  {{}} {params.is_binary}
+        seq 1 22 | parallel -j {threads} --verbose Rscript scripts/moka.R {params.genotype} {input.gene_regions} {input.merged_weights} {params.genotype_path} {params.weights_source}  {{}} {params.is_binary}
         """
 # # Rule 4: Merge MOKA Chromosome Results into zone
 rule merge_moka_results:
@@ -140,7 +140,7 @@ rule unweighted_skat:
         """
         export PATH=$PATH:{params.plink_path}
         mkdir -p {params.output_dir}
-        seq 1 22 | parallel  {threads} --verbose Rscript scripts/skat_unweighted.R {params.genotype_prefix} {input.gene_regions} {params.genotype_path} {{}} {params.output_dir} 
+        seq 1 22 | parallel -j  {threads} --verbose Rscript scripts/skat_unweighted.R {params.genotype_prefix} {input.gene_regions} {params.genotype_path} {{}} {params.output_dir} 
         """
 
 # Rule: merge_unweighted_results
