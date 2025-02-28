@@ -6,9 +6,9 @@ from snakemake.io import expand
 configfile: "config/config.yaml"
 
 
-    # Rule 3: Perform SKAT test on the genotype
-# Rule 3: Perform SKAT test on the genotype
-rule skat_test:
+    # Rule 3: Perform MOKA test on the genotype
+# Rule 3: Perform MOKA test on the genotype
+rule moka_test:
     input:
         merged_weights=config["weights_file"],
         gene_regions = "helper/gene_regions.csv"
@@ -23,39 +23,39 @@ rule skat_test:
         stdout="logs/wkas.stdout",
         stderr="logs/wkas.stderr"
     conda:
-        "envs/skat.yaml"
+        "envs/moka.yaml"
     shell:
         """
         export PATH=$PATH:{params.plink_path}
-        seq 1 22 | parallel {threads} --verbose Rscript scripts/skat.R {params.genotype} {input.gene_regions} {input.merged_weights} {params.genotype_path} {params.weights_source}  {{}} {params.is_binary}
+        seq 1 22 | parallel {threads} --verbose Rscript scripts/moka.R {params.genotype} {input.gene_regions} {input.merged_weights} {params.genotype_path} {params.weights_source}  {{}} {params.is_binary}
         """
-# # Rule 4: Merge SKAT Chromosome Results into zone
-rule merge_skat_results:
+# # Rule 4: Merge MOKA Chromosome Results into zone
+rule merge_moka_results:
     input:
-        skat_results=expand("result_folder/{prefix}_{i}_{weight_source}_result_chr_{i}.txt",i=range(1,23),weight_source=config["weights_type"],prefix=config["genotype_prefix"])
+        moka_results=expand("result_folder/{prefix}_{i}_{weight_source}_result_chr_{i}.txt",i=range(1,23),weight_source=config["weights_type"],prefix=config["genotype_prefix"])
     params:
-        merged_skat_results=expand("result_folder/merged_{prefix}_{weight_source}_SKAT.txt",prefix=config["genotype_prefix"],weight_source=config["weights_type"])
+        merged_moka_results=expand("result_folder/merged_{prefix}_{weight_source}_SKAT.txt",prefix=config["genotype_prefix"],weight_source=config["weights_type"])
     conda:
-        "envs/merge_skat_results.yaml"
+        "envs/merge_moka_results.yaml"
     log:
         stdout="logs/wkas.stdout",
         stderr="logs/wkas.stderr"
     shell:
         """
-        if [ -f "{params.merged_skat_results}" ]; then
-                rm "{params.merged_skat_results}"
+        if [ -f "{params.merged_moka_results}" ]; then
+                rm "{params.merged_moka_results}"
         fi
-        echo -e 'Gene_name\tGene_chromosome\tRegion_start\tRegion_end\tQ_test\tpvalue' > {params.merged_skat_results} && \
-        for file in {input.skat_results}; do \
-            if [ \"$file\" != \"{params.merged_skat_results}\" ]; then \
-                tail -n +2 \"$file\" >> {params.merged_skat_results}; \
+        echo -e 'Gene_name\tGene_chromosome\tRegion_start\tRegion_end\tQ_test\tpvalue' > {params.merged_moka_results} && \
+        for file in {input.moka_results}; do \
+            if [ \"$file\" != \"{params.merged_moka_results}\" ]; then \
+                tail -n +2 \"$file\" >> {params.merged_moka_results}; \
             fi; \
         done
         """
-# Rule 5: Perform Disgenet disease annotation of SKAT results
+# Rule 5: Perform Disgenet disease annotation of MOKA results
 rule disgenet_annotation_001:
     input:
-        merged_skat_results=expand("result_folder/merged_{prefix}_{weight_source}_SKAT.txt", prefix=config["genotype_prefix"], weight_source=config["weights_type"])
+        merged_moka_results=expand("result_folder/merged_{prefix}_{weight_source}_SKAT.txt", prefix=config["genotype_prefix"], weight_source=config["weights_type"])
     params:
         gene_annotation=config["disgenet_reference_file"]
     log:
@@ -64,12 +64,12 @@ rule disgenet_annotation_001:
         "envs/disgenet.yaml"
     shell:
         """
-        Rscript scripts/obtain_genes_in_DGN.R {input.merged_skat_results} {params.gene_annotation} 0.01
+        Rscript scripts/obtain_genes_in_DGN.R {input.merged_moka_results} {params.gene_annotation} 0.01
         """
 
 rule disgenet_annotation_005:
     input:
-        merged_skat_results=expand("result_folder/merged_{prefix}_{weight_source}_SKAT.txt", prefix=config["genotype_prefix"], weight_source=config["weights_type"])
+        merged_moka_results=expand("result_folder/merged_{prefix}_{weight_source}_SKAT.txt", prefix=config["genotype_prefix"], weight_source=config["weights_type"])
     params:
         gene_annotation=config["disgenet_reference_file"]
     log:
@@ -78,12 +78,12 @@ rule disgenet_annotation_005:
         "envs/disgenet.yaml"
     shell:
         """
-        Rscript scripts/obtain_genes_in_DGN.R {input.merged_skat_results} {params.gene_annotation} 0.05
+        Rscript scripts/obtain_genes_in_DGN.R {input.merged_moka_results} {params.gene_annotation} 0.05
         """
 
 rule manhattan_plots:
     input:
-        merged_skat_results = expand("result_folder/merged_{prefix}_{weight_source}_SKAT.txt",prefix=config[
+        merged_moka_results = expand("result_folder/merged_{prefix}_{weight_source}_SKAT.txt",prefix=config[
     "genotype_prefix"],weight_source=config["weights_type"]),
     log:
         stdout="logs/wkas.stdout",stderr="logs/wkas.stderr"
@@ -91,11 +91,11 @@ rule manhattan_plots:
         "envs/manhattan.yaml"
     shell:
         """
-        Rscript scripts/manhattan_plots.R {input.merged_skat_results} 
+        Rscript scripts/manhattan_plots.R {input.merged_moka_results} 
         """
 rule kegg_pathway_analysis:
     input:
-        merged_skat_results = expand("result_folder/merged_{prefix}_{weight_source}_SKAT.txt",prefix=config[
+        merged_moka_results = expand("result_folder/merged_{prefix}_{weight_source}_SKAT.txt",prefix=config[
     "genotype_prefix"],weight_source=config["weights_type"]),
     params:
         pval_thresh = 0.05
@@ -105,11 +105,11 @@ rule kegg_pathway_analysis:
         "envs/kegg_pathway.yaml"
     shell:
         """
-        Rscript scripts/pathfindR_KEGG.R {input.merged_skat_results} {params.pval_thresh}
+        Rscript scripts/pathfindR_KEGG.R {input.merged_moka_results} {params.pval_thresh}
         """
 rule go_analysis:
     input:
-        merged_skat_results = expand("result_folder/merged_{prefix}_{weight_source}_SKAT.txt",prefix=config[
+        merged_moka_results = expand("result_folder/merged_{prefix}_{weight_source}_SKAT.txt",prefix=config[
     "genotype_prefix"],weight_source=config["weights_type"]),
     params:
         pval_thresh = 0.05
@@ -119,10 +119,9 @@ rule go_analysis:
         "envs/go_analysis.yaml"
     shell:
         """
-        Rscript scripts/GO_analysis.R {input.merged_skat_results} {params.pval_thresh}
+        Rscript scripts/GO_analysis.R {input.merged_moka_results} {params.pval_thresh}
         """
 
-# Rule: unweighted_skat
 rule unweighted_skat:
     input:
         gene_regions="helper/gene_regions.csv"
@@ -136,7 +135,7 @@ rule unweighted_skat:
         stdout="logs/unweighted_skat.stdout",
         stderr="logs/unweighted_skat.stderr"
     conda:
-        "envs/skat.yaml"
+        "envs/moka.yaml"
     shell:
         """
         export PATH=$PATH:{params.plink_path}
@@ -154,7 +153,7 @@ rule merge_unweighted_results:
         stdout="logs/merge_unweighted.stdout",
         stderr="logs/merge_unweighted.stderr"
     conda:
-        "envs/skat.yaml"
+        "envs/moka.yaml"
     shell:
         """
         if [ -f "{params.merged_unweighted_results}" ]; then
