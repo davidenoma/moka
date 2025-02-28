@@ -138,6 +138,6 @@ brew install parallel
 - **Plink:** Path to plink installation
   
 ## 📖 Additional Information
-For more information on the BAS pipeline and its usage, refer to the documentation provided in the repository or contact the project maintainers.
+For more information on the MOKA pipeline and its usage, refer to the documentation provided in the repository or contact the project maintainers.
 david.enoma@ucalgary.ca 
 
