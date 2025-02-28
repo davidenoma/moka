@@ -1,6 +1,0 @@
-
-
-#!/bin/bash
-for chr in {1..22}; do
-  Rscript ~/bas_pipeline/scripts/skat_unweighted.R uk_bk_whb_for_sim_5000_QC ~/bas_pipeline/helper/gene_regions.csv ./ $chr output_association/
-done
