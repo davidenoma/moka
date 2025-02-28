@@ -50,7 +50,7 @@ However, some R packages are not available to best to be installed R package man
 - **Output:** Merged association test results.
 - 
 ```bash
-snakemake --cores 1 merge_skat_results
+snakemake --cores 1 merge_moka_results
 ```
 
 
