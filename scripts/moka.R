@@ -68,6 +68,95 @@ perform_skat_test <- function(gene_name, gene_chromosome, region_start, region_e
     cat("Error message:", e$message, "\n")
   })
 }
+perform_skat_test_decomposition <- function(
+  gene_name, gene_chromosome, region_start, region_end, gene_snps,
+  genotype_prefix, genotype_path, result_folder, result_file, is_binary = TRUE
+) {
+  tryCatch({
+    message("Starting SKAT for gene: ", gene_name)
+
+    # ----- Step 1: Read genotype matrix from PLINK .raw -----
+    raw_file <- file.path(genotype_path, paste0(genotype_prefix, ".raw"))
+    geno_df <- read.table(raw_file, header = TRUE)
+    genotype_matrix <- as.matrix(geno_df[, grepl("^rs", colnames(geno_df))])
+
+    # ----- Step 2: Read phenotype from .fam -----
+    fam_file <- file.path(genotype_path, paste0(genotype_prefix, ".fam"))
+    fam <- read.table(fam_file, header = FALSE)
+    Y <- fam$V6
+    Y <- scale(Y, center = TRUE, scale = FALSE)
+
+    # ----- Step 3: Read GRM -----
+    read_grm <- function(prefix) {
+      grm_bin <- paste0(prefix, ".grm.bin")
+      grm_id <- paste0(prefix, ".grm.id")
+      grm_vals <- readBin(grm_bin, what = "numeric", n = 1e9, size = 4)
+      ids <- read.table(grm_id)
+      n <- nrow(ids)
+      G <- matrix(0, n, n)
+      k <- 1
+      for (i in 1:n) {
+        for (j in 1:i) {
+          G[i, j] <- grm_vals[k]
+          G[j, i] <- grm_vals[k]
+          k <- k + 1
+        }
+      }
+      return(G)
+    }
+    G <- read_grm(file.path(genotype_path, genotype_prefix))
+
+    # ----- Step 4: Estimate h² using FaST-LMM -----
+    h2_file <- file.path(genotype_path, paste0(genotype_prefix, ".h2.txt"))
+    system(paste(
+      "python3 estimate_h2_fastlmm.py",
+      "--snp_prefix", file.path(genotype_path, genotype_prefix),
+      "--out", h2_file
+    ))
+    h2 <- as.numeric(readLines(h2_file))
+
+    # ----- Step 5: Subset X to SNPs in gene -----
+    snp_ids <- gene_snps$SNP
+    common_snps <- intersect(snp_ids, colnames(genotype_matrix))
+    if (length(common_snps) == 0) {
+      warning("No SNPs found for gene: ", gene_name)
+      return(NULL)
+    }
+    X <- genotype_matrix[, common_snps, drop = FALSE]
+
+    # ----- Step 6: Decorrelate using GRM -----
+    eig <- eigen(G, symmetric = TRUE)
+    U <- eig$vectors
+    S <- eig$values
+    D <- U %*% diag(1 / sqrt(h2 * S + 1)) %*% t(U)
+
+    Y_star <- D %*% Y
+    X_star <- D %*% X
+    intercept <- D %*% rep(1, length(Y_star))
+
+    # ----- Step 7: Run SKAT -----
+
+    obj <- SKAT_Null_Model(Y_star ~ intercept, out_type = ifelse(is_binary, "D", "C"))
+
+    if ("Weight" %in% colnames(gene_snps)) {
+      weights <- gene_snps$Weight
+      names(weights) <- gene_snps$SNP
+      weights <- weights[common_snps]
+      skat_result <- SKAT(X_star, obj, kernel = "linear.weighted", weights = weights)
+    } else {
+      skat_result <- SKAT(X_star, obj, kernel = "linear")
+    }
+
+    # ----- Step 8: Write result -----
+    ss2 <- c(gene_name, gene_chromosome, region_start, region_end,
+             toString(skat_result$Q), toString(skat_result$p.value))
+    write(ss2, file = result_file, append = TRUE, ncol = 6, sep = "\t")
+
+  }, error = function(e) {
+    cat("Error in SKAT for gene:", gene_name, "\n")
+    cat("Message:", e$message, "\n")
+  })
+}
 
 # Define a function to extract weights for SNVs and perform SKAT for a specific chromosome
 extract_weights_for_snvs_and_skat_chr <- function(genotype_prefix, gene_regions_file, weights_file, genotype_path, weights_type, result_folder, chr, is_binary = TRUE) {
@@ -104,8 +193,12 @@ extract_weights_for_snvs_and_skat_chr <- function(genotype_prefix, gene_regions_
       write.table(gene_snps$SNP, paste0(genotype_path, "snp_list_", weights_type, chr, ".txt"), quote = FALSE, row.names = FALSE, col.names = FALSE)
       print(paste("Gene number: ", gene_count))
       # Call the SKAT test function with selected SNPs
-      perform_skat_test(gene_name, gene_chromosome, region_start, region_end, gene_snps, genotype_prefix, result_folder, result_file, is_binary)
-      gene_count <- gene_count + 1
+          if (spectral_decorrelated) {
+        perform_skat_test_decomposition(gene_name, gene_chromosome, region_start, region_end, gene_snps, genotype_prefix, genotype_path, result_folder, result_file, is_binary)
+      } else {
+        perform_skat_test(gene_name, gene_chromosome, region_start, region_end, gene_snps, genotype_prefix, result_folder, result_file, is_binary)
+      }
+        gene_count <- gene_count + 1
       file.remove(paste0(genotype_path, "snp_list_", weights_type, chr, ".txt"))
     } else {
       print("Not found for gene region")
@@ -180,7 +273,8 @@ weights_file <- args[3]
 genotype_path <- args[4]
 weights_type <- args[5]
 chr <- args[6]
-is_binary <- ifelse(length(args) > 6, as.logical(args[7]), TRUE)
+is_binary <- ifelse(length(args) >= 7, as.logical(args[7]), TRUE)
+spectral_decorrelated <- ifelse(length(args) >= 8, as.logical(args[8]), TRUE)
 chr <- gsub("chr", "", chr)
 
 result_folder <- "result_folder"
