@@ -72,8 +72,8 @@ perform_skat_test_decomposition <- function(
   gene_name, gene_chromosome, region_start, region_end, gene_snps,
   genotype_prefix, genotype_path, result_folder, result_file, is_binary = TRUE
 ) {
-      genotype_prefix <- paste0(genotype_path, genotype_prefix)
-    genotype_bed <- paste0(genotype_prefix, ".bed")
+  genotype_prefix <- paste0(genotype_path, genotype_prefix)
+
   tryCatch({
     message("Starting SKAT for gene: ", gene_name)
 
@@ -91,21 +91,21 @@ perform_skat_test_decomposition <- function(
     # ----- Step 1: Generate .raw file for dosage matrix -----
     system(paste(
       "plink --bfile", prefix_skat,
-      "--recode A --out", genotype_prefix,
+      "--recode A --out", prefix_skat,
       "--allow-no-sex --silent"
     ))
 
     # ----- Step 2: Generate GRM -----
     system(paste(
       "plink --bfile", prefix_skat,
-      "--make-grm-bin --out", genotype_prefix,
+      "--make-grm-bin --out", prefix_skat,
       "--allow-no-sex --silent"
     ))
 
     # ----- Step 3: Read genotype matrix -----
-raw_file <- file.path(paste0(genotype_prefix, ".raw"))
-if (!file.exists(raw_file)) stop("No .raw file found.")
-geno_df <- read.table(raw_file, header = TRUE, sep = " ")
+    raw_file <- file.path(paste0(prefix_skat, ".raw"))
+    if (!file.exists(raw_file)) stop("No .raw file found.")
+    geno_df <- read.table(raw_file, header = TRUE, sep = " ")
     snp_cols <- grep("^rs", colnames(geno_df))
     genotype_matrix <- as.matrix(geno_df[, snp_cols])
     colnames(genotype_matrix) <- sub("_[ACGT]$", "", colnames(genotype_matrix))  # remove allele suffixes
@@ -134,7 +134,7 @@ geno_df <- read.table(raw_file, header = TRUE, sep = " ")
       }
       return(G)
     }
-    G <- read_grm(file.path(genotype_path, genotype_prefix))
+    G <- read_grm(prefix_skat)
 
     # ----- Step 6: Estimate h² using FaST-LMM -----
     h2_file <- file.path(genotype_path, paste0(genotype_prefix, ".h2.txt"))
