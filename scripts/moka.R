@@ -109,7 +109,7 @@ perform_skat_test_decomposition <- function(
     # ----- Step 4: Estimate h² using FaST-LMM -----
     h2_file <- file.path(genotype_path, paste0(genotype_prefix, ".h2.txt"))
     system(paste(
-      "python3 estimate_h2_fastlmm.py",
+      "python estimate_h2_fastlmm.py",
       "--snp_prefix", file.path(genotype_path, genotype_prefix),
       "--out", h2_file
     ))
