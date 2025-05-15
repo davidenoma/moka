@@ -101,7 +101,7 @@ perform_skat_test_decomposition <- function(
     ))
 
     # ----- Step 3: Read genotype matrix -----
-    raw_file <- Sys.glob(file.path(genotype_path, paste0(genotype_prefix, "*.raw")))[1]
+    raw_file <- Sys.glob(file.path( paste0(genotype_prefix, "*.raw")))[1]
     if (is.na(raw_file)) stop("No .raw file found.")
     geno_df <- read.table(raw_file, header = TRUE)
     snp_cols <- grep("^rs", colnames(geno_df))
