@@ -72,6 +72,8 @@ perform_skat_test_decomposition <- function(
   gene_name, gene_chromosome, region_start, region_end, gene_snps,
   genotype_prefix, genotype_path, result_folder, result_file, is_binary = TRUE
 ) {
+      genotype_prefix <- paste0(genotype_path, genotype_prefix)
+    genotype_bed <- paste0(genotype_prefix, ".bed")
   tryCatch({
     message("Starting SKAT for gene: ", gene_name)
 
