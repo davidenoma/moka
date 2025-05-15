@@ -75,13 +75,13 @@ perform_skat_test_decomposition <- function(
   tryCatch({
     message("Starting SKAT for gene: ", gene_name)
 
-    snp_list_file <- file.path(genotype_path, paste0("snp_list_", weights_type, chr, ".txt"))
+    # snp_list_file <- file.path(genotype_path, paste0("snp_list_", weights_type, chr, ".txt"))
     prefix_skat <- paste0(genotype_prefix, "_SKAT")
 
     # ----- Step 0: Create subset binary PLINK files -----
     system(paste(
       "plink --bfile", genotype_prefix,
-      "--extract", snp_list_file,
+      "--extract", paste0(genotype_path,"snp_list_", weights_type, chr,".txt"),
       "--make-bed --silent --allow-no-sex",
       "--out", prefix_skat
     ))
