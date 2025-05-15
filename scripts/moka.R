@@ -75,18 +75,46 @@ perform_skat_test_decomposition <- function(
   tryCatch({
     message("Starting SKAT for gene: ", gene_name)
 
-    # ----- Step 1: Read genotype matrix from PLINK .raw -----
-    raw_file <- file.path(genotype_path, paste0(genotype_prefix, ".raw"))
-    geno_df <- read.table(raw_file, header = TRUE)
-    genotype_matrix <- as.matrix(geno_df[, grepl("^rs", colnames(geno_df))])
+    snp_list_file <- file.path(genotype_path, paste0("snp_list_", weights_type, chr, ".txt"))
+    prefix_skat <- paste0(genotype_prefix, "_SKAT")
 
-    # ----- Step 2: Read phenotype from .fam -----
+    # ----- Step 0: Create subset binary PLINK files -----
+    system(paste(
+      "plink --bfile", genotype_prefix,
+      "--extract", snp_list_file,
+      "--make-bed --silent --allow-no-sex",
+      "--out", prefix_skat
+    ))
+
+    # ----- Step 1: Generate .raw file for dosage matrix -----
+    system(paste(
+      "plink --bfile", prefix_skat,
+      "--recode A --out", genotype_prefix,
+      "--allow-no-sex --silent"
+    ))
+
+    # ----- Step 2: Generate GRM -----
+    system(paste(
+      "plink --bfile", prefix_skat,
+      "--make-grm-bin --out", genotype_prefix,
+      "--allow-no-sex --silent"
+    ))
+
+    # ----- Step 3: Read genotype matrix -----
+    raw_file <- Sys.glob(file.path(genotype_path, paste0(genotype_prefix, "*.raw")))[1]
+    if (is.na(raw_file)) stop("No .raw file found.")
+    geno_df <- read.table(raw_file, header = TRUE)
+    snp_cols <- grep("^rs", colnames(geno_df))
+    genotype_matrix <- as.matrix(geno_df[, snp_cols])
+    colnames(genotype_matrix) <- sub("_[ACGT]$", "", colnames(genotype_matrix))  # remove allele suffixes
+
+    # ----- Step 4: Read phenotype -----
     fam_file <- file.path(genotype_path, paste0(genotype_prefix, ".fam"))
     fam <- read.table(fam_file, header = FALSE)
     Y <- fam$V6
     Y <- scale(Y, center = TRUE, scale = FALSE)
 
-    # ----- Step 3: Read GRM -----
+    # ----- Step 5: Read GRM -----
     read_grm <- function(prefix) {
       grm_bin <- paste0(prefix, ".grm.bin")
       grm_id <- paste0(prefix, ".grm.id")
@@ -106,7 +134,7 @@ perform_skat_test_decomposition <- function(
     }
     G <- read_grm(file.path(genotype_path, genotype_prefix))
 
-    # ----- Step 4: Estimate h² using FaST-LMM -----
+    # ----- Step 6: Estimate h² using FaST-LMM -----
     h2_file <- file.path(genotype_path, paste0(genotype_prefix, ".h2.txt"))
     system(paste(
       "python estimate_h2_fastlmm.py",
@@ -115,7 +143,7 @@ perform_skat_test_decomposition <- function(
     ))
     h2 <- as.numeric(readLines(h2_file))
 
-    # ----- Step 5: Subset X to SNPs in gene -----
+    # ----- Step 7: Subset SNPs for this gene -----
     snp_ids <- gene_snps$SNP
     common_snps <- intersect(snp_ids, colnames(genotype_matrix))
     if (length(common_snps) == 0) {
@@ -124,17 +152,16 @@ perform_skat_test_decomposition <- function(
     }
     X <- genotype_matrix[, common_snps, drop = FALSE]
 
-    # ----- Step 6: Decorrelate using GRM -----
+    # ----- Step 8: Decorrelate using GRM -----
     eig <- eigen(G, symmetric = TRUE)
     U <- eig$vectors
     S <- eig$values
     D <- U %*% diag(1 / sqrt(h2 * S + 1)) %*% t(U)
-
     Y_star <- D %*% Y
     X_star <- D %*% X
     intercept <- D %*% rep(1, length(Y_star))
 
-    # ----- Step 7: Run SKAT -----
+    # ----- Step 9: Run SKAT -----
 
     obj <- SKAT_Null_Model(Y_star ~ intercept, out_type = ifelse(is_binary, "D", "C"))
 
@@ -147,16 +174,22 @@ perform_skat_test_decomposition <- function(
       skat_result <- SKAT(X_star, obj, kernel = "linear")
     }
 
-    # ----- Step 8: Write result -----
+    # ----- Step 10: Write result -----
     ss2 <- c(gene_name, gene_chromosome, region_start, region_end,
              toString(skat_result$Q), toString(skat_result$p.value))
     write(ss2, file = result_file, append = TRUE, ncol = 6, sep = "\t")
+
+    # ----- Step 11: Clean up -----
+    unlink(Sys.glob(file.path(genotype_path, paste0(prefix_skat, ".*"))))
+    unlink(Sys.glob(file.path(genotype_path, paste0(genotype_prefix, "*.raw"))))
+    unlink(Sys.glob(file.path(genotype_path, paste0(genotype_prefix, ".grm*"))))
 
   }, error = function(e) {
     cat("Error in SKAT for gene:", gene_name, "\n")
     cat("Message:", e$message, "\n")
   })
 }
+
 
 # Define a function to extract weights for SNVs and perform SKAT for a specific chromosome
 extract_weights_for_snvs_and_skat_chr <- function(genotype_prefix, gene_regions_file, weights_file, genotype_path, weights_type, result_folder, chr, is_binary = TRUE) {
