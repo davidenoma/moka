@@ -24,7 +24,7 @@ def main():
     }
     pheno = Pheno(pheno_dict)
 
-    results = single_snp(test_snps=bedfile, pheno=pheno)
+    # results = single_snp(test_snps=bedfile, pheno=pheno)
     heritability_spatial_correction.h2(results, test_snps=bedfile, pheno=pheno)
     results = single_snp(test_snps=bedfile, pheno=pheno)
     h2_est = results["h2"][0]

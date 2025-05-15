@@ -263,7 +263,7 @@ combine_skat_results <- function(genotype_prefix, result_folder, weights_type) {
 # Main execution starts here
 args <- commandArgs(trailingOnly = TRUE)
 if (length(args) < 6) {
-  cat("Usage: Rscript skat_analysis.R <genotype_prefix> <gene_regions_file> <weights_file> <genotype_path> <weights_type> <chromosome> [is_binary]\n")
+  cat("Usage: Rscript skat_analysis.R <genotype_prefix> <gene_regions_file> <weights_file> <genotype_path> <weights_type> <chromosome> [is_binary] [spectral_decorrelated]\n")
   quit(status = 1)
 }
 

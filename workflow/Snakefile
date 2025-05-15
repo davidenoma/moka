@@ -17,7 +17,8 @@ rule moka_test:
         weights_source = config["weights_type"],
         genotype_path=config["genotype_file_path"],
         plink_path=config["plink_path"],
-        is_binary = config["is_binary"]  # Pass the is_binary value
+        is_binary = config["is_binary"] , # Pass the is_binary value
+        spectral_decorrelated = config["spectral_decorrelated"]
     threads: 22
     log:
         stdout="logs/wkas.stdout",
@@ -28,7 +29,7 @@ rule moka_test:
         """
         export PATH=$PATH:{params.plink_path}
 
-        seq 1 22 | parallel -j {threads} --verbose Rscript scripts/moka.R {params.genotype} {input.gene_regions} {input.merged_weights} {params.genotype_path} {params.weights_source}  {{}} {params.is_binary}
+        seq 1 22 | parallel -j {threads} --verbose Rscript scripts/moka.R {params.genotype} {input.gene_regions} {input.merged_weights} {params.genotype_path} {params.weights_source}  {{}} {params.is_binary} {params.spectral_decorrelated}
         """
 # # Rule 4: Merge MOKA Chromosome Results into zone
 rule merge_moka_results:
