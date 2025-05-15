@@ -101,9 +101,9 @@ perform_skat_test_decomposition <- function(
     ))
 
     # ----- Step 3: Read genotype matrix -----
-    raw_file <- Sys.glob(file.path( paste0(genotype_prefix, "*.raw")))[1]
-    if (is.na(raw_file)) stop("No .raw file found.")
-    geno_df <- read.table(raw_file, header = TRUE)
+raw_file <- file.path(paste0(genotype_prefix, ".raw"))
+if (!file.exists(raw_file)) stop("No .raw file found.")
+geno_df <- read.table(raw_file, header = TRUE, sep = " ")
     snp_cols <- grep("^rs", colnames(geno_df))
     genotype_matrix <- as.matrix(geno_df[, snp_cols])
     colnames(genotype_matrix) <- sub("_[ACGT]$", "", colnames(genotype_matrix))  # remove allele suffixes
