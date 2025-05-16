@@ -136,13 +136,14 @@ perform_skat_test_decomposition <- function(
     "--reml --out", prefix_skat
   ))
   h2_file <- paste0(prefix_skat, ".hsq")
-  h2_data <- read.table(h2_file, header = FALSE, sep = "\t", stringsAsFactors = FALSE, fill = TRUE)
-    print(h2_data, "\n")
-  h2_line <- h2_data[h2_data[, 1] == "V(G)/Vp", ]
-  h2 <- as.numeric(h2_line[2])
-    cat(h2)
-    G <- read_grm(prefix_skat)
-    cat('G matrix read\n')
+# Read the hsq file with header set to TRUE and fill parameter for safety
+h2_data <- read.table(h2_file, header = TRUE, sep = "\t", stringsAsFactors = FALSE, fill = TRUE)
+print(h2_data, "\n")
+# Extract the row for 'V(G)/Vp'
+h2_line <- h2_data[h2_data$Source == "V(G)/Vp", ]
+# Convert the Variance column value to numeric
+h2 <- as.numeric(h2_line$Variance)
+cat(h2)
 
     # h2_file <- file.path(genotype_path, paste0(genotype_prefix, ".h2.txt"))
     # system(paste(
