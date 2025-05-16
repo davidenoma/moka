@@ -109,11 +109,20 @@ perform_skat_test_decomposition <- function(
     # ----- Step 3: Read genotype matrix -----
     raw_file <- paste0(prefix_skat, ".raw")
     if (!file.exists(raw_file)) stop("No .raw file found.") else (print("raw file found"))
+# Read the genotype data
 geno_df <- read.table(raw_file, header = TRUE, sep = " ")
-snp_cols <- grep("^rs", colnames(geno_df))  # make sure this line is still included before the next ones
 
-genotype_matrix <- as.matrix(geno_df[, snp_cols])
-colnames(genotype_matrix) <- sub("_[ACGT]$", "", colnames(geno_df)[snp_cols])
+all_cols <- colnames(geno_df)
+snp_indices <- which(sapply(all_cols, function(cn) {
+  any(startsWith(cn, paste0(gene_snps$SNP, "_")))
+}))
+
+if (length(snp_indices) == 0) {
+  warning("No SNPs matched for gene: ", gene_name)
+  return(NULL)
+}
+
+genotype_matrix <- as.matrix(geno_df[, snp_indices])
 
     # ----- Step 4: Read phenotype -----
     # fam_file <- file.path(genotype_path, paste0(genotype_prefix, ".fam"))
@@ -155,22 +164,28 @@ cat(h2)
 
 
     X <- genotype_matrix
-    # cat(str(X), "\n")
+    cat(str(X), "\n")
     G <- read_grm(prefix_skat)
+    # cat(str(G))
 
     # ----- Step 8: Decorrelate using GRM -----
     eig <- eigen(G, symmetric = TRUE)
-    U <- eig$vectors
+
+    U <- unname(eig$vectors)
     S <- eig$values
     D <- U %*% diag(1 / sqrt(h2 * S + 1)) %*% t(U)
+    # cat(str(D), "\n")
 
     Y_star <- D %*% Y
+    cat(str(Y_star), "\n")
     X_star <- D %*% X
-    intercept <- D %*% rep(1, length(Y_star))
+    cat(str(X_star), "\n")
+    # intercept <- D %*% rep(1, length(Y_star))
+    # cat(str(intercept), "\n")
 
     # ----- Step 9: Run SKAT -----
 
-    obj <- SKAT_Null_Model(Y_star ~ intercept, out_type = ifelse(is_binary, "D", "C"))
+    obj <- SKAT_Null_Model(Y_star ~ 1, out_type = ifelse(is_binary, "D", "C"))
 
     skat_result <- SKAT(X_star, obj, kernel = "linear.weighted", weights = gene_snps$Weight)
 
