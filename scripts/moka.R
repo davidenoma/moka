@@ -135,14 +135,15 @@ perform_skat_test_decomposition <- function(
     "--pheno", pheno_file, "--thread-num", 22,
     "--reml --out", prefix_skat
   ))
-
   h2_file <- paste0(prefix_skat, ".hsq")
-  h2_lines <- readLines(h2_file)
-  h2_line <- h2_lines[grep("V(G)/Vp", h2_lines)][1]
-  h2 <- as.numeric(strsplit(h2_line, "\t")[[1]][2])
+  h2_data <- read.table(h2_file, header = FALSE, sep = "\t", stringsAsFactors = FALSE)
+    print(h2_data, "\n")
+  h2_line <- h2_data[h2_data[, 1] == "V(G)/Vp", ]
+  h2 <- as.numeric(h2_line[2])
+    cat(h2)
     G <- read_grm(prefix_skat)
-    # print("GRM read, now estimating h2")
-    # ----- Step 6: Estimate h² using FaST-LMM -----
+    cat('G matrix read\n')
+
     # h2_file <- file.path(genotype_path, paste0(genotype_prefix, ".h2.txt"))
     # system(paste(
     #   "python ../estimate_h2_fastlmm.py",
