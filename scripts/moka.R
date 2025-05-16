@@ -141,23 +141,7 @@ perform_skat_test_decomposition <- function(
   h2_line <- h2_lines[grep("V(G)/Vp", h2_lines)][1]
   h2 <- as.numeric(strsplit(h2_line, "\t")[[1]][2])
     # ----- Step 5: Read GRM -----
-    read_grm <- function(prefix) {
-      grm_bin <- paste0(prefix, ".grm.bin")
-      grm_id <- paste0(prefix, ".grm.id")
-      grm_vals <- readBin(grm_bin, what = "numeric", n = 1e9, size = 4)
-      ids <- read.table(grm_id)
-      n <- nrow(ids)
-      G <- matrix(0, n, n)
-      k <- 1
-      for (i in 1:n) {
-        for (j in 1:i) {
-          G[i, j] <- grm_vals[k]
-          G[j, i] <- grm_vals[k]
-          k <- k + 1
-        }
-      }
-      return(G)
-    }
+
     G <- read_grm(prefix_skat)
     # print("GRM read, now estimating h2")
     # ----- Step 6: Estimate h² using FaST-LMM -----
@@ -262,7 +246,23 @@ extract_weights_for_snvs_and_skat_chr <- function(genotype_prefix, gene_regions_
 
   print(paste("Done with SKAT analysis for chromosome", chr))
 }
-
+    read_grm <- function(prefix) {
+      grm_bin <- paste0(prefix, ".grm.bin")
+      grm_id <- paste0(prefix, ".grm.id")
+      grm_vals <- readBin(grm_bin, what = "numeric", n = 1e9, size = 4)
+      ids <- read.table(grm_id)
+      n <- nrow(ids)
+      G <- matrix(0, n, n)
+      k <- 1
+      for (i in 1:n) {
+        for (j in 1:i) {
+          G[i, j] <- grm_vals[k]
+          G[j, i] <- grm_vals[k]
+          k <- k + 1
+        }
+      }
+      return(G)
+    }
 # Helper function to prepare files for SKAT per chromosome
 prepare_SKAT_files_per_chr <- function(genotype_path, genotype_prefix)  {
   old_file_name_bed <- paste0(genotype_path, genotype_prefix, ".bed")
