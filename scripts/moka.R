@@ -174,13 +174,13 @@ cat(h2)
 
     skat_result <- SKAT(X_star, obj, kernel = "linear.weighted", weights = gene_snps$Weight)
 
-    cat(skat_result$Q, skat_result$p.value, "\n")
+    # cat(skat_result$Q, skat_result$p.value, "\n")
 
     # ----- Step 10: Write result -----
     ss2 <- c(gene_name, gene_chromosome, region_start, region_end,
              toString(skat_result$Q), toString(skat_result$p.value))
     write(ss2, file = result_file, append = TRUE, ncol = 6, sep = "\t")
-
+    cat('Written association result for gene:', gene_name, "\n")
     # ----- Step 11: Clean up -----
     unlink(Sys.glob(file.path(genotype_path, paste0(prefix_skat, ".*"))))
     unlink(Sys.glob(file.path(genotype_path, paste0(genotype_prefix, "*.raw"))))
