@@ -140,8 +140,6 @@ perform_skat_test_decomposition <- function(
   h2_lines <- readLines(h2_file)
   h2_line <- h2_lines[grep("V(G)/Vp", h2_lines)][1]
   h2 <- as.numeric(strsplit(h2_line, "\t")[[1]][2])
-    # ----- Step 5: Read GRM -----
-
     G <- read_grm(prefix_skat)
     # print("GRM read, now estimating h2")
     # ----- Step 6: Estimate h² using FaST-LMM -----
@@ -153,15 +151,9 @@ perform_skat_test_decomposition <- function(
     # ))
     # h2 <- as.numeric(readLines(h2_file))
 
-    # ----- Step 7: Subset SNPs for this gene -----
-    snp_ids <- gene_snps$SNP
-    common_snps <- intersect(snp_ids, colnames(genotype_matrix))
-    if (length(common_snps) == 0) {
-      warning("No SNPs found for gene: ", gene_name)
-      return(NULL)
-    }
-    X <- genotype_matrix[, common_snps, drop = FALSE]
 
+    X <- genotype_matrix
+    cat(X, "\n")
     # ----- Step 8: Decorrelate using GRM -----
     eig <- eigen(G, symmetric = TRUE)
     U <- eig$vectors
