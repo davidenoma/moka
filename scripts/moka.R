@@ -189,6 +189,8 @@ cat(h2)
   }, error = function(e) {
     cat("Error in SKAT for gene:", gene_name, "\n")
     cat("Message:", e$message, "\n")
+     cat("Full Error Details:\n")
+  print(e)
   })
 }
 
