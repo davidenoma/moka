@@ -109,10 +109,11 @@ perform_skat_test_decomposition <- function(
     # ----- Step 3: Read genotype matrix -----
     raw_file <- paste0(prefix_skat, ".raw")
     if (!file.exists(raw_file)) stop("No .raw file found.") else (print("raw file found"))
-    geno_df <- read.table(raw_file, header = TRUE, sep = " ")
-    snp_cols <- grep("^rs", colnames(geno_df))
-    genotype_matrix <- as.matrix(geno_df[, snp_cols])
-    colnames(genotype_matrix) <- sub("_[ACGT]$", "", colnames(genotype_matrix))  # remove allele suffixes
+geno_df <- read.table(raw_file, header = TRUE, sep = " ")
+snp_cols <- grep("^rs", colnames(geno_df))  # make sure this line is still included before the next ones
+
+genotype_matrix <- as.matrix(geno_df[, snp_cols])
+colnames(genotype_matrix) <- sub("_[ACGT]$", "", colnames(geno_df)[snp_cols])
 
     # ----- Step 4: Read phenotype -----
     # fam_file <- file.path(genotype_path, paste0(genotype_prefix, ".fam"))
@@ -154,8 +155,9 @@ cat(h2)
 
 
     X <- genotype_matrix
-    G <- read_grm(prefix_skat)
     cat(X, "\n")
+    G <- read_grm(prefix_skat)
+
     # ----- Step 8: Decorrelate using GRM -----
     eig <- eigen(G, symmetric = TRUE)
     U <- eig$vectors
