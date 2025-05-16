@@ -136,7 +136,7 @@ perform_skat_test_decomposition <- function(
     "--reml --out", prefix_skat
   ))
   h2_file <- paste0(prefix_skat, ".hsq")
-  h2_data <- read.table(h2_file, header = FALSE, sep = "\t", stringsAsFactors = FALSE)
+  h2_data <- read.table(h2_file, header = FALSE, sep = "\t", stringsAsFactors = FALSE, fill = TRUE)
     print(h2_data, "\n")
   h2_line <- h2_data[h2_data[, 1] == "V(G)/Vp", ]
   h2 <- as.numeric(h2_line[2])
