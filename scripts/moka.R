@@ -138,7 +138,6 @@ perform_skat_test_decomposition <- function(
   h2_file <- paste0(prefix_skat, ".hsq")
 # Read the hsq file with header set to TRUE and fill parameter for safety
 h2_data <- read.table(h2_file, header = TRUE, sep = "\t", stringsAsFactors = FALSE, fill = TRUE)
-print(h2_data, "\n")
 # Extract the row for 'V(G)/Vp'
 h2_line <- h2_data[h2_data$Source == "V(G)/Vp", ]
 # Convert the Variance column value to numeric
