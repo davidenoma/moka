@@ -84,7 +84,7 @@ perform_skat_test_decomposition <- function(
     system(paste(
       "plink --bfile", genotype_prefix,
       "--extract", paste0(genotype_path,"snp_list_", weights_type, chr,".txt"),
-      "--make-bed --silent --allow-no-sex",
+      "--make-bed --allow-no-sex",
       "--out", prefix_skat
     ))
 
@@ -92,30 +92,54 @@ perform_skat_test_decomposition <- function(
     system(paste(
       "plink --bfile", prefix_skat,
       "--recode A --out", prefix_skat,
-      "--allow-no-sex --silent"
+      "--allow-no-sex "
     ))
+    print('raw file generated')
 
     # ----- Step 2: Generate GRM -----
-    system(paste(
-      "plink --bfile", prefix_skat,
-      "--make-grm-bin --out", prefix_skat,
-      "--allow-no-sex --silent"
-    ))
+    # system(paste(
+    #   "plink --bfile", prefix_skat,
+    #   "--make-grm-bin --out", prefix_skat,
+    #   "--allow-no-sex "
+    # ))
+    # print("GRM generated")
+
+
 
     # ----- Step 3: Read genotype matrix -----
-    raw_file <- file.path(paste0(prefix_skat, ".raw"))
-    if (!file.exists(raw_file)) stop("No .raw file found.")
+    raw_file <- paste0(prefix_skat, ".raw")
+    if (!file.exists(raw_file)) stop("No .raw file found.") else (print("raw file found"))
     geno_df <- read.table(raw_file, header = TRUE, sep = " ")
     snp_cols <- grep("^rs", colnames(geno_df))
     genotype_matrix <- as.matrix(geno_df[, snp_cols])
     colnames(genotype_matrix) <- sub("_[ACGT]$", "", colnames(genotype_matrix))  # remove allele suffixes
 
     # ----- Step 4: Read phenotype -----
-    fam_file <- file.path(genotype_path, paste0(genotype_prefix, ".fam"))
-    fam <- read.table(fam_file, header = FALSE)
+    # fam_file <- file.path(genotype_path, paste0(genotype_prefix, ".fam"))
+    fam <- read.table(paste0(genotype_prefix, ".fam"), header = FALSE)
     Y <- fam$V6
     Y <- scale(Y, center = TRUE, scale = FALSE)
+        # Step 2: Generate GRM using GCTA
+    system(paste(
+      "gcta64 --bfile", prefix_skat,
+      "--make-grm-bin --out", prefix_skat
+    ))
+    # ----- Step 2.5: Generate GCTA-compatible .pheno file from .fam -----
+  pheno_file <- paste0(prefix_skat, ".pheno")
+  fam <- read.table(paste0(genotype_prefix, ".fam"), header = FALSE)
+  fam_pheno <- fam[, c(1, 2, 6)]  # FID, IID, PHENO
+  write.table(fam_pheno, file = pheno_file, quote = FALSE, row.names = FALSE, col.names = FALSE, sep = "\t")
+  # Step 3: Estimate h² using GCTA REML
+  system(paste(
+    "gcta64 --grm", prefix_skat,
+    "--pheno", pheno_file, "--thread-num", 22,
+    "--reml --out", prefix_skat
+  ))
 
+  h2_file <- paste0(prefix_skat, ".hsq")
+  h2_lines <- readLines(h2_file)
+  h2_line <- h2_lines[grep("V(G)/Vp", h2_lines)][1]
+  h2 <- as.numeric(strsplit(h2_line, "\t")[[1]][2])
     # ----- Step 5: Read GRM -----
     read_grm <- function(prefix) {
       grm_bin <- paste0(prefix, ".grm.bin")
@@ -135,15 +159,15 @@ perform_skat_test_decomposition <- function(
       return(G)
     }
     G <- read_grm(prefix_skat)
-
+    # print("GRM read, now estimating h2")
     # ----- Step 6: Estimate h² using FaST-LMM -----
-    h2_file <- file.path(genotype_path, paste0(genotype_prefix, ".h2.txt"))
-    system(paste(
-      "python estimate_h2_fastlmm.py",
-      "--snp_prefix", file.path(genotype_path, genotype_prefix),
-      "--out", h2_file
-    ))
-    h2 <- as.numeric(readLines(h2_file))
+    # h2_file <- file.path(genotype_path, paste0(genotype_prefix, ".h2.txt"))
+    # system(paste(
+    #   "python ../estimate_h2_fastlmm.py",
+    #   "--snp_prefix", file.path(genotype_path, genotype_prefix),
+    #   "--out", h2_file
+    # ))
+    # h2 <- as.numeric(readLines(h2_file))
 
     # ----- Step 7: Subset SNPs for this gene -----
     snp_ids <- gene_snps$SNP
@@ -159,6 +183,7 @@ perform_skat_test_decomposition <- function(
     U <- eig$vectors
     S <- eig$values
     D <- U %*% diag(1 / sqrt(h2 * S + 1)) %*% t(U)
+
     Y_star <- D %*% Y
     X_star <- D %*% X
     intercept <- D %*% rep(1, length(Y_star))
@@ -167,14 +192,9 @@ perform_skat_test_decomposition <- function(
 
     obj <- SKAT_Null_Model(Y_star ~ intercept, out_type = ifelse(is_binary, "D", "C"))
 
-    if ("Weight" %in% colnames(gene_snps)) {
-      weights <- gene_snps$Weight
-      names(weights) <- gene_snps$SNP
-      weights <- weights[common_snps]
-      skat_result <- SKAT(X_star, obj, kernel = "linear.weighted", weights = weights)
-    } else {
-      skat_result <- SKAT(X_star, obj, kernel = "linear")
-    }
+    skat_result <- SKAT(X_star, obj, kernel = "linear.weighted", weights = gene_snps$Weight)
+
+    cat(skat_result$Q, skat_result$p.value, "\n")
 
     # ----- Step 10: Write result -----
     ss2 <- c(gene_name, gene_chromosome, region_start, region_end,
