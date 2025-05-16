@@ -110,17 +110,17 @@ perform_skat_test_decomposition <- function(
     raw_file <- paste0(prefix_skat, ".raw")
     if (!file.exists(raw_file)) stop("No .raw file found.") else (print("raw file found"))
 # Read the genotype data
-geno_df <- read.table(raw_file, header = TRUE, sep = " ")
+  geno_df <- read.table(raw_file, header = TRUE, sep = " ")
 
-all_cols <- colnames(geno_df)
-snp_indices <- which(sapply(all_cols, function(cn) {
-  any(startsWith(cn, paste0(gene_snps$SNP, "_")))
-}))
+  all_cols <- colnames(geno_df)
+  snp_indices <- which(sapply(all_cols, function(cn) {
+    any(startsWith(cn, paste0(gene_snps$SNP, "_")))
+  }))
 
-if (length(snp_indices) == 0) {
-  warning("No SNPs matched for gene: ", gene_name)
-  return(NULL)
-}
+  if (length(snp_indices) == 0) {
+    warning("No SNPs matched for gene: ", gene_name)
+    return(NULL)
+  }
 
 genotype_matrix <- as.matrix(geno_df[, snp_indices])
 
@@ -161,7 +161,6 @@ cat(h2)
     #   "--out", h2_file
     # ))
     # h2 <- as.numeric(readLines(h2_file))
-
 
     X <- genotype_matrix
     cat(str(X), "\n")

@@ -45,9 +45,11 @@ def main():
 
     # Perform MLMA using FaST-LMM
     print("Starting MLMA analysis with FaST-LMM...")
-    results_df = single_snp(test_snps=bedfile, pheno=pheno)
+    results_df = single_snp(test_snps=bedfile, pheno=pheno,leave_out_one_chrom=False)
 
     # Save results
     output_filename = f"{os.path.splitext(os.path.basename(snp_data_loc))[0]}_results_fast_lmm_mlma.csv"
     results_df.to_csv(output_filename, index=False)
     print(f"Results saved to {output_filename}")
+if __name__ == "__main__":
+    main()
