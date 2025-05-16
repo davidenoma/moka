@@ -155,7 +155,7 @@ cat(h2)
 
 
     X <- genotype_matrix
-    cat(str(X), "\n")
+    # cat(str(X), "\n")
     G <- read_grm(prefix_skat)
 
     # ----- Step 8: Decorrelate using GRM -----
