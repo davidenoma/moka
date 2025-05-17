@@ -47,8 +47,8 @@ def main():
     # print("Starting MLMA analysis with FaST-LMM... to get HERITABILITY ")
     # Perform analysis and extract only null h2
     results_df = single_snp(test_snps=bedfile, pheno=pheno, leave_out_one_chrom=False)
-
-    h2 = results_df['null_h2'].iloc[0]
+    # h2 = results_df['Nullh2'].iloc[0]  # Get first value since null h2 is constant
+    h2 = results_df['Nullh2'].iloc[0]
     print(f"{h2:.15f}")
 if __name__ == "__main__":
     main()
