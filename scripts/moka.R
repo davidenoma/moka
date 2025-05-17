@@ -130,10 +130,10 @@ genotype_matrix <- as.matrix(geno_df[, snp_indices])
     Y <- fam$V6
     Y <- scale(Y, center = TRUE, scale = FALSE)
         # Step 2: Generate GRM using GCTA
-    system(paste(
-      "gcta64 --bfile", prefix_skat,
-      "--make-grm-bin --out", prefix_skat
-    ))
+    # system(paste(
+    #   "gcta64 --bfile", prefix_skat,
+    #   "--make-grm-bin --out", prefix_skat
+    # ))
 #     # ----- Step 2.5: Generate GCTA-compatible .pheno file from .fam -----
 #   pheno_file <- paste0(prefix_skat, ".pheno")
 #   fam <- read.table(paste0(genotype_prefix, ".fam"), header = FALSE)
