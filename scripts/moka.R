@@ -129,38 +129,38 @@ genotype_matrix <- as.matrix(geno_df[, snp_indices])
     fam <- read.table(paste0(genotype_prefix, ".fam"), header = FALSE)
     Y <- fam$V6
     Y <- scale(Y, center = TRUE, scale = FALSE)
-        # Step 2: Generate GRM using GCTA
-    system(paste(
-      "gcta64 --bfile", prefix_skat,
-      "--make-grm-bin --out", prefix_skat
-    ))
-    # ----- Step 2.5: Generate GCTA-compatible .pheno file from .fam -----
-  pheno_file <- paste0(prefix_skat, ".pheno")
-  fam <- read.table(paste0(genotype_prefix, ".fam"), header = FALSE)
-  fam_pheno <- fam[, c(1, 2, 6)]  # FID, IID, PHENO
-  write.table(fam_pheno, file = pheno_file, quote = FALSE, row.names = FALSE, col.names = FALSE, sep = "\t")
-  # Step 3: Estimate h² using GCTA REML
-  system(paste(
-    "gcta64 --grm", prefix_skat,
-    "--pheno", pheno_file, "--thread-num", 22,
-    "--reml --out", prefix_skat
-  ))
-  h2_file <- paste0(prefix_skat, ".hsq")
-# Read the hsq file with header set to TRUE and fill parameter for safety
-h2_data <- read.table(h2_file, header = TRUE, sep = "\t", stringsAsFactors = FALSE, fill = TRUE)
-# Extract the row for 'V(G)/Vp'
-h2_line <- h2_data[h2_data$Source == "V(G)/Vp", ]
-# Convert the Variance column value to numeric
-h2 <- as.numeric(h2_line$Variance)
-cat(h2)
+#         # Step 2: Generate GRM using GCTA
+#     system(paste(
+#       "gcta64 --bfile", prefix_skat,
+#       "--make-grm-bin --out", prefix_skat
+#     ))
+#     # ----- Step 2.5: Generate GCTA-compatible .pheno file from .fam -----
+#   pheno_file <- paste0(prefix_skat, ".pheno")
+#   fam <- read.table(paste0(genotype_prefix, ".fam"), header = FALSE)
+#   fam_pheno <- fam[, c(1, 2, 6)]  # FID, IID, PHENO
+#   write.table(fam_pheno, file = pheno_file, quote = FALSE, row.names = FALSE, col.names = FALSE, sep = "\t")
+#   # Step 3: Estimate h² using GCTA REML
+#   system(paste(
+#     "gcta64 --grm", prefix_skat,
+#     "--pheno", pheno_file, "--thread-num", 22,
+#     "--reml --out", prefix_skat
+#   ))
+#   h2_file <- paste0(prefix_skat, ".hsq")
+# # Read the hsq file with header set to TRUE and fill parameter for safety
+# h2_data <- read.table(h2_file, header = TRUE, sep = "\t", stringsAsFactors = FALSE, fill = TRUE)
+# # Extract the row for 'V(G)/Vp'
+# h2_line <- h2_data[h2_data$Source == "V(G)/Vp", ]
+# # Convert the Variance column value to numeric
+# h2 <- as.numeric(h2_line$Variance)
+# cat(h2)
 
-    # h2_file <- file.path(genotype_path, paste0(genotype_prefix, ".h2.txt"))
-    # system(paste(
-    #   "python ../estimate_h2_fastlmm.py",
-    #   "--snp_prefix", file.path(genotype_path, genotype_prefix),
-    #   "--out", h2_file
-    # ))
-    # h2 <- as.numeric(readLines(h2_file))
+# Run the Python script and capture its output
+  h2 <- as.numeric(system(
+    paste("python", script_path, "--snp_prefix", prefix_skat),
+    intern = TRUE
+  ))
+  cat(h2)
+
 
     X <- genotype_matrix
     cat(str(X), "\n")
@@ -330,7 +330,8 @@ combine_skat_results <- function(genotype_prefix, result_folder, weights_type) {
 # Main execution starts here
 args <- commandArgs(trailingOnly = TRUE)
 if (length(args) < 6) {
-  cat("Usage: Rscript skat_analysis.R <genotype_prefix> <gene_regions_file> <weights_file> <genotype_path> <weights_type> <chromosome> [is_binary] [spectral_decorrelated]\n")
+  cat("Usage: Rscript skat_analysis.R <genotype_prefix> <gene_regions_file> <weights_file> <genotype_path> <weights_type> <chromosome> [is_binary] [spectral_decorrelated]
+  <FAsTLMM heritability calculator\n")
   quit(status = 1)
 }
 
@@ -342,6 +343,8 @@ weights_type <- args[5]
 chr <- args[6]
 is_binary <- ifelse(length(args) >= 7, as.logical(args[7]), TRUE)
 spectral_decorrelated <- ifelse(length(args) >= 8, as.logical(args[8]), TRUE)
+script_path <- commandArgs(trailingOnly = TRUE)[9]  # Assume the 9th argument is the python script
+
 chr <- gsub("chr", "", chr)
 
 result_folder <- "result_folder"
