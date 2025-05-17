@@ -168,7 +168,7 @@ genotype_matrix <- as.matrix(geno_df[, snp_indices])
     # G <- read_grm(prefix_skat)
     G <- read_grm_plink(prefix_skat)
 
-    cat(str(G))
+    # cat(str(G))
 
     # ----- Step 8: Decorrelate using GRM -----
     eig <- eigen(G, symmetric = TRUE)
