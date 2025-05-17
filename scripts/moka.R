@@ -164,8 +164,10 @@ genotype_matrix <- as.matrix(geno_df[, snp_indices])
 
     X <- genotype_matrix
     cat(str(X), "\n")
-    G <- read_grm(prefix_skat)
-    # cat(str(G))
+    # G <- read_grm(prefix_skat)
+    G <- read_grm_plink(prefix_skat)
+
+    cat(str(G))
 
     # ----- Step 8: Decorrelate using GRM -----
     eig <- eigen(G, symmetric = TRUE)
@@ -206,6 +208,16 @@ genotype_matrix <- as.matrix(geno_df[, snp_indices])
      cat("Full Error Details:\n")
   print(e)
   })
+}
+# PLINK-based GRM generation function
+read_grm_plink <- function(prefix) {
+  system(paste(
+    "plink --bfile", prefix,
+    "--make-rel square --out", prefix
+  ))
+  grm_file <- paste0(prefix, ".rel")
+  G <- as.matrix(read.table(grm_file, header = FALSE))
+  return(G)
 }
 
 
