@@ -165,8 +165,8 @@ genotype_matrix <- as.matrix(geno_df[, snp_indices])
   cat('Reading GRM\n')
     X <- genotype_matrix
     # cat(str(X), "\n")
-    G <- read_grm(prefix_skat)
-    # G <- read_grm_plink(prefix_skat)
+    # G <- read_grm(prefix_skat)
+    G <- read_grm_plink(prefix_skat)
 
     # cat(str(G))
     cat('Decomposing GRM\n')
