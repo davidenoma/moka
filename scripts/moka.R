@@ -159,11 +159,12 @@ genotype_matrix <- as.matrix(geno_df[, snp_indices])
     paste("python", script_path, "--snp_prefix", prefix_skat),
     intern = TRUE
   ))
-  cat(h2)
+  cat(h2,"\n")
+    # G <- read_grm(p)
 
 
     X <- genotype_matrix
-    cat(str(X), "\n")
+    # cat(str(X), "\n")
     # G <- read_grm(prefix_skat)
     G <- read_grm_plink(prefix_skat)
 
@@ -212,7 +213,7 @@ genotype_matrix <- as.matrix(geno_df[, snp_indices])
 # PLINK-based GRM generation function
 read_grm_plink <- function(prefix) {
   system(paste(
-    "plink --bfile", prefix,
+    "plink --bfile", prefix, "--allow-no-sex",
     "--make-rel square --out", prefix
   ))
   grm_file <- paste0(prefix, ".rel")
