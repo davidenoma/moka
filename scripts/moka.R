@@ -155,12 +155,13 @@ genotype_matrix <- as.matrix(geno_df[, snp_indices])
 # cat(h2)
 
 # Run the Python script and capture its output
-  h2 <- as.numeric(system(
+  h2_raw <- system(
     paste("python", script_path, "--snp_prefix", prefix_skat),
     intern = TRUE
-  ))
-  cat(h2,"\n")
-    # G <- read_grm(p)
+  )
+h2_numeric <- as.numeric(trimws(h2_raw))
+h2 <- h2_numeric[which.max(!is.na(h2_numeric))]  # Take last non-NA
+cat(sprintf("Extracted h²: %.15f\n", h2))
 
   cat('Reading GRM\n')
     X <- genotype_matrix
