@@ -162,14 +162,14 @@ genotype_matrix <- as.matrix(geno_df[, snp_indices])
   cat(h2,"\n")
     # G <- read_grm(p)
 
-
+  cat('Reading GRM\n')
     X <- genotype_matrix
     # cat(str(X), "\n")
     G <- read_grm(prefix_skat)
     # G <- read_grm_plink(prefix_skat)
 
     # cat(str(G))
-
+    cat('Decomposing GRM\n')
     # ----- Step 8: Decorrelate using GRM -----
     eig <- eigen(G, symmetric = TRUE)
 
@@ -177,7 +177,7 @@ genotype_matrix <- as.matrix(geno_df[, snp_indices])
     S <- eig$values
     D <- U %*% diag(1 / sqrt(h2 * S + 1)) %*% t(U)
     # cat(str(D), "\n")
-
+    cat('Done decompsition\n')
     Y_star <- D %*% Y
     cat(str(Y_star), "\n")
     X_star <- D %*% X
