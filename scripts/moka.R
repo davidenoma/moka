@@ -122,7 +122,7 @@ perform_skat_test_decomposition <- function(
     return(NULL)
   }
 
-genotype_matrix <- as.matrix(geno_df[, snp_indices])
+    genotype_matrix <- as.matrix(geno_df[, snp_indices])
 
     # ----- Step 4: Read phenotype -----
     # fam_file <- file.path(genotype_path, paste0(genotype_prefix, ".fam"))
@@ -159,11 +159,11 @@ genotype_matrix <- as.matrix(geno_df[, snp_indices])
     paste("python", script_path, "--snp_prefix", prefix_skat),
     intern = TRUE
   )
-h2_numeric <- as.numeric(trimws(h2_raw))
-h2 <- h2_numeric[which.max(!is.na(h2_numeric))]  # Take last non-NA
-cat(sprintf("Extracted h²: %.15f\n", h2))
+  h2_numeric <- as.numeric(trimws(h2_raw))
+  h2 <- h2_numeric[which.max(!is.na(h2_numeric))]  # Take last non-NA
+  cat(sprintf("Extracted h²: %.15f\n", h2))
 
-  cat('Reading GRM\n')
+    cat('Reading GRM\n')
     X <- genotype_matrix
     # cat(str(X), "\n")
     # G <- read_grm(prefix_skat)
@@ -187,13 +187,9 @@ cat(sprintf("Extracted h²: %.15f\n", h2))
     # cat(str(intercept), "\n")
 
     # ----- Step 9: Run SKAT -----
-
     obj <- SKAT_Null_Model(Y_star ~ 1, out_type = ifelse(is_binary, "D", "C"))
-
     skat_result <- SKAT(X_star, obj, kernel = "linear.weighted", weights = gene_snps$Weight)
-
     # cat(skat_result$Q, skat_result$p.value, "\n")
-
     # ----- Step 10: Write result -----
     ss2 <- c(gene_name, gene_chromosome, region_start, region_end,
              toString(skat_result$Q), toString(skat_result$p.value))
