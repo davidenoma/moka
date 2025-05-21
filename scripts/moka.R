@@ -130,44 +130,44 @@ perform_skat_test_decomposition <- function(
     Y <- fam$V6
     Y <- scale(Y, center = TRUE, scale = FALSE)
         # Step 2: Generate GRM using GCTA
-    # system(paste(
-    #   "gcta64 --bfile", prefix_skat,
-    #   "--make-grm-bin --out", prefix_skat
-    # ))
-#     # ----- Step 2.5: Generate GCTA-compatible .pheno file from .fam -----
-#   pheno_file <- paste0(prefix_skat, ".pheno")
-#   fam <- read.table(paste0(genotype_prefix, ".fam"), header = FALSE)
-#   fam_pheno <- fam[, c(1, 2, 6)]  # FID, IID, PHENO
-#   write.table(fam_pheno, file = pheno_file, quote = FALSE, row.names = FALSE, col.names = FALSE, sep = "\t")
-#   # Step 3: Estimate h² using GCTA REML
-#   system(paste(
-#     "gcta64 --grm", prefix_skat,
-#     "--pheno", pheno_file, "--thread-num", 22,
-#     "--reml --out", prefix_skat
-#   ))
-#   h2_file <- paste0(prefix_skat, ".hsq")
+    system(paste(
+      "gcta64 --bfile", prefix_skat,
+      "--make-grm-bin --out", prefix_skat
+    ))
+    # ----- Step 2.5: Generate GCTA-compatible .pheno file from .fam -----
+  pheno_file <- paste0(prefix_skat, ".pheno")
+  fam <- read.table(paste0(genotype_prefix, ".fam"), header = FALSE)
+  fam_pheno <- fam[, c(1, 2, 6)]  # FID, IID, PHENO
+  write.table(fam_pheno, file = pheno_file, quote = FALSE, row.names = FALSE, col.names = FALSE, sep = "\t")
+  # Step 3: Estimate h² using GCTA REML
+  system(paste(
+    "gcta64 --grm", prefix_skat,
+    "--pheno", pheno_file, "--thread-num", 22,
+    "--reml --out", prefix_skat
+  ))
+  h2_file <- paste0(prefix_skat, ".hsq")
 # # Read the hsq file with header set to TRUE and fill parameter for safety
-# h2_data <- read.table(h2_file, header = TRUE, sep = "\t", stringsAsFactors = FALSE, fill = TRUE)
+h2_data <- read.table(h2_file, header = TRUE, sep = "\t", stringsAsFactors = FALSE, fill = TRUE)
 # # Extract the row for 'V(G)/Vp'
-# h2_line <- h2_data[h2_data$Source == "V(G)/Vp", ]
+h2_line <- h2_data[h2_data$Source == "V(G)/Vp", ]
 # # Convert the Variance column value to numeric
-# h2 <- as.numeric(h2_line$Variance)
-# cat(h2)
+h2 <- as.numeric(h2_line$Variance)
+cat(h2)
 
 # Run the Python script and capture its output
-  h2_raw <- system(
-    paste("python", script_path, "--snp_prefix", prefix_skat),
-    intern = TRUE
-  )
-  h2_numeric <- as.numeric(trimws(h2_raw))
-  h2 <- h2_numeric[which.max(!is.na(h2_numeric))]  # Take last non-NA
-  cat(sprintf("Extracted h²: %.15f\n", h2))
+#   h2_raw <- system(
+#     paste("python", script_path, "--snp_prefix", prefix_skat),
+#     intern = TRUE
+#   )
+#   h2_numeric <- as.numeric(trimws(h2_raw))
+#   h2 <- h2_numeric[which.max(!is.na(h2_numeric))]  # Take last non-NA
+#   cat(sprintf("Extracted h²: %.15f\n", h2))
 
     cat('Reading GRM\n')
     X <- genotype_matrix
     # cat(str(X), "\n")
-    # G <- read_grm(prefix_skat)
-    G <- read_grm_plink(prefix_skat)
+    G <- read_grm(prefix_skat)
+    # G <- read_grm_plink(prefix_skat)
 
     # cat(str(G))
     cat('Decomposing GRM\n')
