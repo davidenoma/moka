@@ -70,7 +70,7 @@ perform_skat_test <- function(gene_name, gene_chromosome, region_start, region_e
 }
 perform_skat_test_decomposition <- function(
   gene_name, gene_chromosome, region_start, region_end, gene_snps,
-  genotype_prefix, genotype_path, result_folder, result_file, is_binary = TRUE
+  genotype_prefix, genotype_path, result_folder, result_file, genome_wide_heritability, grm, is_binary = TRUE
 ) {
   genotype_prefix <- paste0(genotype_path, genotype_prefix)
 
@@ -129,11 +129,11 @@ perform_skat_test_decomposition <- function(
     fam <- read.table(paste0(genotype_prefix, ".fam"), header = FALSE)
     Y <- fam$V6
     Y <- scale(Y, center = TRUE, scale = FALSE)
-        # Step 2: Generate GRM using GCTA
-    system(paste(
-      "gcta64 --bfile", prefix_skat,
-      "--make-grm-bin --out", prefix_skat
-    ))
+    #     # Step 2: Generate GRM using GCTA
+    # system(paste(
+    #   "gcta64 --bfile", prefix_skat,
+    #   "--make-grm-bin --out", prefix_skat
+    # ))
     # ----- Step 2.5: Generate GCTA-compatible .pheno file from .fam -----
   pheno_file <- paste0(prefix_skat, ".pheno")
   fam <- read.table(paste0(genotype_prefix, ".fam"), header = FALSE)
