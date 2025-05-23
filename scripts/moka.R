@@ -241,7 +241,7 @@ extract_weights_for_snvs_and_skat_chr <- function(genotype_prefix, gene_regions_
       print(paste("Gene number: ", gene_count))
       # Call the SKAT test function with selected SNPs
           if (spectral_decorrelated) {
-        perform_skat_test_decomposition(gene_name, gene_chromosome, region_start, region_end, gene_snps, genotype_prefix, genotype_path, result_folder, result_file, is_binary)
+        perform_skat_test_decomposition(gene_name, gene_chromosome, region_start, region_end, gene_snps, genotype_prefix, genotype_path, result_folder, result_file,h2, grm, is_binary)
       } else {
         perform_skat_test(gene_name, gene_chromosome, region_start, region_end, gene_snps, genotype_prefix, result_folder, result_file, is_binary)
       }
