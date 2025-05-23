@@ -70,7 +70,7 @@ perform_skat_test <- function(gene_name, gene_chromosome, region_start, region_e
 }
 perform_skat_test_decomposition <- function(
   gene_name, gene_chromosome, region_start, region_end, gene_snps,
-  genotype_prefix, genotype_path, result_folder, result_file, genome_wide_heritability, grm, is_binary = TRUE
+  genotype_prefix, genotype_path, result_folder, result_file, h2, grm, is_binary = TRUE
 ) {
   genotype_prefix <- paste0(genotype_path, genotype_prefix)
 
@@ -140,33 +140,26 @@ perform_skat_test_decomposition <- function(
   fam_pheno <- fam[, c(1, 2, 6)]  # FID, IID, PHENO
   write.table(fam_pheno, file = pheno_file, quote = FALSE, row.names = FALSE, col.names = FALSE, sep = "\t")
   # Step 3: Estimate h² using GCTA REML
-  system(paste(
-    "gcta64 --grm", prefix_skat,
-    "--pheno", pheno_file, "--thread-num", 22,
-    "--reml --out", prefix_skat
-  ))
-  h2_file <- paste0(prefix_skat, ".hsq")
-# # Read the hsq file with header set to TRUE and fill parameter for safety
-h2_data <- read.table(h2_file, header = TRUE, sep = "\t", stringsAsFactors = FALSE, fill = TRUE)
-# # Extract the row for 'V(G)/Vp'
-h2_line <- h2_data[h2_data$Source == "V(G)/Vp", ]
-# # Convert the Variance column value to numeric
-h2 <- as.numeric(h2_line$Variance)
-cat(h2)
+#   system(paste(
+#     "gcta64 --grm", prefix_skat,
+#     "--pheno", pheno_file, "--thread-num", 22,
+#     "--reml --out", prefix_skat
+#   ))
+#   h2_file <- paste0(prefix_skat, ".hsq")
+# # # Read the hsq file with header set to TRUE and fill parameter for safety
+# h2_data <- read.table(h2_file, header = TRUE, sep = "\t", stringsAsFactors = FALSE, fill = TRUE)
+# # # Extract the row for 'V(G)/Vp'
+# h2_line <- h2_data[h2_data$Source == "V(G)/Vp", ]
+# # # Convert the Variance column value to numeric
+# h2 <- as.numeric(h2_line$Variance)
+# cat(h2)
 
-# Run the Python script and capture its output
-#   h2_raw <- system(
-#     paste("python", script_path, "--snp_prefix", prefix_skat),
-#     intern = TRUE
-#   )
-#   h2_numeric <- as.numeric(trimws(h2_raw))
-#   h2 <- h2_numeric[which.max(!is.na(h2_numeric))]  # Take last non-NA
-#   cat(sprintf("Extracted h²: %.15f\n", h2))
+
 
     cat('Reading GRM\n')
     X <- genotype_matrix
     # cat(str(X), "\n")
-    G <- read_grm(prefix_skat)
+    G <- grm
     # G <- read_grm_plink(prefix_skat)
 
     # cat(str(G))
@@ -207,20 +200,13 @@ cat(h2)
   print(e)
   })
 }
-# PLINK-based GRM generation function
-read_grm_plink <- function(prefix) {
-  system(paste(
-    "plink --bfile", prefix, "--allow-no-sex",
-    "--make-rel square --out", prefix
-  ))
-  grm_file <- paste0(prefix, ".rel")
-  G <- as.matrix(read.table(grm_file, header = FALSE))
-  return(G)
-}
+
+
+
 
 
 # Define a function to extract weights for SNVs and perform SKAT for a specific chromosome
-extract_weights_for_snvs_and_skat_chr <- function(genotype_prefix, gene_regions_file, weights_file, genotype_path, weights_type, result_folder, chr, is_binary = TRUE) {
+extract_weights_for_snvs_and_skat_chr <- function(genotype_prefix, gene_regions_file, weights_file, genotype_path, weights_type, result_folder, chr, h2, grm,is_binary = TRUE) {
   # Read the weights vector file
   weights_vector <- read.csv(weights_file, sep = ",", header = TRUE)
   colnames(weights_vector) <- c("SNP", "Chr", "Pos", "Weight")
@@ -268,7 +254,7 @@ extract_weights_for_snvs_and_skat_chr <- function(genotype_prefix, gene_regions_
 
   print(paste("Done with SKAT analysis for chromosome", chr))
 }
-    read_grm <- function(prefix) {
+read_grm <- function(prefix) {
       grm_bin <- paste0(prefix, ".grm.bin")
       grm_id <- paste0(prefix, ".grm.id")
       grm_vals <- readBin(grm_bin, what = "numeric", n = 1e9, size = 4)
@@ -285,6 +271,18 @@ extract_weights_for_snvs_and_skat_chr <- function(genotype_prefix, gene_regions_
       }
       return(G)
     }
+# PLINK-based GRM generation function
+read_grm_plink <- function(prefix) {
+  system(paste(
+    "plink --bfile", prefix, "--allow-no-sex",
+    "--make-rel square --out", prefix
+  ))
+  grm_file <- paste0(prefix, ".rel")
+  G <- as.matrix(read.table(grm_file, header = FALSE))
+  return(G)
+}
+
+
 # Helper function to prepare files for SKAT per chromosome
 prepare_SKAT_files_per_chr <- function(genotype_path, genotype_prefix)  {
   old_file_name_bed <- paste0(genotype_path, genotype_prefix, ".bed")
@@ -353,15 +351,44 @@ weights_type <- args[5]
 chr <- args[6]
 is_binary <- ifelse(length(args) >= 7, as.logical(args[7]), TRUE)
 spectral_decorrelated <- ifelse(length(args) >= 8, as.logical(args[8]), TRUE)
-script_path <- commandArgs(trailingOnly = TRUE)[9]  # Assume the 9th argument is the python script
+# script_path <- commandArgs(trailingOnly = TRUE)[9]  # Assume the 9th argument is the python script
+
+# First check if h2 file exists
+h2_file <- paste0(genotype_path, genotype_prefix, "_h2.txt")
+if (!file.exists(h2_file)) {
+  # Run FastLMM and save h2
+  h2_raw <- system(
+    paste("python", "scripts/estimate_h2_fastlmm.py", "--snp_prefix", paste0(genotype_path, genotype_prefix)),
+    intern = TRUE
+  )
+  h2_numeric <- as.numeric(trimws(h2_raw))
+  h2 <- h2_numeric[which.max(!is.na(h2_numeric))]  # Take last non-NA
+  # Write h2 to file
+  write(sprintf("%.15f", h2), file = h2_file)
+  cat(sprintf("Calculated and saved h²: %.15f\n", h2))
+} else {
+  # Read existing h2
+  h2 <- as.numeric(readLines(h2_file))
+  cat(sprintf("Loaded existing h²: %.15f\n", h2))
+}
+
+# Check for GRM file
+grm_file <- paste0(genotype_path, genotype_prefix, ".rel")
+if (!file.exists(grm_file)) {
+  # Generate GRM if it doesn't exist
+  cat("Generating GRM...\n")
+  grm <- read_grm_plink(paste0(genotype_path, genotype_prefix))
+}  else{
+  cat("Loading existing GRM...\n")
+  grm <- as.matrix(read.table(grm_file, header = FALSE))
+}
 
 chr <- gsub("chr", "", chr)
-
 result_folder <- "result_folder"
 prepare_SKAT_files_per_chr(genotype_path, genotype_prefix)
 print("done creating skat genotype")
 genotype_prefix <- paste0(genotype_prefix, "_", chr)
-extract_weights_for_snvs_and_skat_chr(genotype_prefix, gene_regions_file, weights_file, genotype_path, weights_type, result_folder, chr, is_binary)
+extract_weights_for_snvs_and_skat_chr(genotype_prefix, gene_regions_file, weights_file, genotype_path, weights_type, result_folder, chr,h2, grm, is_binary)
 
 #combine_skat_results(genotype_prefix, result_folder, weights_type)
 remove_SKAT_files_per_chr(genotype_path, genotype_prefix)
