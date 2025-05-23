@@ -338,8 +338,7 @@ combine_skat_results <- function(genotype_prefix, result_folder, weights_type) {
 # Main execution starts here
 args <- commandArgs(trailingOnly = TRUE)
 if (length(args) < 6) {
-  cat("Usage: Rscript skat_analysis.R <genotype_prefix> <gene_regions_file> <weights_file> <genotype_path> <weights_type> <chromosome> [is_binary] [spectral_decorrelated]
-  <FAsTLMM heritability calculator\n")
+  cat("Usage: Rscript skat_analysis.R <genotype_prefix> <gene_regions_file> <weights_file> <genotype_path> <weights_type> <chromosome> [is_binary] [spectral_decorrelated]\n")
   quit(status = 1)
 }
 
@@ -352,7 +351,7 @@ chr <- args[6]
 is_binary <- ifelse(length(args) >= 7, as.logical(args[7]), TRUE)
 spectral_decorrelated <- ifelse(length(args) >= 8, as.logical(args[8]), TRUE)
 # script_path <- commandArgs(trailingOnly = TRUE)[9]  # Assume the 9th argument is the python script
-
+   if (spectral_decorrelated) {
 # First check if h2 file exists
 h2_file <- paste0(genotype_path, genotype_prefix, "_h2.txt")
 if (!file.exists(h2_file)) {
@@ -382,7 +381,7 @@ if (!file.exists(grm_file)) {
   cat("Loading existing GRM...\n")
   grm <- as.matrix(read.table(grm_file, header = FALSE))
 }
-
+   }
 chr <- gsub("chr", "", chr)
 result_folder <- "result_folder"
 prepare_SKAT_files_per_chr(genotype_path, genotype_prefix)
