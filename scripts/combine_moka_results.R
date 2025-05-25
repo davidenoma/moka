@@ -4,7 +4,7 @@ combine_skat_results <- function(genotype_prefix, weights_type, result_folder) {
   output_file <- paste0(genotype_prefix, "_", weights_type, "_combined_association.tsv")
 
   # Execute shell commands to combine SKAT files using pattern matching
-  system(paste('echo -e "Gene_name\tGene_chromosome\tRegion_start\tRegion_end\tQ_test\tpvalue" >', file.path(result_folder, output_file)))
+  system(paste('echo "Gene_name\tGene_chromosome\tRegion_start\tRegion_end\tQ_test\tpvalue" >', file.path(result_folder, output_file)))
   system(paste('for file in', file.path(result_folder, paste0("*", genotype_prefix, "*", weights_type, "*")), '; do if [ "$file" !=', file.path(result_folder, output_file), ']; then tail -n +2 "$file" >>', file.path(result_folder, output_file), '; fi; done'))
 
   # Optional: Print message indicating completion
