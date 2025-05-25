@@ -23,7 +23,7 @@ gene_data <- read.table(
   file_path,
   sep = "\t",  
   header = TRUE,  
-  col.names = c("Gene_name", "Gene_chromosome", "Region_start", "Region_end", "Q_test", "pvalue")
+  # col.names = c("Gene_name", "Gene_chromosome", "Region_start", "Region_end", "Q_test", "pvalue")
 )
 
 # Calculate the p-value threshold using Bonferroni correction
