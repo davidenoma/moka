@@ -189,9 +189,13 @@ perform_skat_test_decomposition <- function(
     write(ss2, file = result_file, append = TRUE, ncol = 6, sep = "\t")
     # cat('Written association result for gene:')
     # ----- Step 11: Clean up -----
-    unlink(Sys.glob(file.path(genotype_path, paste0(prefix_skat, ".*"))))
-    unlink(Sys.glob(file.path(genotype_path, paste0(genotype_prefix, "*.raw"))))
-    unlink(Sys.glob(file.path(genotype_path, paste0(genotype_prefix, ".grm*"))))
+# Remove SKAT temporary files, excluding the .rel file
+files_to_remove <- Sys.glob(file.path(genotype_path, paste0(prefix_skat, ".*")))
+files_to_remove <- files_to_remove[!grepl("\\.rel$", files_to_remove)]
+unlink(files_to_remove)
+
+raw_files <- Sys.glob(file.path(genotype_path, paste0(genotype_prefix, "*.raw")))
+unlink(raw_files)
 
   }, error = function(e) {
     cat("Error in SKAT for gene:", gene_name, "\n")
