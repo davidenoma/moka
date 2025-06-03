@@ -8,3 +8,8 @@ dependencies:
  - r-base
  - r-parallelly
  - r-skat
+ - python
+ - pip
+ - pip:
+   - fastlmm
+   - pysnptools
