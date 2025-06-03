@@ -172,7 +172,7 @@ perform_skat_test_decomposition <- function(
     # cat(str(intercept), "\n")
 
     # ----- Step 9: Run SKAT -----
-    obj <- SKAT_Null_Model(Y_star ~ 1)
+    obj <- SKAT_Null_Model(Y_star ~ 1,out_type="C")
     skat_result <- SKAT(X_star, obj, kernel = "linear.weighted", weights = gene_snps$Weight)
     # cat(skat_result$Q, skat_result$p.value, "\n")
     # ----- Step 10: Write result -----
