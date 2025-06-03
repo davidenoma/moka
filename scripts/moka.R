@@ -376,11 +376,11 @@ if (!file.exists(h2_file)) {
 }
 
 # Check for GRM file
-grm_file <- paste0(genotype_path, genotype_prefix, ".rel")
+grm_file <- paste0(genotype_path, genotype_prefix, ".grm.bin")
 if (!file.exists(grm_file)) {
   # Generate GRM if it doesn't exist
   cat("Generating GRM...\n")
-    make_grm_bin_plink(paste0(genotype_path, genotype_prefix))
+  make_grm_bin_plink(paste0(genotype_path, genotype_prefix))
   grm <- read_grm(paste0(genotype_path, genotype_prefix))
 }  else{
   cat("Loading existing GRM...\n")
