@@ -96,14 +96,6 @@ perform_skat_test_decomposition <- function(
     ))
     print('raw file generated')
 
-    # ----- Step 2: Generate GRM -----
-    # system(paste(
-    #   "plink --bfile", prefix_skat,
-    #   "--make-grm-bin --out", prefix_skat,
-    #   "--allow-no-sex "
-    # ))
-    # print("GRM generated")
-
 
 
     # ----- Step 3: Read genotype matrix -----
@@ -286,7 +278,15 @@ read_grm_plink <- function(prefix) {
   return(G)
 }
 
+make_grm_bin_plink <- function(prefix){
 
+    system(paste(
+      "plink --bfile", prefix,
+      "--make-grm-bin --out", prefix,
+      "--allow-no-sex "
+    ))
+    print("GRM generated")
+}
 # Helper function to prepare files for SKAT per chromosome
 prepare_SKAT_files_per_chr <- function(genotype_path, genotype_prefix)  {
   old_file_name_bed <- paste0(genotype_path, genotype_prefix, ".bed")
@@ -380,10 +380,12 @@ grm_file <- paste0(genotype_path, genotype_prefix, ".rel")
 if (!file.exists(grm_file)) {
   # Generate GRM if it doesn't exist
   cat("Generating GRM...\n")
-  grm <- read_grm_plink(paste0(genotype_path, genotype_prefix))
+    make_grm_bin_plink(paste0(genotype_path, genotype_prefix))
+  grm <- read_grm(paste0(genotype_path, genotype_prefix))
 }  else{
   cat("Loading existing GRM...\n")
-  grm <- as.matrix(read.table(grm_file, header = FALSE))
+  grm <- read_grm(paste0(genotype_path, genotype_prefix))
+  # grm <- as.matrix(read.table(grm_file, header = FALSE))
 }
    }
 chr <- gsub("chr", "", chr)
