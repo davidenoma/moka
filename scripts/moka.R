@@ -163,7 +163,7 @@ perform_skat_test_decomposition <- function(
     S <- eig$values
     D <- U %*% diag(1 / sqrt(h2 * S + 1))
     # cat(str(D), "\n")
-    cat('Done decompsition\n')
+    cat('Done decomposition\n')
     Y_star <- D %*% Y
     cat(str(Y_star), "\n")
     X_star <- D %*% X
