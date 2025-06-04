@@ -1,7 +1,7 @@
 # Load required R libraries
 library(SKAT)
 library(parallel)
-
+# import
 # Define the function to perform the SKAT test
 perform_skat_test <- function(gene_name, gene_chromosome, region_start, region_end, gene_snps, genotype_prefix, result_folder, result_file, is_binary = TRUE) {
   tryCatch({
@@ -70,7 +70,7 @@ perform_skat_test <- function(gene_name, gene_chromosome, region_start, region_e
 }
 perform_skat_test_decomposition <- function(
   gene_name, gene_chromosome, region_start, region_end, gene_snps,
-  genotype_prefix, genotype_path, result_folder, result_file, h2, grm, is_binary = TRUE
+  genotype_prefix, genotype_path, result_folder, result_file, D, is_binary = TRUE
 ) {
   genotype_prefix <- paste0(genotype_path, genotype_prefix)
 
@@ -151,17 +151,17 @@ perform_skat_test_decomposition <- function(
     cat('Reading GRM\n')
     X <- genotype_matrix
     # cat(str(X), "\n")
-    G <- grm
-    # G <- read_grm_plink(prefix_skat)
-
-    # cat(str(G))
-    cat('Decomposing GRM\n')
-    # ----- Step 8: Decorrelate using GRM -----
-    eig <- eigen(G, symmetric = TRUE)
-
-    U <- unname(eig$vectors)
-    S <- eig$values
-    D <- U %*% diag(1 / sqrt(h2 * S + 1))
+    # G <- grm
+    # # G <- read_grm_plink(prefix_skat)
+    #
+    # # cat(str(G))
+    # cat('Decomposing GRM\n')
+    # # ----- Step 8: Decorrelate using GRM -----
+    # eig <- eigen(G, symmetric = TRUE)
+    #
+    # U <- unname(eig$vectors)
+    # S <- eig$values
+    # D <- U %*% diag(1 / sqrt(h2 * S + 1))
     # cat(str(D), "\n")
     cat('Done decomposition\n')
     Y_star <- D %*% Y
@@ -202,7 +202,7 @@ unlink(raw_files)
 
 
 # Define a function to extract weights for SNVs and perform SKAT for a specific chromosome
-extract_weights_for_snvs_and_skat_chr <- function(genotype_prefix, gene_regions_file, weights_file, genotype_path, weights_type, result_folder, chr, h2, grm,is_binary = TRUE) {
+extract_weights_for_snvs_and_skat_chr <- function(genotype_prefix, gene_regions_file, weights_file, genotype_path, weights_type, result_folder, chr, D,is_binary = TRUE) {
   # Read the weights vector file
   weights_vector <- read.csv(weights_file, sep = ",", header = TRUE)
   colnames(weights_vector) <- c("SNP", "Chr", "Pos", "Weight")
@@ -237,7 +237,7 @@ extract_weights_for_snvs_and_skat_chr <- function(genotype_prefix, gene_regions_
       print(paste("Gene number: ", gene_count))
       # Call the SKAT test function with selected SNPs
           if (spectral_decorrelated) {
-        perform_skat_test_decomposition(gene_name, gene_chromosome, region_start, region_end, gene_snps, genotype_prefix, genotype_path, result_folder, result_file,h2, grm, is_binary)
+        perform_skat_test_decomposition(gene_name, gene_chromosome, region_start, region_end, gene_snps, genotype_prefix, genotype_path, result_folder, result_file,D, is_binary)
       } else {
         perform_skat_test(gene_name, gene_chromosome, region_start, region_end, gene_snps, genotype_prefix, result_folder, result_file, is_binary)
       }
@@ -382,9 +382,31 @@ if (!file.exists(grm_file)) {
   cat("Generating GRM...\n")
   make_grm_bin_plink(paste0(genotype_path, genotype_prefix))
   grm <- read_grm(paste0(genotype_path, genotype_prefix))
+  G <- grm
+    # G <- read_grm_plink(prefix_skat)
+
+    # cat(str(G))
+    cat('Decomposing GRM\n')
+    # ----- Step 8: Decorrelate using GRM -----
+    eig <- eigen(G, symmetric = TRUE)
+
+    U <- unname(eig$vectors)
+    S <- eig$values
+    D <- U %*% diag(1 / sqrt(h2 * S + 1))
 }  else{
   cat("Loading existing GRM...\n")
   grm <- read_grm(paste0(genotype_path, genotype_prefix))
+  G <- grm
+    # G <- read_grm_plink(prefix_skat)
+
+    # cat(str(G))
+    cat('Decomposing GRM\n')
+    # ----- Step 8: Decorrelate using GRM -----
+    eig <- eigen(G, symmetric = TRUE)
+
+    U <- unname(eig$vectors)
+    S <- eig$values
+    D <- U %*% diag(1 / sqrt(h2 * S + 1))
   # grm <- as.matrix(read.table(grm_file, header = FALSE))
 }
    }
@@ -393,7 +415,8 @@ result_folder <- "result_folder"
 prepare_SKAT_files_per_chr(genotype_path, genotype_prefix)
 print("done creating skat genotype")
 genotype_prefix <- paste0(genotype_prefix, "_", chr)
-extract_weights_for_snvs_and_skat_chr(genotype_prefix, gene_regions_file, weights_file, genotype_path, weights_type, result_folder, chr,h2, grm, is_binary)
+#assign GRM TO d
+extract_weights_for_snvs_and_skat_chr(genotype_prefix, gene_regions_file, weights_file, genotype_path, weights_type, result_folder, chr,D, is_binary)
 
 #combine_skat_results(genotype_prefix, result_folder, weights_type)
 remove_SKAT_files_per_chr(genotype_path, genotype_prefix)
