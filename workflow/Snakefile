@@ -17,7 +17,7 @@ rule moka_test:
         weights_source = config["weights_type"],
         genotype_path=config["genotype_file_path"],
         plink_path=config["plink_path"],
-        is_binary = config["is_binary"] , # Pass the is_binary value
+        is_binary = config["is_binary"], # Pass the is_binary value
         spectral_decorrelated = config["spectral_decorrelated"]
     threads: 22
     log:
