@@ -27,9 +27,9 @@ rule moka_test:
         "envs/moka.yaml"
     shell:
         """(
-        export PATH=$PATH:{params.plink_path}\
+        export PATH=$PATH:{params.plink_path}
         seq 1 22 | parallel -j {threads} Rscript scripts/moka.R {params.genotype} {input.gene_regions} {input.merged_weights} {params.genotype_path} {params.weights_source}  {{}} {params.is_binary} {params.spectral_decorrelated}
-        ) >{log} 2>&1"""
+        )> {log.stdout} 2> {log.stderr}"""
 # # Rule 4: Merge MOKA Chromosome Results into zone
 rule merge_moka_results:
     input:
@@ -52,7 +52,7 @@ rule merge_moka_results:
                 tail -n +2 \"$file\" >> {params.merged_moka_results}; \
             fi; \
         done
-        ) >{log} 2>&1"""
+        )> {log.stdout} 2> {log.stderr}"""
 # Rule 5: Perform Disgenet disease annotation of MOKA results
 rule disgenet_annotation_001:
     input:
@@ -66,7 +66,7 @@ rule disgenet_annotation_001:
     shell:
         """(
         Rscript scripts/obtain_genes_in_DGN.R {input.merged_moka_results} {params.gene_annotation} 0.01
-        ) >{log} 2>&1"""
+        )> {log.stdout} 2> {log.stderr}"""
 
 rule disgenet_annotation_005:
     input:
@@ -80,7 +80,7 @@ rule disgenet_annotation_005:
     shell:
         """(
         Rscript scripts/obtain_genes_in_DGN.R {input.merged_moka_results} {params.gene_annotation} 0.05
-        ) >{log} 2>&1"""
+        )> {log.stdout} 2> {log.stderr}"""
 
 rule manhattan_plots:
     input:
@@ -93,7 +93,7 @@ rule manhattan_plots:
     shell:
         """(
         Rscript scripts/manhattan_plots.R {input.merged_moka_results} 
-        ) >{log} 2>&1"""
+        )> {log.stdout} 2> {log.stderr}"""
 rule kegg_pathway_analysis:
     input:
         merged_moka_results = expand("result_folder/merged_{prefix}_{weight_source}_SKAT.txt",prefix=config[
