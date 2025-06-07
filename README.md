@@ -96,15 +96,16 @@ snakemake --cores 22 unweighted_skat
 
 ### Software
 **They must be configured on your path**
-- **Snakemake**
-- **R**
-- **Python**
-- **PLINK**
+- **Snakemake (8.0.1+)**
+- **R(4.2.0+)**
+- **Python (3.9+)**
+- **PLINK (1.9+)**
 - **Rscript**
 
 ### Python Packages
 - **FaST-LMM**  Factored Spectrally Transformed Linear Mixed Models, is a program for performing genome-wide association studies (GWAS) on datasets of all sizes
 - **PySnpTools**  PySnpTools is a library for reading and manipulating genetic data.
+  
 ```Python
 pip install pysnptools fastlmm
 ```
@@ -123,21 +124,24 @@ install.packages(c("BiocManager","SKAT","ggplot2"))
 BiocManager::install(c( "gprofiler2", "pathfindR","manhattan","qqman"))
 ```
 
-### Other
+### Other Software
 
-- **PLINK:** PLINK is a widely used software toolset for genome-wide association studies (GWAS) and analysis of DNA sequencing data.
+- **PLINK:** PLINK is a widely used software toolset for genome-wide association studies (GWAS) and analysis of DNA sequencing data. 
 - **Parallel:** Linux Parallel GNU : https://www.gnu.org/software/parallel/
 ```bash
 apt install parallel
 brew install parallel 
 ```
 ### Input file format
-- **Data Files:** Plink genotyped Bim, Bed & Fam files, bridge weights file (format is specified), gene regions file, DisGeNET gene disease daatabse reference file 
+- **Data Files:** Plink genotyped Bim, Bed & Fam files [!required]
+- Multi-omics **Bridge weights.csv** file (SNP_ID,Chromosome,Position,Weight) [!required for moka]
+- Gene regions file (file provided)
+- DisGeNET gene disease database reference file ( If disease external validation needed)
 
 
 ## 📋 Configuration
 - **genotype_prefix:** Prefix for genotype data files.
-- **weights_type:** Type of bridge weights to be used such as EQTL, Imaging, Conservation, Representation etc.
+- **weights_type:** Text string ype of bridge weights to be used e.g. "eqtl", "imaging"
 - **genotype_file_path:** Path to genotype data files.
 - **weight_file:** Path to weight files used for association tests.
 - **disgenet_reference_file:** External disease database specific gene-disease associations from https://disgenet.org [For gene disease associations only!]
