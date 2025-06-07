@@ -102,6 +102,12 @@ snakemake --cores 22 unweighted_skat
 - **PLINK**
 - **Rscript**
 
+### Python Packages
+- **FaST-LMM**  Factored Spectrally Transformed Linear Mixed Models, is a program for performing genome-wide association studies (GWAS) on datasets of all sizes
+- **PySnpTools**  PySnpTools is a library for reading and manipulating genetic data.
+```Python
+pip install pysnptools fastlmm
+```
 ### R Packages
 
 - **manhattan:** R package for creating manhattan plots, commonly used in genome-wide association studies (GWAS).
@@ -134,8 +140,10 @@ brew install parallel
 - **weights_type:** Type of bridge weights to be used such as EQTL, Imaging, Conservation, Representation etc.
 - **genotype_file_path:** Path to genotype data files.
 - **weight_file:** Path to weight files used for association tests.
-- **disgenet_reference_file:** Disease database specific weights from https://disgenet.org [For gene disease associations only!]
-- **Plink:** Path to plink installation
+- **disgenet_reference_file:** External disease database specific gene-disease associations from https://disgenet.org [For gene disease associations only!]
+- **spectral decomposition:** Flag for performation decomposition and transformation of genotype and phenotype, default: TRUE
+- **is_binary:** Flag for binary/ quantitative trait, default: TRUE 
+- **Plink:** Path to plink installation e.g. "~/software/plink"
   
 ## 📖 Additional Information
 For more information on the MOKA pipeline and its usage, refer to the documentation provided in the repository or contact the project maintainers.
