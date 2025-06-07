@@ -5,10 +5,6 @@ from pysnptools.snpreader import Bed
 from pysnptools.snpreader import Pheno
 from fastlmm.association import single_snp
 import argparse
-import pylab
-import fastlmm.util.util as flutil
-from fastlmm.util.stats import plotp
-
 
 def main():
     # Set up argument parser
@@ -49,6 +45,8 @@ def main():
     results_df = single_snp(test_snps=bedfile, pheno=pheno, leave_out_one_chrom=False)
     # h2 = results_df['Nullh2'].iloc[0]  # Get first value since null h2 is constant
     h2 = results_df['Nullh2'].iloc[0]
+    if pd.isna(h2):
+        h2 = 0.5
     print(f"{h2:.15f}")
 if __name__ == "__main__":
     main()
