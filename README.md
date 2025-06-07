@@ -102,6 +102,12 @@ snakemake --cores 22 unweighted_skat
 - **PLINK**
 - **Rscript**
 
+### Python Packages
+- **FaST-LMM**  Factored Spectrally Transformed Linear Mixed Models, is a program for performing genome-wide association studies (GWAS) on datasets of all sizes
+- **PySnpTools**  PySnpTools is a library for reading and manipulating genetic data.
+```Python
+pip install pysnptools fastlmm
+```
 ### R Packages
 
 - **manhattan:** R package for creating manhattan plots, commonly used in genome-wide association studies (GWAS).
