@@ -85,11 +85,11 @@ snakemake --cores 1 go_analysis
 ```bash
 snakemake --cores 1 kegg_pathway_analysis
 ```
-### Rule: unweighted skat
+### Rule:  Skat test with linear kernel
 - **Input:** Genotype
-- **Output:** Unweighted association mapping, folder: output_association/
+- **Output:** results for association mapping, folder: output_association/
 ```bash
-snakemake --cores 22 unweighted_skat
+snakemake --cores 22 skat
 
 ```
 ## Dependencies
@@ -125,8 +125,6 @@ BiocManager::install(c( "gprofiler2", "pathfindR","manhattan","qqman"))
 ```
 
 ### Other Software
-
-- **PLINK:** PLINK is a widely used software toolset for genome-wide association studies (GWAS) and analysis of DNA sequencing data. 
 - **Parallel:** Linux Parallel GNU : https://www.gnu.org/software/parallel/
 ```bash
 apt install parallel
