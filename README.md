@@ -1,5 +1,5 @@
 
-<img src="https://github.com/user-attachments/assets/548b7bbf-6598-4156-98d3-f18869491cca" alt="image" width="400">
+<img src="https://github.com/user-attachments/assets/548b7bbf-6598-4156-98d3-f18869491cca" alt="image" width="400" >
 
 # 🌉 Multi-omics bridged SNP-set kernel association test (MOKA) Pipeline
 
