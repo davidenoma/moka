@@ -58,11 +58,14 @@ manhattan(
   snp = "SNP",
   p = "P",
   col = c("grey", "skyblue", "pink"),
-  annotatePval = pvalue_threshold,
+  annotatePval = FALSE,
   annotateTop = FALSE,
   genomewideline = -log10(pvalue_threshold),
   suggestiveline = FALSE,
   logp = TRUE
 )
+# Annotate the top 10 SNPs with smallest p-values
+top_snps <- head(selected_gene_data[order(selected_gene_data$P), ], 10)
+with(top_snps, text(BP, -log10(P), labels = SNP, pos = 3, cex = 0.8))
 dev.off()
 cat("Manhattan plot saved to:", png_file_path, "\n")
