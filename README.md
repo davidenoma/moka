@@ -23,7 +23,7 @@ To run the BAS pipeline:
      mamba activate snakemake
      snakemake --help
      ```
-2. Install Python & R dependencies and Rscript  [!important Check Dependencies section](https://github.com/davidenoma/moka/blob/main/README.md#dependencies)
+2. Install Plink, Python & R (Rscript configure)  [!important Check Dependencies section](https://github.com/davidenoma/moka/blob/main/README.md#dependencies)
 3. Download and install moka
 ```bash
 git clone https://github.com/davidenoma/moka
@@ -102,11 +102,11 @@ snakemake --cores 22 skat
 - **Snakemake (8.0.1+)**
 - **R(4.2.0+)**
 - **Python (3.9+)**
-- **PLINK (1.9+)**
+- **PLINK (1.9+)**: [https://www.cog-genomics.org/plink/1.9/](https://www.cog-genomics.org/plink/1.9/)
 - **Rscript**
 
 ### Python Packages
-- **FaST-LMM**  Factored Spectrally Transformed Linear Mixed Models, is a program for performing genome-wide association studies (GWAS) on datasets of all sizes
+- **FaST-LMM**  Factored Spectrally Transformed Linear Mixed Models, is a program for performing genome-wide association studies (GWAS) on datasets of all sizes 
 - **PySnpTools**  PySnpTools is a library for reading and manipulating genetic data.
   
 ```Python
@@ -116,11 +116,12 @@ pip install pysnptools fastlmm
 
 - **manhattan:** R package for creating manhattan plots, commonly used in genome-wide association studies (GWAS).
 - **SKAT:** R package for SKAT (Sequence Kernel Association Test) which is a powerful gene-based association test.
-- **PARALLEL:** R package for parallel computing capabilities in R.
 - **QQMAN:** R package for creating QQ (Quantile-Quantile) plots, commonly used in GWAS to assess whether observed p-values deviate from the expected distribution under the null hypothesis.
 - **GGPLOT:** R package for creating highly customizable plots and graphics.
 - **gprofiler2:** R package for gene set enrichment analysis (GO analysis).
 - **pathfindR:** R package for pathway analysis, including KEGG pathway analysis.
+
+Installation steps:
 
 ```R
 install.packages(c("BiocManager","SKAT","ggplot2"))
@@ -130,11 +131,11 @@ BiocManager::install(c( "gprofiler2", "pathfindR","manhattan","qqman"))
 ### Other Software
 - **Parallel:** Linux Parallel GNU : https://www.gnu.org/software/parallel/
 ```bash
-apt install parallel
-brew install parallel 
+apt install parallel #linux or WSL windows
+brew install parallel #macos
 ```
 ### Input file format
-- **Data Files:** Plink genotyped Bim, Bed & Fam files [!required]
+- **Data Files:** Plink https://www.cog-genomics.org/plink/1.9/  format genotyped BIM, BED & FAM files [!required]
 - Multi-omics **Bridge weights.csv** file (SNP_ID,Chromosome,Position,Weight) [!required for moka]
 - Gene regions file (file provided)
 - DisGeNET gene disease database reference file ( If disease external validation needed)
@@ -142,7 +143,7 @@ brew install parallel
 
 ## 📋 Configuration
 - **genotype_prefix:** Prefix for genotype data files.
-- **weights_type:** Text string ype of bridge weights to be used e.g. "eqtl", "imaging"
+- **weights_type:** Text string for type of bridge weights to be used e.g. "eqtl", "imaging"
 - **genotype_file_path:** Path to genotype data files.
 - **weight_file:** Path to weight files used for association tests.
 - **disgenet_reference_file:** External disease database specific gene-disease associations from https://disgenet.org [For gene disease associations only!]
