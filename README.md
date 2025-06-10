@@ -102,7 +102,7 @@ snakemake --cores 22 skat
 - **Snakemake (8.0.1+)**
 - **R(4.2.0+)**
 - **Python (3.9+)**
-- **PLINK (1.9+)**: [https://www.cog-genomics.org/plink/1.9/](https://www.cog-genomics.org/plink/1.9/)
+- **PLINK (1.9+)**: [https://www.cog-genomics.org/plink/1.9/]
 - **Rscript**
 
 ### Python Packages
@@ -137,9 +137,11 @@ brew install parallel #macos
 ### Input file format
 - **Data Files:** Plink https://www.cog-genomics.org/plink/1.9/  format genotyped BIM, BED & FAM files [!required]
 - Multi-omics **Bridge weights.csv** file (SNP_ID,Chromosome,Position,Weight) [!required for moka]
-- Gene regions file (file provided)
+- Gene regions file provied in GRCh38 or hg38. (Genome Research Consortium Human Build 38)
 - DisGeNET gene disease database reference file ( If disease external validation needed)
 
+### Liftover protocol 
+You much lift over to GRCh38 format check here: Liftover GWAS: [https://github.com/davidenoma/LiftOver] 
 
 ## 📋 Configuration
 - **genotype_prefix:** Prefix for genotype data files.
