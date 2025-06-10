@@ -20,19 +20,19 @@ To run the BAS pipeline:
      mamba activate snakemake
      snakemake --help
      ```
-2. Install R dependencies and Rscript
-3. Download and install package
+2. Install Python & R dependencies and Rscript [! Check ## Dependencies]
+3. Download and install moka
 ```bash
-git clone https://github.com/davidenoma/moka_pipeline/
-cd moka_pipeline
+git clone https://github.com/davidenoma/moka
+cd moka
 ```
 5. Configure the pipeline parameters in the `config.yaml` file.
-3. Execute the pipeline using the command:
+6. Execute the pipeline using the commands/rules:
 
 
 ## 📚 Rules
-### Rule: association_test
-- **Input:** Preprocessed data and weight files.
+### Rule: moka association_test
+- **Input:** Preprocessed genotype data and weight files.
 - **Output:** Results of association tests.
 ```bash
 snakemake --cores <num_cores>
