@@ -23,14 +23,6 @@ def main():
     phenotypes = pd.read_csv(phenotype_file, sep=' ', header=None)
     phenotypes.columns = ["FID", "IID", "father", "mother", "sex", "phenotype"]  # Adjust column names if necessary
 
-    # Load the SNP information from the .bim file
-    bim_file = snp_data_loc + ".bim"
-    bim = pd.read_csv(bim_file, sep='\t', header=None)
-    bim.columns = ["chromosome", "snp_id", "genetic_distance", "basepair_position", "allele1", "allele2"]
-
-    # Extract positional information
-    pos = bim[["chromosome", "genetic_distance", "basepair_position"]].values
-
     # Create Pheno object
     pheno_dict = {
         'header': ['phenotype'],
