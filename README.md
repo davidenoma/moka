@@ -23,7 +23,8 @@ To run the BAS pipeline:
      mamba activate snakemake
      snakemake --help
      ```
-2. Install Python & R dependencies and Rscript  [!important Check Dependencies section]
+2. Install Python & R dependencies and Rscript  
+[!important Check Dependencies section](https://github.com/davidenoma/moka/blob/main/README.md#dependencies)
 3. Download and install moka
 ```bash
 git clone https://github.com/davidenoma/moka
