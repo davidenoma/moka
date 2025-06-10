@@ -2,8 +2,9 @@
 
 # 🌉 Multi-omics bridged SNP-set kernel association test (MOKA) Pipeline
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/41097396-cc35-49e0-b15b-90d6d5486141" alt="image" width="400">
+  <img src="https://github.com/user-attachments/assets/a071b8b5-60bd-48fa-97f3-cdbc7a2385f9" alt="image" width="400">
 </div>
+
 
 [![Snakemake](https://img.shields.io/badge/snakemake-≥6.3.0-brightgreen.svg)](https://snakemake.github.io)
 
