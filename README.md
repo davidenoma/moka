@@ -2,7 +2,7 @@
 
 # 🌉 Multi-omics bridged SNP-set kernel association test (MOKA) Pipeline
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/a071b8b5-60bd-48fa-97f3-cdbc7a2385f9" alt="image" width="400">
+  <img src="https://github.com/user-attachments/assets/a071b8b5-60bd-48fa-97f3-cdbc7a2385f9" alt="image" width="600">
 </div>
 
 
