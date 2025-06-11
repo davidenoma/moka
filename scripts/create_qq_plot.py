@@ -23,7 +23,7 @@ def calculate_inflation_factor(pvalues):
     chisq_observed = np.quantile(-2 * np.log(pvalues), 0.5)
     print(chisq_observed)
     chisq_expected = np.quantile(np.random.chisquare(1, size=len(pvalues)), 0.5)
-
+    print(chisq_expected)
     # Genomic Inflation Factor (λ)
     inflation_factor = chisq_observed / chisq_expected
     return inflation_factor
