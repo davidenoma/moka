@@ -49,8 +49,14 @@ if (!dir.exists("output_plots")) dir.create("output_plots")
 file_name <- basename(file_path)  
 png_file_path <- paste0("output_plots/manhattan_", sub("\\.[^.]*$", "", file_name), ".png")
 
+top_snps <- head(selected_gene_data[order(selected_gene_data$P), ], 10)
+top_idx <- which.max(top_snps$P)
+# Extract the p-value for that SNP
+top_pvalue <- top_snps$P[top_idx]
+
 # Create the Manhattan plot using CairoPNG
 CairoPNG(filename = png_file_path, width = 2940, height = 1782, units = "px", pointsize = 22, res = 150)
+# quartz()
 manhattan(
   selected_gene_data,
   chr = "CHR",
@@ -58,14 +64,17 @@ manhattan(
   snp = "SNP",
   p = "P",
   col = c("grey", "skyblue", "pink"),
-  annotatePval = FALSE,
+  annotatePval = top_pvalue,
+  highlight = top_snps$SNP,
   annotateTop = FALSE,
   genomewideline = -log10(pvalue_threshold),
   suggestiveline = FALSE,
   logp = TRUE
 )
+# Wait for the user to press enter so the plot stays open
+# readline(prompt = "Press [enter] to close the plot window.")
 # Annotate the top 10 SNPs with smallest p-values
-top_snps <- head(selected_gene_data[order(selected_gene_data$P), ], 10)
-with(top_snps, text(BP, -log10(P), labels = SNP, pos = 3, cex = 0.8))
+# with(top_snps, text(BP, -log10(P), labels = SNP, pos = 3, cex = 0.8))
+# dev.print()
 dev.off()
 cat("Manhattan plot saved to:", png_file_path, "\n")
