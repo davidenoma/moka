@@ -3,8 +3,6 @@
 [![Platforms](https://img.shields.io/badge/platform-linux--64%20%7C%20osx--64-lightgrey)](https://github.com/moiexpositoalonsolab/grenepipe/releases)
 [![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](http://www.gnu.org/licenses/gpl.html)
 
-<!-- [![CI](https://github.com/moiexpositoalonsolab/grenepipe/workflows/CI/badge.svg?branch=master)](https://github.com/moiexpositoalonsolab/grenepipe/actions) -->
-<!-- ![Language](https://img.shields.io/badge/language-python-lightgrey.svg) -->
 # 🌉 Multi-omics bridged SNP-set kernel association test (MOKA) Pipeline
 <div align="center">
   <img src="https://github.com/user-attachments/assets/6d7d5099-aac4-44e2-a3d2-eacf6921a395" alt="image" width="600">
