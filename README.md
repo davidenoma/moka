@@ -7,7 +7,7 @@
   <img src="https://github.com/user-attachments/assets/6d7d5099-aac4-44e2-a3d2-eacf6921a395" alt="image" width="700">
 </div>
 
-# 🌉 Multi-omics bridged kernel association test (MOKA) Pipeline
+# 🌉 Multi-omics bridged Kernel Association test (MOKA) Pipeline
 MOKA implements a Snakemake pipeline to automate data bridge kernel-based association tests. 
 This pipeline offers flexibility of GWAS analysis & visualizations with different multi-omics variant specific weights.
 
