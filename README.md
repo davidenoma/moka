@@ -2,9 +2,6 @@
 <div align="center">
   <img src="https://github.com/user-attachments/assets/6d7d5099-aac4-44e2-a3d2-eacf6921a395" alt="image" width="600">
 </div>
-![image](https://github.com/user-attachments/assets/54aeec0f-7ffb-48cd-acea-54be8384473b)
-
-[![Snakemake](https://img.shields.io/badge/snakemake-≥6.3.0-brightgreen.svg)](https://snakemake.github.io)
 
 ## Introduction
 Multi-Omics bridged SNP-set Kernel Association test (MOKA) aims to implement a Snakemake pipeline to automate data bridge kernel-based association tests. 
