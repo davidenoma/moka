@@ -2,12 +2,12 @@
 [![CI](https://github.com/moiexpositoalonsolab/grenepipe/actions/workflows/ci.yaml/badge.svg)](https://github.com/moiexpositoalonsolab/grenepipe/actions)
 [![Platforms](https://img.shields.io/badge/platform-linux--64%20%7C%20osx--64-lightgrey)](https://github.com/moiexpositoalonsolab/grenepipe/releases)
 [![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](http://www.gnu.org/licenses/gpl.html)
-# 🌉 Multi-omics bridged SNP-set kernel association test (MOKA) Pipeline
+
 <div align="center">
   <img src="https://github.com/user-attachments/assets/6d7d5099-aac4-44e2-a3d2-eacf6921a395" alt="image" width="600">
 </div>
 
-## Introduction
+# 🌉 Multi-omics bridged SNP-set kernel association test (MOKA) Pipeline
 Multi-Omics bridged SNP-set Kernel Association test (MOKA) aims to implement a Snakemake pipeline to automate data bridge kernel-based association tests. 
 This pipeline offers flexibility of GWAS analysis & visualizations with different multi-omics variant specific weights.
 
