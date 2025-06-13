@@ -8,7 +8,7 @@
 </div>
 
 # 🌉 Multi-omics bridged SNP-set kernel association test (MOKA) Pipeline
-Multi-Omics bridged SNP-set Kernel Association test (MOKA) aims to implement a Snakemake pipeline to automate data bridge kernel-based association tests. 
+MOKA implements a Snakemake pipeline to automate data bridge kernel-based association tests. 
 This pipeline offers flexibility of GWAS analysis & visualizations with different multi-omics variant specific weights.
 
 ## 🚀 Usage
