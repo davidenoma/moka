@@ -13,7 +13,10 @@ Multi-Omics bridged SNP-set Kernel Association test (MOKA) aims to implement a S
 ## 🚀 Usage
 To run the BAS pipeline:
 
-1. Install **Snakemake** 
+1.Minimal data inputs
+   1. GWAS genotype files in plink format
+   2. Variant specific weights for each SNP ('SNP_ID, CHROMOSOME, POSITION, WEIGHT)
+2. Install **Snakemake** 
    - [Snakemake Installation Guide](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html)
      ```bash
      conda install -n base -c conda-forge mamba
@@ -21,14 +24,14 @@ To run the BAS pipeline:
      mamba activate snakemake
      snakemake --help
      ```
-2. Install Plink, Python & R (Rscript configure)  [!important Check Dependencies section](https://github.com/davidenoma/moka/blob/main/README.md#dependencies)
-3. Download and install moka
+3. Install Plink, Python & R (Rscript configure)  [!important Check Dependencies section](https://github.com/davidenoma/moka/blob/main/README.md#dependencies)
+4. Download and install moka
 ```bash
 git clone https://github.com/davidenoma/moka
 cd moka
 ```
 5. Configure the pipeline parameters in the `config.yaml` file.
-6. Execute the pipeline using the commands/rules:
+6. Execute the pipeline using the software:
 
 
 ## 📚 Rules
