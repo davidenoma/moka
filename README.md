@@ -7,7 +7,7 @@
   <img src="https://github.com/user-attachments/assets/6d7d5099-aac4-44e2-a3d2-eacf6921a395" alt="image" width="700">
 </div>
 
-# 🌉 Multi-omics bridged SNP-set kernel association test (MOKA) Pipeline
+# 🌉 Multi-omics bridged kernel association test (MOKA) Pipeline
 MOKA implements a Snakemake pipeline to automate data bridge kernel-based association tests. 
 This pipeline offers flexibility of GWAS analysis & visualizations with different multi-omics variant specific weights.
 
@@ -16,7 +16,7 @@ To run the BAS pipeline:
 
 1.Minimal data inputs
 
--GWAS genotype files in PLINK format (bed, bin & fam)
+-GWAS genotype files in PLINK format (bed, bim & fam)
 
 -Variant specific weights for each SNP ('SNP_ID, CHROMOSOME, POSITION, WEIGHT)
 
