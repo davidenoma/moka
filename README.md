@@ -14,8 +14,8 @@ Multi-Omics bridged SNP-set Kernel Association test (MOKA) aims to implement a S
 To run the BAS pipeline:
 
 1.Minimal data inputs
-   1. GWAS genotype files in plink format
-   2. Variant specific weights for each SNP ('SNP_ID, CHROMOSOME, POSITION, WEIGHT)
+-GWAS genotype files in plink format
+-Variant specific weights for each SNP ('SNP_ID, CHROMOSOME, POSITION, WEIGHT)
 
 2. Install **Snakemake** 
    - [Snakemake Installation Guide](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html)
