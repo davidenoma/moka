@@ -6,6 +6,7 @@ library(ggplot2)
 library(qqman)
 library(Cairo)
 
+
 # Process command-line arguments
 args <- commandArgs(trailingOnly = TRUE)
 
@@ -55,7 +56,7 @@ top_idx <- which.max(top_snps$P)
 top_pvalue <- top_snps$P[top_idx]
 
 # Create the Manhattan plot using CairoPNG
-CairoPNG(filename = png_file_path, width = 2940, height = 1782, units = "px", pointsize = 22, res = 150)
+CairoPNG(filename = png_file_path, width = 2940, height = 1782, units = "px", pointsize = 20, res = 250)
 # quartz()
 manhattan(
   selected_gene_data,
@@ -69,8 +70,16 @@ manhattan(
   annotateTop = FALSE,
   genomewideline = -log10(pvalue_threshold),
   suggestiveline = FALSE,
-  logp = TRUE
+  logp = TRUE,
+  cex.main= 3.0,
+  cex = 1.0
 )
+
+ # with(subset(selected_gene_data, P < top_pvalue), textxy(pos, -log10(P), offset = 0.625, labs = topHits$SNP, cex = 1.5 ))
+# ── NEW lines: draw larger gene labels ───────────────────────────────
+
+## ─────────────────────────────────
+
 # Wait for the user to press enter so the plot stays open
 # readline(prompt = "Press [enter] to close the plot window.")
 # Annotate the top 10 SNPs with smallest p-values
