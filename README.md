@@ -1,21 +1,26 @@
+[![Snakemake](https://img.shields.io/badge/snakemake-8.15.2-brightgreen.svg)](https://snakemake.github.io)
+[![CI](https://github.com/moiexpositoalonsolab/grenepipe/actions/workflows/ci.yaml/badge.svg)](https://github.com/moiexpositoalonsolab/grenepipe/actions)
+[![Platforms](https://img.shields.io/badge/platform-linux--64%20%7C%20osx--64-lightgrey)](https://github.com/moiexpositoalonsolab/grenepipe/releases)
+[![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](http://www.gnu.org/licenses/gpl.html)
 
-
-# 🌉 Multi-omics bridged SNP-set kernel association test (MOKA) Pipeline
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/a071b8b5-60bd-48fa-97f3-cdbc7a2385f9" alt="image" width="600">
+  <img src="https://github.com/user-attachments/assets/6d7d5099-aac4-44e2-a3d2-eacf6921a395" alt="image" width="700">
 </div>
 
-
-[![Snakemake](https://img.shields.io/badge/snakemake-≥6.3.0-brightgreen.svg)](https://snakemake.github.io)
-
-
-## Introduction
-Multi-Omics bridged SNP-set Kernel Association test (MOKA) aims to implement a Snakemake pipeline to automate data bridge kernel-based association tests. This pipeline offers flexibility for various types of association studies with different bridge weights.
+# 🌉 Multi-omics bridged Kernel Association test (MOKA) Pipeline
+MOKA implements a Snakemake pipeline to automate data bridge kernel-based association tests. 
+This pipeline offers flexibility of GWAS analysis & visualizations with different multi-omics variant specific weights.
 
 ## 🚀 Usage
 To run the BAS pipeline:
 
-1. Install **Snakemake** 
+1.Minimal data inputs
+
+-GWAS genotype files in PLINK format (bed, bim & fam)
+
+-Variant specific weights for each SNP ('SNP_ID, CHROMOSOME, POSITION, WEIGHT)
+
+2. Install **Snakemake** 
    - [Snakemake Installation Guide](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html)
      ```bash
      conda install -n base -c conda-forge mamba
@@ -23,14 +28,14 @@ To run the BAS pipeline:
      mamba activate snakemake
      snakemake --help
      ```
-2. Install Plink, Python & R (Rscript configure)  [!important Check Dependencies section](https://github.com/davidenoma/moka/blob/main/README.md#dependencies)
-3. Download and install moka
+3. Install Plink, Python & R (Rscript configure)  [!important Check Dependencies section](https://github.com/davidenoma/moka/blob/main/README.md#dependencies)
+4. Download and install moka
 ```bash
 git clone https://github.com/davidenoma/moka
 cd moka
 ```
 5. Configure the pipeline parameters in the `config.yaml` file.
-6. Execute the pipeline using the commands/rules:
+6. Execute the pipeline using the software:
 
 
 ## 📚 Rules
