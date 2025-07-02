@@ -12,7 +12,7 @@ MOKA implements a Snakemake pipeline to automate data bridge kernel-based associ
 This pipeline offers flexibility of GWAS analysis & visualizations with different multi-omics variant specific weights.
 
 ## 🚀 Usage
-To run the BAS pipeline:
+To run the moka pipeline:
 
 1.Minimal data inputs
 
