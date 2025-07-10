@@ -10,7 +10,7 @@
 # 🌉 Multi-omics bridged Kernel Association test (MOKA) Pipeline
 MOKA implements a Snakemake pipeline to automate data bridge kernel-based association tests. 
 This pipeline offers flexibility of GWAS analysis & visualizations with different multi-omics variant specific weights.
-
+Publication available at: https://www.medrxiv.org/content/10.1101/2025.07.06.25330974v1 
 ## 🚀 Usage
 To run the moka pipeline:
 
