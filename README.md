@@ -162,3 +162,6 @@ You much lift over to GRCh38 format check here: Liftover GWAS: [https://github.c
 For more information on the MOKA pipeline and its usage, refer to the documentation provided in the repository or contact the project maintainers.
 david.enoma@ucalgary.ca 
 
+## Publication reference 
+MOKA: A pipeline for multi-omics bridged SNP-set kernel association test
+https://www.medrxiv.org/content/10.1101/2025.07.06.25330974v1 
