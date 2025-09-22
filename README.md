@@ -27,7 +27,7 @@ To run the moka pipeline:
       snakemake --help
      ```
 3. Download and install moka
-4. 
+
 ```bash
 git clone https://github.com/davidenoma/moka
 cd moka
