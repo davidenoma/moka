@@ -153,6 +153,7 @@ rule unweighted_skat:
             mkdir -p $( {params.plink_path}) && cd $( {params.plink_path})
             wget -q https://s3.amazonaws.com/plink1-assets/plink_linux_x86_64_20250819.zip
             unzip -q plink_linux_x86_64_20250819.zip && chmod +x plink && rm *.zip
+            cd ..
         fi
         
         export PATH={params.plink_path}:$PATH
