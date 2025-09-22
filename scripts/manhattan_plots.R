@@ -1,10 +1,9 @@
 
+
 # Set CRAN mirror
 options(repos = c(CRAN = "https://cloud.r-project.org"))
-# library(c('ggplot2', 'qqman', 'Cairo'))
+
 # Install and load required packages
-library(ggplot2)
-library(qqman)
 # packages <- c("ggplot2", "qqman", "Cairo")
 # for (pkg in packages) {
 #   if (!require(pkg, character.only = TRUE, quietly = TRUE)) {
@@ -12,7 +11,9 @@ library(qqman)
 #     library(pkg, character.only = TRUE)
 #   }
 # }
-
+library(ggplot2)
+library(qqman)
+library(Cairo)
 # Process command-line arguments
 args <- commandArgs(trailingOnly = TRUE)
 
@@ -62,7 +63,7 @@ top_idx <- which.max(top_snps$P)
 top_pvalue <- top_snps$P[top_idx]
 
 # Create the Manhattan plot using CairoPNG
-png(filename = png_file_path, width = 2940, height = 1782, units = "px", pointsize = 20, res = 250)
+CairoPNG(filename = png_file_path, width = 2940, height = 1782, units = "px", pointsize = 20, res = 250)
 # quartz()
 manhattan(
   selected_gene_data,
