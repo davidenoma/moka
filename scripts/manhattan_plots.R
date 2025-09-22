@@ -1,10 +1,8 @@
-
-
 # Set CRAN mirror
 options(repos = c(CRAN = "https://cloud.r-project.org"))
 
 # Install and load required packages
-# packages <- c("ggplot2", "qqman", "Cairo")
+# packages <- c("ggplot2", "qqman")
 # for (pkg in packages) {
 #   if (!require(pkg, character.only = TRUE, quietly = TRUE)) {
 #     install.packages(pkg)
@@ -13,7 +11,7 @@ options(repos = c(CRAN = "https://cloud.r-project.org"))
 # }
 library(ggplot2)
 library(qqman)
-library(Cairo)
+
 # Process command-line arguments
 args <- commandArgs(trailingOnly = TRUE)
 
@@ -29,8 +27,8 @@ file_path <- args[1]
 # Read the gene data from the tab-delimited file
 gene_data <- read.table(
   file_path,
-  sep = "\t",  
-  header = TRUE,  
+  sep = "\t",
+  header = TRUE
   # col.names = c("Gene_name", "Gene_chromosome", "Region_start", "Region_end", "Q_test", "pvalue")
 )
 
@@ -43,6 +41,12 @@ cat("P-value threshold:", pvalue_threshold, "\n")
 selected_gene_data <- gene_data[, c("Gene_name", "Gene_chromosome", "Region_start", "pvalue")]
 colnames(selected_gene_data) <- c("SNP", "CHR", "BP", "P")
 
+# Ensure CHR is numeric if possible (qqman expects numeric chromosomes)
+# If your chromosomes are like "X", "Y", "MT", convert or drop accordingly.
+suppressWarnings({
+  selected_gene_data$CHR <- as.numeric(selected_gene_data$CHR)
+})
+
 # Ensure p-values are finite and non-zero
 selected_gene_data <- selected_gene_data[!is.na(selected_gene_data$P) & selected_gene_data$P > 0, ]
 
@@ -54,17 +58,17 @@ if (nrow(selected_gene_data) == 0) {
 
 # Create output directory if it doesn't exist
 if (!dir.exists("output_plots")) dir.create("output_plots")
-file_name <- basename(file_path)  
+file_name <- basename(file_path)
 png_file_path <- paste0("output_plots/manhattan_", sub("\\.[^.]*$", "", file_name), ".png")
 
+# Get top SNPs by smallest p-values (top 10)
 top_snps <- head(selected_gene_data[order(selected_gene_data$P), ], 10)
-top_idx <- which.max(top_snps$P)
-# Extract the p-value for that SNP
-top_pvalue <- top_snps$P[top_idx]
+# Threshold for annotation = largest p among the selected top SNPs
+top_pvalue <- max(top_snps$P, na.rm = TRUE)
 
-# Create the Manhattan plot using CairoPNG
-CairoPNG(filename = png_file_path, width = 2940, height = 1782, units = "px", pointsize = 20, res = 250)
-# quartz()
+# Open a standard PNG device (no Cairo)
+png(filename = png_file_path, width = 2940, height = 1782, units = "px", pointsize = 20, res = 250)
+
 manhattan(
   selected_gene_data,
   chr = "CHR",
@@ -78,19 +82,9 @@ manhattan(
   genomewideline = -log10(pvalue_threshold),
   suggestiveline = FALSE,
   logp = TRUE,
-  cex.main= 3.0,
+  cex.main = 3.0,
   cex = 1.0
 )
 
- # with(subset(selected_gene_data, P < top_pvalue), textxy(pos, -log10(P), offset = 0.625, labs = topHits$SNP, cex = 1.5 ))
-# ── NEW lines: draw larger gene labels ───────────────────────────────
-
-## ─────────────────────────────────
-
-# Wait for the user to press enter so the plot stays open
-# readline(prompt = "Press [enter] to close the plot window.")
-# Annotate the top 10 SNPs with smallest p-values
-# with(top_snps, text(BP, -log10(P), labels = SNP, pos = 3, cex = 0.8))
-# dev.print()
 dev.off()
 cat("Manhattan plot saved to:", png_file_path, "\n")
