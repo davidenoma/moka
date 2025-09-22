@@ -51,9 +51,9 @@ CairoPNG(filename = kegg_png_file_path, width = 1500, height = 1000, units = "px
 # Create the enrichment chart and customize font size
 enrichment_plot <- enrichment_chart(enrichment_res, top_terms = 10) +
   theme(
-    text = element_text(size = 18),          # Increase font size for all text
+    text = element_text(size = 15),          # Increase font size for all text
     axis.title = element_text(size = 20),    # Font size for axis titles
-    axis.text.y = element_text(size = 18),  # Increase font size of the pathway names
+    axis.text.y = element_text(size = 15),  # Increase font size of the pathway names
     axis.text.x = element_text(size = 20),  # Adjust x-axis font size if needed
     plot.title = element_text(size = 24, face = "bold"),  # Font size for the plot title
     legend.text = element_text(size = 16),   # Font size for legend text
