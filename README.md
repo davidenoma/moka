@@ -18,7 +18,8 @@ To run the moka pipeline:
 
 -Variant specific weights for each SNP ('SNP_ID, CHROMOSOME, POSITION, WEIGHT)
 
-2. Install **Snakemake** 
+2. Install **Snakemake**
+   
    - [Snakemake Installation Guide](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html)
      ```bash
       conda create -c conda-forge -c bioconda -c nodefaults -n snakemake snakemake
@@ -26,13 +27,16 @@ To run the moka pipeline:
       snakemake --help
      ```
 3. Download and install moka
+4. 
 ```bash
 git clone https://github.com/davidenoma/moka
 cd moka
 ```
+
 4. Configure the pipeline parameters in the `config.yaml` file.
 
 ## 📚 Rules
+
 ### Rule: moka association_test
 - **Input:** Preprocessed genotype data and weight files.
 - **Output:** Results of association tests.
