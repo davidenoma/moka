@@ -64,7 +64,7 @@ rule merge_moka_results:
 # Rule 5: Perform Disgenet disease annotation of MOKA results
 rule disgenet_annotation_001:
     input:
-        merged_moka_results=expand("result_folder/merged_{prefix}_{weight_source}_SKAT.txt", prefix=config["genotype_prefix"], weight_source=config["weights_type"])
+        merged_moka_results=expand("result_folder/merged_{prefix}_{weight_source}_moka.txt", prefix=config["genotype_prefix"], weight_source=config["weights_type"])
     params:
         gene_annotation=config["disgenet_reference_file"]
     log:
@@ -78,7 +78,7 @@ rule disgenet_annotation_001:
 
 rule disgenet_annotation_005:
     input:
-        merged_moka_results=expand("result_folder/merged_{prefix}_{weight_source}_SKAT.txt", prefix=config["genotype_prefix"], weight_source=config["weights_type"])
+        merged_moka_results=expand("result_folder/merged_{prefix}_{weight_source}_moka.txt", prefix=config["genotype_prefix"], weight_source=config["weights_type"])
     params:
         gene_annotation=config["disgenet_reference_file"]
     log:
@@ -92,7 +92,7 @@ rule disgenet_annotation_005:
 
 rule manhattan_plots:
     input:
-        merged_moka_results = expand("result_folder/merged_{prefix}_{weight_source}_SKAT.txt",prefix=config[
+        merged_moka_results = expand("result_folder/merged_{prefix}_{weight_source}_moka.txt",prefix=config[
     "genotype_prefix"],weight_source=config["weights_type"]),
     log:
         stdout="logs/wkas.stdout",stderr="logs/wkas.stderr"
@@ -104,7 +104,7 @@ rule manhattan_plots:
         > {log.stdout} 2> {log.stderr}"""
 rule kegg_pathway_analysis:
     input:
-        merged_moka_results = expand("result_folder/merged_{prefix}_{weight_source}_SKAT.txt",prefix=config[
+        merged_moka_results = expand("result_folder/merged_{prefix}_{weight_source}_moka.txt",prefix=config[
     "genotype_prefix"],weight_source=config["weights_type"]),
     params:
         pval_thresh = 0.05
@@ -118,7 +118,7 @@ rule kegg_pathway_analysis:
         )> {log.stdout} 2> {log.stderr}"""
 rule go_analysis:
     input:
-        merged_moka_results = expand("result_folder/merged_{prefix}_{weight_source}_SKAT.txt",prefix=config[
+        merged_moka_results = expand("result_folder/merged_{prefix}_{weight_source}_moka.txt",prefix=config[
     "genotype_prefix"],weight_source=config["weights_type"]),
     params:
         pval_thresh = 0.05
@@ -150,7 +150,7 @@ rule unweighted_skat:
         # Install dependencies if missing
         command -v parallel >/dev/null || (apt update && apt install -y parallel) || brew install parallel
         if ! command -v plink >/dev/null && [ ! -f "{params.plink_path}/plink" ]; then
-            mkdir -p $(dirname {params.plink_path}) && cd $(dirname {params.plink_path})
+            mkdir -p $( {params.plink_path}) && cd $( {params.plink_path})
             wget -q https://s3.amazonaws.com/plink1-assets/plink_linux_x86_64_20250819.zip
             unzip -q plink_linux_x86_64_20250819.zip && chmod +x plink && rm *.zip
         fi
