@@ -67,7 +67,14 @@ top_snps <- head(selected_gene_data[order(selected_gene_data$P), ], 10)
 top_pvalue <- max(top_snps$P, na.rm = TRUE)
 
 # Open a standard PNG device (no Cairo)
-png(filename = png_file_path, width = 2940, height = 1782, units = "px", pointsize = 20, res = 250)
+# Cross-platform PNG creation
+if (Sys.info()["sysname"] == "Darwin") {
+  # macOS - use quartz
+  png(filename = png_file_path, width = 2940, height = 1782, units = "px", pointsize = 20, res = 250, type = "quartz")
+} else {
+  # Linux - use Xlib
+  png(filename = png_file_path, width = 2940, height = 1782, units = "px", pointsize = 20, res = 250, type = "Xlib")
+}
 
 manhattan(
   selected_gene_data,
