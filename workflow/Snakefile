@@ -89,11 +89,11 @@ rule disgenet_annotation_005:
         """(
         Rscript scripts/obtain_genes_in_DGN.R {input.merged_moka_results} {params.gene_annotation} 0.05
         )> {log.stdout} 2> {log.stderr}"""
-
+# Rule 5: Generate Manhattan plots for MOKA results
 rule manhattan_plots:
     input:
         merged_moka_results = expand("result_folder/merged_{prefix}_{weight_source}_moka.txt",prefix=config[
-    "genotype_prefix"],weight_source=config["weights_type"]),
+    "genotype_prefix"],weight_source=config["weights_type"])
     log:
         stdout="logs/wkas.stdout",stderr="logs/wkas.stderr"
     conda:
@@ -102,10 +102,11 @@ rule manhattan_plots:
         """
         Rscript scripts/manhattan_plots.R {input.merged_moka_results} 
         > {log.stdout} 2> {log.stderr}"""
+# Rule 6: Perform KEGG pathway analysis of MOKA results
 rule kegg_pathway_analysis:
     input:
         merged_moka_results = expand("result_folder/merged_{prefix}_{weight_source}_moka.txt",prefix=config[
-    "genotype_prefix"],weight_source=config["weights_type"]),
+    "genotype_prefix"],weight_source=config["weights_type"])
     params:
         pval_thresh = 0.05
     log:
@@ -116,10 +117,11 @@ rule kegg_pathway_analysis:
         """(
         Rscript scripts/pathfindR_KEGG.R {input.merged_moka_results} {params.pval_thresh}
         )> {log.stdout} 2> {log.stderr}"""
+# Rule 7: Perform GO analysis of MOKA results
 rule go_analysis:
     input:
         merged_moka_results = expand("result_folder/merged_{prefix}_{weight_source}_moka.txt",prefix=config[
-    "genotype_prefix"],weight_source=config["weights_type"]),
+    "genotype_prefix"],weight_source=config["weights_type"])
     params:
         pval_thresh = 0.05
     log:
@@ -130,6 +132,10 @@ rule go_analysis:
         """(
         Rscript scripts/GO_analysis.R {input.merged_moka_results} {params.pval_thresh}
         )> {log.stdout} 2> {log.stderr}"""
+
+
+
+
 
 rule unweighted_skat:
     input:
