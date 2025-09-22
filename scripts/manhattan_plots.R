@@ -89,6 +89,31 @@ tryCatch({
 
   dev.off()
   cat("Manhattan plot saved to:", png_file_path, "\n")
+}, warning = function(w) {
+  cat("PNG warning, creating PDF instead:", w$message, "\n")
+  if (dev.cur() > 1) dev.off()
+
+  pdf(file = pdf_file_path, width = 11.76, height = 7.13, pointsize = 20)
+
+  manhattan(
+    selected_gene_data,
+    chr = "CHR",
+    bp = "BP",
+    snp = "SNP",
+    p = "P",
+    col = c("grey", "skyblue", "pink"),
+    annotatePval = top_pvalue,
+    highlight = top_snps$SNP,
+    annotateTop = FALSE,
+    genomewideline = -log10(pvalue_threshold),
+    suggestiveline = FALSE,
+    logp = TRUE,
+    cex.main = 3.0,
+    cex = 1.0
+  )
+
+  dev.off()
+  cat("Manhattan plot saved to:", pdf_file_path, "\n")
 }, error = function(e) {
   cat("PNG failed, creating PDF instead:", e$message, "\n")
   if (dev.cur() > 1) dev.off()
