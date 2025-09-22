@@ -32,7 +32,7 @@ rule moka_test:
         if ! command -v plink >/dev/null && [ ! -f "{params.plink_path}/plink" ]; then
             mkdir -p $(dirname {params.plink_path}) && cd $(dirname {params.plink_path})
             wget -q https://s3.amazonaws.com/plink1-assets/plink_linux_x86_64_20250819.zip
-            unzip -q plink_linux_x86_64_20250819.zip && chmod +x plink && rm *.zip
+            # unzip -q plink_linux_x86_64_20250819.zip && chmod +x plink && rm *.zip
         fi
         
         export PATH={params.plink_path}:$PATH
