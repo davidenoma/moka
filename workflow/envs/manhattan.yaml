@@ -8,4 +8,5 @@ dependencies:
  - r-base=4.2.0
  - r-ggplot2
  - r-qqman
+ - r-cairo
 
