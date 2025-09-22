@@ -9,3 +9,7 @@ dependencies:
  - r-ggplot2
  - r-qqman
  - r-cairo
+ - r-cairodevice
+ - xorg-libx11-dev
+ - xorg-libxt-dev
+ - cairo-dev
