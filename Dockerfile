@@ -1,5 +1,7 @@
 # syntax=docker/dockerfile:1.7
 FROM mambaorg/micromamba:1.5.3
+SHELL ["/bin/bash", "-lc"]
+
 
 # --- build-time knobs ---
 ARG REPO_URL="https://github.com/davidenoma/moka.git"
@@ -40,19 +42,20 @@ RUN set -eux; \
     micromamba clean -a -y
 
 # 2) any pip: entries inside those YAMLs
-RUN micromamba run -n base python - <<'PY'\n\
-import yaml,glob\n\
-pkgs=set()\n\
-for p in glob.glob('workflow/envs/*.y*ml'):\n\
-    try:\n\
-        y=yaml.safe_load(open(p)) or {}\n\
-        for d in y.get('dependencies',[]):\n\
-            if isinstance(d, dict) and 'pip' in d:\n\
-                pkgs.update(d['pip'])\n\
-    except Exception as e:\n\
-        print('WARN:', p, e)\n\
-open('/tmp/pip.txt','w').write('\\n'.join(sorted(pkgs))+'\\n')\n\
+RUN micromamba run -n base python - <<'PY'
+import yaml,glob
+pkgs=set()
+for p in glob.glob('workflow/envs/*.y*ml'):
+    try:
+        y=yaml.safe_load(open(p)) or {}
+        for d in y.get('dependencies',[]):
+            if isinstance(d, dict) and 'pip' in d:
+                pkgs.update(d['pip'])
+    except Exception as e:
+        print('WARN:', p, e)
+open('/tmp/pip.txt','w').write('\n'.join(sorted(pkgs))+'\n')
 PY
+
 RUN if [ -s /tmp/pip.txt ]; then \
       echo 'pip installing extras...'; \
       micromamba run -n base pip install -r /tmp/pip.txt; \
