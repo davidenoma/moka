@@ -1,18 +1,16 @@
 [![Snakemake](https://img.shields.io/badge/snakemake-8.15.2-brightgreen.svg)](https://snakemake.github.io)
-[![CI](https://github.com/moiexpositoalonsolab/grenepipe/actions/workflows/ci.yaml/badge.svg)](https://github.com/moiexpositoalonsolab/grenepipe/actions)
-[![Platforms](https://img.shields.io/badge/platform-linux--64%20%7C%20osx--64-lightgrey)](https://github.com/moiexpositoalonsolab/grenepipe/releases)
-[![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](http://www.gnu.org/licenses/gpl.html)
+
 
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/6d7d5099-aac4-44e2-a3d2-eacf6921a395" alt="image" width="700">
+  <img src="https://github.com/user-attachments/assets/6d7d5099-aac4-44e2-a3d2-eacf6921a395" alt="image" width="500">
 </div>
 
 # 🌉 Multi-omics bridged Kernel Association test (MOKA) Pipeline
 MOKA implements a Snakemake pipeline to automate data bridge kernel-based association tests. 
 This pipeline offers flexibility of GWAS analysis & visualizations with different multi-omics variant specific weights.
-
+Publication available at: https://www.medrxiv.org/content/10.1101/2025.07.06.25330974v1 
 ## 🚀 Usage
-To run the BAS pipeline:
+To run the moka pipeline:
 
 1.Minimal data inputs
 
@@ -162,3 +160,6 @@ You much lift over to GRCh38 format check here: Liftover GWAS: [https://github.c
 For more information on the MOKA pipeline and its usage, refer to the documentation provided in the repository or contact the project maintainers.
 david.enoma@ucalgary.ca 
 
+## Publication reference 
+MOKA: A pipeline for multi-omics bridged SNP-set kernel association test
+https://www.medrxiv.org/content/10.1101/2025.07.06.25330974v1 
