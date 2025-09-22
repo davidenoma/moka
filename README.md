@@ -25,15 +25,12 @@ To run the moka pipeline:
       conda activate snakemake
       snakemake --help
      ```
-3. Install Plink, Python & R (Rscript configure)  [!important Check Dependencies section](https://github.com/davidenoma/moka/blob/main/README.md#dependencies)
-4. Download and install moka
+3. Download and install moka
 ```bash
 git clone https://github.com/davidenoma/moka
 cd moka
 ```
-5. Configure the pipeline parameters in the `config.yaml` file.
-6. Execute the pipeline using the software:
-
+4. Configure the pipeline parameters in the `config.yaml` file.
 
 ## 📚 Rules
 ### Rule: moka association_test
@@ -42,13 +39,12 @@ cd moka
 ```bash
 snakemake --cores <num_cores>
 ```
-
-   If you do not have all the dependencies with Python and R you can get it configured on conda, utilize with:
+    <num_cores> are the number of cores to use
+  If you do not have all the dependencies with Python and R you can get it configured on conda, utilize with:
 
    ```bash
    snakemake --cores <num_cores> --use-conda
    ```
-However, some R packages are not available to best to be installed R package manager.
 
 ### Rule: merge_results
 - **Input:** Individual association test results.
