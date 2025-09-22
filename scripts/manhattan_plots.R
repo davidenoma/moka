@@ -1,16 +1,7 @@
 # Set CRAN mirror
 options(repos = c(CRAN = "https://cloud.r-project.org"))
 
-# Install and load required packages
-# packages <- c("ggplot2", "qqman")
-# for (pkg in packages) {
-#   if (!require(pkg, character.only = TRUE, quietly = TRUE)) {
-#     install.packages(pkg)
-#     library(pkg, character.only = TRUE)
-#   }
-# }
-# Install and load required packages
-packages <- c("ggplot2", "qqman", "ragg")
+packages <- c("ggplot2", "qqman" )
 for (pkg in packages) {
   if (!require(pkg, character.only = TRUE, quietly = TRUE)) {
     install.packages(pkg)
@@ -65,39 +56,62 @@ if (nrow(selected_gene_data) == 0) {
 if (!dir.exists("output_plots")) dir.create("output_plots")
 file_name <- basename(file_path)
 png_file_path <- paste0("output_plots/manhattan_", sub("\\.[^.]*$", "", file_name), ".png")
+pdf_file_path <- paste0("output_plots/manhattan_", sub("\\.[^.]*$", "", file_name), ".pdf")
 
 # Get top SNPs by smallest p-values (top 10)
 top_snps <- head(selected_gene_data[order(selected_gene_data$P), ], 10)
-# Threshold for annotation = largest p among the selected top SNPs
 top_pvalue <- max(top_snps$P, na.rm = TRUE)
 
-# Open a standard PNG device (no Cairo)
-# Cross-platform PNG creation
-# if (Sys.info()["sysname"] == "Darwin") {
-#   # macOS - use quartz
-#   png(filename = png_file_path, width = 2940, height = 1782, units = "px", pointsize = 20, res = 250, type = "quartz")
-# } else {
-#   # Linux - use Xlib
-#   png(filename = png_file_path, width = 2940, height = 1782, units = "px", pointsize = 20, res = 250, type = "Xlib")
-# }
-ragg::agg_png(filename = png_file_path, width = 2940, height = 1782, units = "px", pointsize = 20, res = 250)
+# Try PNG first, fallback to PDF
+tryCatch({
+  if (Sys.info()["sysname"] == "Darwin") {
+    png(filename = png_file_path, width = 2940, height = 1782, units = "px", pointsize = 20, res = 250, type = "quartz")
+  } else {
+    png(filename = png_file_path, width = 2940, height = 1782, units = "px", pointsize = 20, res = 250)
+  }
 
-manhattan(
-  selected_gene_data,
-  chr = "CHR",
-  bp = "BP",
-  snp = "SNP",
-  p = "P",
-  col = c("grey", "skyblue", "pink"),
-  annotatePval = top_pvalue,
-  highlight = top_snps$SNP,
-  annotateTop = FALSE,
-  genomewideline = -log10(pvalue_threshold),
-  suggestiveline = FALSE,
-  logp = TRUE,
-  cex.main = 3.0,
-  cex = 1.0
-)
+  manhattan(
+    selected_gene_data,
+    chr = "CHR",
+    bp = "BP",
+    snp = "SNP",
+    p = "P",
+    col = c("grey", "skyblue", "pink"),
+    annotatePval = top_pvalue,
+    highlight = top_snps$SNP,
+    annotateTop = FALSE,
+    genomewideline = -log10(pvalue_threshold),
+    suggestiveline = FALSE,
+    logp = TRUE,
+    cex.main = 3.0,
+    cex = 1.0
+  )
 
-dev.off()
-cat("Manhattan plot saved to:", png_file_path, "\n")
+  dev.off()
+  cat("Manhattan plot saved to:", png_file_path, "\n")
+}, error = function(e) {
+  cat("PNG failed, creating PDF instead:", e$message, "\n")
+  if (dev.cur() > 1) dev.off()
+
+  pdf(file = pdf_file_path, width = 11.76, height = 7.13, pointsize = 20)
+
+  manhattan(
+    selected_gene_data,
+    chr = "CHR",
+    bp = "BP",
+    snp = "SNP",
+    p = "P",
+    col = c("grey", "skyblue", "pink"),
+    annotatePval = top_pvalue,
+    highlight = top_snps$SNP,
+    annotateTop = FALSE,
+    genomewideline = -log10(pvalue_threshold),
+    suggestiveline = FALSE,
+    logp = TRUE,
+    cex.main = 3.0,
+    cex = 1.0
+  )
+
+  dev.off()
+  cat("Manhattan plot saved to:", pdf_file_path, "\n")
+})
