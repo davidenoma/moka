@@ -1,9 +1,11 @@
 
 # Set CRAN mirror
 options(repos = c(CRAN = "https://cloud.r-project.org"))
-library(c('ggplot2', 'qqman', 'Cairo'))
+# library(c('ggplot2', 'qqman', 'Cairo'))
 # Install and load required packages
-packages <- c("ggplot2", "qqman", "Cairo")
+library(ggplot2)
+library(qqman)
+# packages <- c("ggplot2", "qqman", "Cairo")
 # for (pkg in packages) {
 #   if (!require(pkg, character.only = TRUE, quietly = TRUE)) {
 #     install.packages(pkg)
