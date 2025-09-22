@@ -43,7 +43,7 @@ rule merge_moka_results:
     input:
         moka_results=expand("result_folder/{prefix}_{i}_{weight_source}_result_chr_{i}.txt",i=range(1,23),weight_source=config["weights_type"],prefix=config["genotype_prefix"])
     params:
-        merged_moka_results=expand("result_folder/merged_{prefix}_{weight_source}_SKAT.txt",prefix=config["genotype_prefix"],weight_source=config["weights_type"])
+        merged_moka_results=expand("result_folder/merged_{prefix}_{weight_source}_moka.txt",prefix=config["genotype_prefix"],weight_source=config["weights_type"])
     conda:
         "envs/merge_moka_results.yaml"
     log:
