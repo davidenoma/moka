@@ -1,0 +1,11 @@
+.git
+**/__pycache__/
+**/.snakemake/
+**/.mamba/
+**/.conda/
+**/.venv/
+results/
+outputs/
+data/raw/
+data/intermediate/
+.DS_Store

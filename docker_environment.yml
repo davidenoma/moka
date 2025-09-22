@@ -1,0 +1,17 @@
+# docker_environment.yml
+name: moka
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.11
+  - snakemake-minimal>=7,<9
+  - mamba
+  - bash
+  - git
+  - coreutils
+  - parallel
+  - wget
+  - curl
+  - unzip
+  - pandoc
