@@ -30,7 +30,7 @@ rule moka_test:
         # Install dependencies if missing
         command -v parallel >/dev/null || (apt update && apt install -y parallel) || brew install parallel
         if ! command -v plink >/dev/null && [ ! -f "{params.plink_path}/plink" ]; then
-            mkdir -p $(dirname {params.plink_path}) && cd $(dirname {params.plink_path})
+            mkdir -p {params.plink_path} && cd {params.plink_path} || exit 1
             wget -q https://s3.amazonaws.com/plink1-assets/plink_linux_x86_64_20250819.zip
             unzip -q plink_linux_x86_64_20250819.zip
         fi
