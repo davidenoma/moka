@@ -21,10 +21,9 @@ To run the moka pipeline:
 2. Install **Snakemake** 
    - [Snakemake Installation Guide](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html)
      ```bash
-     conda install -n base -c conda-forge mamba
-     mamba create -c conda-forge -c bioconda -n snakemake
-     mamba activate snakemake
-     snakemake --help
+      conda create -c conda-forge -c bioconda -c nodefaults -n snakemake snakemake
+      conda activate snakemake
+      snakemake --help
      ```
 3. Install Plink, Python & R (Rscript configure)  [!important Check Dependencies section](https://github.com/davidenoma/moka/blob/main/README.md#dependencies)
 4. Download and install moka
