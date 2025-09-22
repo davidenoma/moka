@@ -9,4 +9,3 @@ dependencies:
  - r-ggplot2
  - r-qqman
  - r-cairo
- - r-cairodevice
