@@ -2,21 +2,17 @@
 # Set CRAN mirror for non\-interactive runs
 options(repos = c(CRAN = "https://cloud.r-project.org"))
 
-required_pkgs <- c("ggplot2", "qqman", "Cairo")
+# Set CRAN mirror
+options(repos = c(CRAN = "https://cloud.r-project.org"))
 
-# Check presence without attempting installs
-missing_pkgs <- required_pkgs[!vapply(required_pkgs, requireNamespace, logical(1), quietly = TRUE)]
-if (length(missing_pkgs) > 0) {
-  stop(
-    "Missing R packages: ", paste(missing_pkgs, collapse = ", "), ".\n",
-    "Add them to the conda environment defined in `workflow/envs/manhattan.yaml` (e.g. r-ggplot2 r-qqman r-cairo) and recreate the env."
-  )
+# Install and load required packages
+packages <- c("ggplot2", "qqman", "Cairo")
+for (pkg in packages) {
+  if (!require(pkg, character.only = TRUE, quietly = TRUE)) {
+    install.packages(pkg)
+    library(pkg, character.only = TRUE)
+  }
 }
-
-# Load packages quietly
-invisible(lapply(required_pkgs, function(p) {
-  suppressPackageStartupMessages(library(p, character.only = TRUE))
-}))
 
 # Process command-line arguments
 args <- commandArgs(trailingOnly = TRUE)
