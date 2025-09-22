@@ -9,9 +9,14 @@ options(repos = c(CRAN = "https://cloud.r-project.org"))
 #     library(pkg, character.only = TRUE)
 #   }
 # }
-library(ggplot2)
-library(qqman)
-
+# Install and load required packages
+packages <- c("ggplot2", "qqman", "ragg")
+for (pkg in packages) {
+  if (!require(pkg, character.only = TRUE, quietly = TRUE)) {
+    install.packages(pkg)
+    library(pkg, character.only = TRUE)
+  }
+}
 # Process command-line arguments
 args <- commandArgs(trailingOnly = TRUE)
 
@@ -68,13 +73,14 @@ top_pvalue <- max(top_snps$P, na.rm = TRUE)
 
 # Open a standard PNG device (no Cairo)
 # Cross-platform PNG creation
-if (Sys.info()["sysname"] == "Darwin") {
-  # macOS - use quartz
-  png(filename = png_file_path, width = 2940, height = 1782, units = "px", pointsize = 20, res = 250, type = "quartz")
-} else {
-  # Linux - use Xlib
-  png(filename = png_file_path, width = 2940, height = 1782, units = "px", pointsize = 20, res = 250, type = "Xlib")
-}
+# if (Sys.info()["sysname"] == "Darwin") {
+#   # macOS - use quartz
+#   png(filename = png_file_path, width = 2940, height = 1782, units = "px", pointsize = 20, res = 250, type = "quartz")
+# } else {
+#   # Linux - use Xlib
+#   png(filename = png_file_path, width = 2940, height = 1782, units = "px", pointsize = 20, res = 250, type = "Xlib")
+# }
+ragg::agg_png(filename = png_file_path, width = 2940, height = 1782, units = "px", pointsize = 20, res = 250)
 
 manhattan(
   selected_gene_data,
