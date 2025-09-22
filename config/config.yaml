@@ -1,0 +1,13 @@
+# config.yaml
+#Replace with your configuration
+genotype_prefix: "test_geno"
+weights_type: "neg_phylo"
+#Short identifier for your bridge weights
+genotype_file_path: "genotype_data/"
+#Your weights file must follow the format of the sample
+weights_file: "weights/test_geno_weights.csv"
+gene_regions_file: "helper/gene_regions.csv"
+disgenet_reference_file: "disease_database/{}.tsv"
+plink_path: "" #Path to plink binary
+is_binary: "TRUE"
+spectral_decorrelated: "FALSE"

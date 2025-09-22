@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="$PROJECT_DIR$/update_fam_ids.py">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/update_fam_ids.py" />
+              <option name="updatedContent" value="#!/usr/bin/env python3&#10;&quot;&quot;&quot;&#10;Script to update the first two columns of a FAM file with sequential IDs from 1 to 2400&#10;&quot;&quot;&quot;&#10;&#10;def update_fam_file(input_file, output_file):&#10;    &quot;&quot;&quot;Update first two columns with sequential numbers 1-2400&quot;&quot;&quot;&#10;    with open(input_file, 'r') as infile, open(output_file, 'w') as outfile:&#10;        for i, line in enumerate(infile, 1):&#10;            # Split the line into columns&#10;            columns = line.strip().split()&#10;            &#10;            # Update first two columns with sequential number&#10;            columns[0] = str(i)&#10;            columns[1] = str(i)&#10;            &#10;            # Write the updated line&#10;            outfile.write(' '.join(columns) + '\n')&#10;&#10;if __name__ == &quot;__main__&quot;:&#10;    input_file = &quot;/Users/davidenoma/PycharmProjects/wkas_pipeline/genotype_data/test_geno.fam&quot;&#10;    output_file = &quot;/Users/davidenoma/PycharmProjects/wkas_pipeline/genotype_data/test_geno_updated.fam&quot;&#10;    &#10;    update_fam_file(input_file, output_file)&#10;    print(f&quot;Updated FAM file saved as: {output_file}&quot;)" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
