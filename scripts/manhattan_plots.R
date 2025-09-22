@@ -63,7 +63,7 @@ top_idx <- which.max(top_snps$P)
 top_pvalue <- top_snps$P[top_idx]
 
 # Create the Manhattan plot using CairoPNG
-CairoPNG(filename = png_file_path, width = 2940, height = 1782, units = "px", pointsize = 20, res = 250)
+png(filename = png_file_path, width = 2940, height = 1782, units = "px", pointsize = 20, res = 250)
 # quartz()
 manhattan(
   selected_gene_data,
