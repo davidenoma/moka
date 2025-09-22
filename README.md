@@ -40,7 +40,7 @@ cd moka
 snakemake --cores <num_cores>
 ```
     <num_cores> are the number of cores to use
-  If you do not have all the dependencies with Python and R you can get it configured on conda, utilize with:
+You can automatically install the software dependencies environment using: 
 
    ```bash
    snakemake --cores <num_cores> --use-conda
