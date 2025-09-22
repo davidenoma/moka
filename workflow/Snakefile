@@ -115,7 +115,7 @@ rule kegg_pathway_analysis:
     shell:
         """(
         Rscript scripts/pathfindR_KEGG.R {input.merged_moka_results} {params.pval_thresh}
-        > {log.stdout} 2> {log.stderr}"""
+        )> {log.stdout} 2> {log.stderr}"""
 rule go_analysis:
     input:
         merged_moka_results = expand("result_folder/merged_{prefix}_{weight_source}_SKAT.txt",prefix=config[
