@@ -27,7 +27,7 @@ To run the moka pipeline:
       snakemake --help
      ```
 3. Download and install moka
-4. 
+
 ```bash
 git clone https://github.com/davidenoma/moka
 cd moka
@@ -58,15 +58,6 @@ You can automatically install the software dependencies environment using:
 snakemake --cores 1 merge_moka_results
 ```
 
-
-### Rule: annotate_results
-- **Input:** Merged association test results.
-- **Output:** Annotated association test results with DisGeNet database
-
-```bash
-snakemake --cores 1 disgenet_annotation_005
-```
-
 ### Rule: visualize_results
 - **Input:** Merged association test results.
 - **Output:** Manhattan plots with visual representations of association test results.
@@ -90,6 +81,16 @@ snakemake --cores 1 go_analysis
 ```bash
 snakemake --cores 1 kegg_pathway_analysis
 ```
+
+### Rule: annotate_results
+- **Input:** Merged association test results.
+- **Output:** Annotated association test results with DisGeNet database
+
+```bash
+snakemake --cores 1 disgenet_annotation_005
+```
+
+
 ### Rule:  Skat test with linear kernel
 - **Input:** Genotype
 - **Output:** results for association mapping, folder: output_association/
