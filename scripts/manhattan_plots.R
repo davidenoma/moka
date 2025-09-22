@@ -1,18 +1,15 @@
-# r
-# Set CRAN mirror for non\-interactive runs
-options(repos = c(CRAN = "https://cloud.r-project.org"))
 
 # Set CRAN mirror
 options(repos = c(CRAN = "https://cloud.r-project.org"))
-
+library(c('ggplot2', 'qqman', 'Cairo'))
 # Install and load required packages
 packages <- c("ggplot2", "qqman", "Cairo")
-for (pkg in packages) {
-  if (!require(pkg, character.only = TRUE, quietly = TRUE)) {
-    install.packages(pkg)
-    library(pkg, character.only = TRUE)
-  }
-}
+# for (pkg in packages) {
+#   if (!require(pkg, character.only = TRUE, quietly = TRUE)) {
+#     install.packages(pkg)
+#     library(pkg, character.only = TRUE)
+#   }
+# }
 
 # Process command-line arguments
 args <- commandArgs(trailingOnly = TRUE)
