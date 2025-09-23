@@ -165,6 +165,7 @@ rule unweighted_skat:
         
         export PATH={params.plink_path}:$PATH
         mkdir -p {params.output_dir}
+        parallel --citation
         seq 1 22 | parallel -j  {threads} --verbose Rscript scripts/skat_unweighted.R {params.genotype_prefix} {input.gene_regions} {params.genotype_path} {{}} {params.output_dir} 
         """
 
