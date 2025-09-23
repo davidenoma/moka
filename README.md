@@ -7,7 +7,7 @@
 
 
 <div align="center"> 
-<img width="600" height="600" alt="moka-figure" src="https://github.com/user-attachments/assets/51837dd7-5563-4ddf-8864-e8cd07079f00" />
+<img width="800" height="800" alt="moka-figure" src="https://github.com/user-attachments/assets/51837dd7-5563-4ddf-8864-e8cd07079f00" />
 </div>
 
 
