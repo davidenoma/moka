@@ -4,7 +4,7 @@ SHELL ["/bin/bash", "-lc"]
 
 # --- knobs ---
 ARG REPO_URL="https://github.com/davidenoma/moka.git"
-ARG REPO_REF="docker_config"
+ARG REPO_REF="main"
 ARG ENV_FILE="docker_environment.yml"
 
 # Use only conda-forge + bioconda; remove defaults to avoid TOS
