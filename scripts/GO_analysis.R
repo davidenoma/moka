@@ -1,6 +1,10 @@
-library(gprofiler2)
-library(ggplot2)
-library(Cairo)
+packages <- c("gprofiler2", "ggplot2", "Cairo")
+for (pkg in packages) {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
+    install.packages(pkg, repos = "https://cloud.r-project.org")
+  }
+  suppressPackageStartupMessages(library(pkg, character.only = TRUE))
+}
 
 # Process command-line arguments
 args <- commandArgs(trailingOnly = TRUE)
