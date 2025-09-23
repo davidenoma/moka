@@ -1,86 +1,74 @@
 # syntax=docker/dockerfile:1.7
-FROM mambaorg/micromamba:1.5.3
+FROM continuumio/miniconda3:latest
 SHELL ["/bin/bash", "-lc"]
 
-# ---- build-time args ----
+# --- knobs ---
 ARG REPO_URL="https://github.com/davidenoma/moka.git"
 ARG REPO_REF="docker_config"
-ARG PLINK_URL="https://s3.amazonaws.com/plink1-assets/plink_linux_x86_64_20231211.zip"
 ARG ENV_FILE="docker_environment.yml"
 
-# micromamba root + PATH (include user's ~/.local/bin for plink)
-ENV MAMBA_ROOT_PREFIX=/opt/conda
-ENV PATH="/opt/conda/bin:/usr/local/bin:/home/mambauser/.local/bin:${PATH}"
+# Use only conda-forge + bioconda; remove defaults to avoid TOS
+RUN conda update -n base -y conda \
+ && conda config --system --remove channels defaults || true \
+ && conda config --system --add channels conda-forge \
+ && conda config --system --add channels bioconda \
+ && conda config --system --set channel_priority strict \
+ && conda install -n base -y conda-libmamba-solver \
+ && conda config --system --set solver libmamba
 
-# ---- base runtime (snakemake, mamba, etc.) ----
+# ---- base runtime; your YAMLs define most deps ----
 COPY ${ENV_FILE} /tmp/base_env.yml
-RUN micromamba install -y -n base -f /tmp/base_env.yml -c conda-forge -c bioconda \
- && micromamba clean -a -y
-# --- 2) Add a real 'conda' + 'mamba' into the SAME base env and expose on PATH
-# ---- base runtime (snakemake, etc.) ----
-COPY ${ENV_FILE} /tmp/base_env.yml
-RUN micromamba install -y -n base -f /tmp/base_env.yml -c conda-forge -c bioconda \
- && micromamba install -y -n base conda mamba -c conda-forge \
- && micromamba clean -a -y \
- && micromamba run -n base conda info --json >/dev/null
+# strip any explicit 'defaults' entries in your YAML (belt & suspenders)
+RUN sed -i '/^\s*-\s*defaults\s*$/d' /tmp/base_env.yml || true
+RUN if [ -s /tmp/base_env.yml ]; then \
+      echo ">> updating base from ${ENV_FILE}"; \
+      conda env update -n base -f /tmp/base_env.yml || true; \
+    fi \
+ && conda install -n base -y snakemake git wget unzip parallel pyyaml \
+ && conda clean -a -y
 
-# Ensure we actually have wget+unzip available in the build
-RUN micromamba install -y -n base wget unzip -c conda-forge \
- && micromamba clean -a -y
+# ---- repo ----
+WORKDIR /home/conda
+RUN mkdir -p moka
+WORKDIR /home/conda/moka
+RUN git clone --depth 1 --branch "${REPO_REF}" "${REPO_URL}" .
 
-# ---- working directory: /home/mambauser/moka (no chown, no root) ----
-WORKDIR /home/mambauser
-WORKDIR ./moka
-
-# ---- clone your repo into the current dir (.) ----
-RUN micromamba run -n base git clone --depth 1 --branch "${REPO_REF}" "${REPO_URL}" .
-
-# ---- PLINK 1.9 (download into /opt/conda/bin so PATH sees it) ----
-RUN micromamba run -n base wget -q -O /tmp/plink.zip "${PLINK_URL}" \
- && micromamba run -n base unzip -j /tmp/plink.zip -d /opt/conda/bin \
- && chmod +x /opt/conda/bin/plink \
- && micromamba run -n base plink --version \
- && rm -f /tmp/plink.zip
-
-
-
-# ---- OPTIONAL: pre-install rule envs into the same env (no --use-conda) ----
-# 1) conda sections from workflow/envs/*.yml
+# ---- merge ALL rule envs into base (so no --use-conda at runtime) ----
 RUN set -eux; \
-    if compgen -G 'workflow/envs/*.y*ml' > /dev/null; then \
-      for f in workflow/envs/*.y*ml; do \
-        echo "Installing conda deps from $f"; \
-        micromamba install -y -n base -f "$f" -c conda-forge -c bioconda || true; \
-      done; \
-      micromamba clean -a -y; \
-    else \
-      echo 'No workflow/envs/*.y*ml found; skipping.'; \
-    fi
+    shopt -s nullglob; \
+    for f in workflow/envs/*.yml workflow/envs/*.yaml; do \
+      sed -i '/^\s*-\s*defaults\s*$/d' "$f" || true; \
+      echo ">> merging $f into base"; \
+      conda env update -n base -f "$f" || true; \
+    done; \
+    conda clean -a -y
 
-# 2) any pip: entries inside those YAMLs
-RUN micromamba run -n base python - <<'PY'
-import glob, sys
-try:
-    import yaml
-except Exception:
-    print("PyYAML not found; skipping pip extraction.", file=sys.stderr); sys.exit(0)
-pkgs=set()
+# ---- install any pip: extras from those YAMLs into base ----
+RUN python - <<'PY'
+import glob, sys, yaml, subprocess, tempfile
+pip_pkgs=set()
 for p in glob.glob('workflow/envs/*.y*ml'):
     try:
-        with open(p) as fh:
-            y=yaml.safe_load(fh) or {}
+        y=yaml.safe_load(open(p)) or {}
         for d in y.get('dependencies', []):
             if isinstance(d, dict) and 'pip' in d:
-                pkgs.update(d['pip'])
+                pip_pkgs.update(d['pip'] or [])
     except Exception as e:
-        print('WARN:', p, e, file=sys.stderr)
-open('/tmp/pip.txt','w').write('\n'.join(sorted(pkgs))+'\n')
-print('pip packages:', len(pkgs))
+        print("WARN:", p, e, file=sys.stderr)
+if pip_pkgs:
+    with tempfile.NamedTemporaryFile('w', delete=False) as fh:
+        fh.write('\n'.join(sorted(pip_pkgs))+'\n'); name=fh.name
+    subprocess.check_call(["bash","-lc",f"conda run -n base pip install -r {name}"])
+else:
+    print("No pip extras found.")
 PY
-RUN if [ -s /tmp/pip.txt ]; then \
-      micromamba run -n base pip install -r /tmp/pip.txt; \
-    fi
 
-# ---- default: run Snakemake with preloaded env ----
-ENTRYPOINT ["/usr/local/bin/_entrypoint.sh", "snakemake"]
+# ---- default entrypoint: run snakemake in base env ----
+RUN printf '%s\n' '#!/usr/bin/env bash' \
+                  'set -euo pipefail' \
+                  'exec conda run -n base snakemake "$@"' \
+   > /usr/local/bin/snakemake-entry.sh \
+ && chmod +x /usr/local/bin/snakemake-entry.sh
+
+ENTRYPOINT ["/usr/local/bin/snakemake-entry.sh"]
 CMD ["--help"]
