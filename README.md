@@ -1,9 +1,17 @@
 [![Snakemake](https://img.shields.io/badge/snakemake-8.15.2-brightgreen.svg)](https://snakemake.github.io)
 
 
-<div align="center">
+<!-- <div align="center">
   <img src="https://github.com/user-attachments/assets/6d7d5099-aac4-44e2-a3d2-eacf6921a395" alt="image" width="500">
+</div> -->
+<div> align="center"> 
+
+<img width="468" height="341" alt="image" src="https://github.com/user-attachments/assets/4a775201-a55e-4e1b-92d8-ec6906f705cd" />
 </div>
+
+  
+
+
 
 # 🌉 Multi-omics bridged Kernel Association test (MOKA) Pipeline
 MOKA implements a Snakemake pipeline to automate data bridge kernel-based association tests. 
