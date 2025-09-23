@@ -1,6 +1,5 @@
 [![Snakemake](https://img.shields.io/badge/snakemake-8.15.2-brightgreen.svg)](https://snakemake.github.io)
 
-
 <div align="center">
   <img src="https://github.com/user-attachments/assets/6d7d5099-aac4-44e2-a3d2-eacf6921a395" alt="image" width="500">
 </div>
@@ -13,6 +12,7 @@ This pipeline offers flexibility of GWAS analysis & visualizations with differen
 
 </div>
 Publication available at: https://www.medrxiv.org/content/10.1101/2025.07.06.25330974v1 
+
 ## 🚀 Usage
 To run the moka pipeline:
 
