@@ -16,6 +16,13 @@ ENV PATH="/opt/conda/bin:/usr/local/bin:/home/mambauser/.local/bin:${PATH}"
 COPY ${ENV_FILE} /tmp/base_env.yml
 RUN micromamba install -y -n base -f /tmp/base_env.yml -c conda-forge -c bioconda \
  && micromamba clean -a -y
+# --- 2) Add a real 'conda' + 'mamba' into the SAME base env and expose on PATH
+# ---- base runtime (snakemake, etc.) ----
+COPY ${ENV_FILE} /tmp/base_env.yml
+RUN micromamba install -y -n base -f /tmp/base_env.yml -c conda-forge -c bioconda \
+ && micromamba install -y -n base conda mamba -c conda-forge \
+ && micromamba clean -a -y \
+ && micromamba run -n base conda info --json >/dev/null
 
 # Ensure we actually have wget+unzip available in the build
 RUN micromamba install -y -n base wget unzip -c conda-forge \

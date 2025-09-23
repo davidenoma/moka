@@ -87,9 +87,9 @@ rule disgenet_annotation_005:
     conda:
         "envs/disgenet.yaml"
     shell:
-        """(
+        """
         Rscript scripts/obtain_genes_in_DGN.R {input.merged_moka_results} {params.gene_annotation} 0.05
-        )> {log.stdout} 2> {log.stderr}"""
+        > {log.stdout} 2> {log.stderr}"""
 # Rule 5: Generate Manhattan plots for MOKA results
 rule manhattan_plots:
     input:
@@ -115,9 +115,9 @@ rule kegg_pathway_analysis:
     conda:
         "envs/kegg_pathway.yaml"
     shell:
-        """(
+        """
         Rscript scripts/pathfindR_KEGG.R {input.merged_moka_results} {params.pval_thresh}
-        )> {log.stdout} 2> {log.stderr}"""
+        > {log.stdout} 2> {log.stderr}"""
 # Rule 7: Perform GO analysis of MOKA results
 rule go_analysis:
     input:
@@ -130,9 +130,9 @@ rule go_analysis:
     conda:
         "envs/go_analysis.yaml"
     shell:
-        """(
+        """
         Rscript scripts/GO_analysis.R {input.merged_moka_results} {params.pval_thresh}
-        )> {log.stdout} 2> {log.stderr}"""
+        > {log.stdout} 2> {log.stderr}"""
 
 
 
