@@ -1,7 +1,8 @@
 # config.yaml
 # 1. Replace with your configuration
 genotype_prefix: "test_geno"
-#2. Short identifier for your multi-omics weights for each variant
+#2. Short identifier for your multi-omics weights for each variant,
+# NOTE! Please include an identifier if you have spectral decorrelation, "TRUE". e.g. neg_phylo_decorr
 weights_type: "neg_phylo"
 genotype_file_path: "genotype_data/"
 #3. Your weights file for multi-omics weights for each variant
@@ -10,5 +11,5 @@ gene_regions_file: "helper/gene_regions.csv"
 disgenet_reference_file: "disease_database/{}.tsv"
 plink_path: "helper/" #Path to plink binary update if you have plink installed elsewhere
 is_binary: "TRUE"
-spectral_decorrelated: "TRUE"
+spectral_decorrelated: "FALSE"
 flank_size: 500000
