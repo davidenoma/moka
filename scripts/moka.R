@@ -360,6 +360,8 @@ spectral_decorrelated <- ifelse(length(args) >= 8, as.logical(args[8]), TRUE)
 h2_file <- paste0(genotype_path, genotype_prefix, "_h2.txt")
 if (!file.exists(h2_file)) {
   # Run FastLMM and save h2
+  print("Calculating heritability using FastLMM...")
+  # Ensure the script path is correct
   h2_raw <- system(
     paste("python", "scripts/estimate_h2_fastlmm.py", "--snp_prefix", paste0(genotype_path, genotype_prefix)),
     intern = TRUE
