@@ -41,5 +41,7 @@ def main():
     out_file = snp_data_loc + "_h2.txt"
     with open(out_file, "w") as f:
         f.write(f"{h2:.15f}\n")
+    print(f"Heritability estimate (h2) {h2:.15f} written to {out_file}")
+
 if __name__ == "__main__":
     main()

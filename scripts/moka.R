@@ -401,7 +401,6 @@ if (!file.exists(grm_file)) {
     cat('Decomposing GRM\n')
     # ----- Step 8: Decorrelate using GRM -----
     eig <- eigen(G, symmetric = TRUE)
-
     U <- unname(eig$vectors)
     S <- eig$values
     D <- U %*% diag(1 / sqrt(h2 * S + 1))
@@ -413,6 +412,8 @@ result_folder <- "result_folder"
 prepare_SKAT_files_per_chr(genotype_path, genotype_prefix)
 print("done creating skat genotype")
 genotype_prefix <- paste0(genotype_prefix, "_", chr)
+
+
 #assign GRM TO d
 extract_weights_for_snvs_and_skat_chr(genotype_prefix, gene_regions_file, weights_file, genotype_path, weights_type, result_folder, chr,D, is_binary)
 
