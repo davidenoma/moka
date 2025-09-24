@@ -109,49 +109,16 @@ snakemake --cores 22 skat --use-conda
 snakemake --cores 1 generate_gene_regions --use-conda
 ```
 
-## Dependencies
+### Dependencies
+All required Python and R packages, as well as other software dependencies, are specified in the provided `envs.yaml` files in the `workflow/envs/` directory. These environments are automatically created and managed by Snakemake when you use the `--use-conda` flag. You do not need to install packages manually.
 
-### Software
-**They must be configured on your path**
-- **Snakemake (8.0.1+)**
-- **R(4.2.0+)**
-- **Python (3.9+)**
-- **PLINK (1.9+)**: [https://www.cog-genomics.org/plink/1.9/]
-- **Rscript**
+For more details, see the environment YAML files in `workflow/envs/`.
 
-### Python Packages
-- **FaST-LMM**  Factored Spectrally Transformed Linear Mixed Models, is a program for performing genome-wide association studies (GWAS) on datasets of all sizes 
-- **PySnpTools**  PySnpTools is a library for reading and manipulating genetic data.
-  
-```Python
-pip install pysnptools fastlmm
-```
-### R Packages
 
-- **manhattan:** R package for creating manhattan plots, commonly used in genome-wide association studies (GWAS).
-- **SKAT:** R package for SKAT (Sequence Kernel Association Test) which is a powerful gene-based association test.
-- **QQMAN:** R package for creating QQ (Quantile-Quantile) plots, commonly used in GWAS to assess whether observed p-values deviate from the expected distribution under the null hypothesis.
-- **GGPLOT:** R package for creating highly customizable plots and graphics.
-- **gprofiler2:** R package for gene set enrichment analysis (GO analysis).
-- **pathfindR:** R package for pathway analysis, including KEGG pathway analysis.
-
-Installation steps:
-
-```R
-install.packages(c("BiocManager","SKAT","ggplot2"))
-BiocManager::install(c( "gprofiler2", "pathfindR","manhattan","qqman"))
-```
-
-### Other Software
-- **Parallel:** Linux Parallel GNU : https://www.gnu.org/software/parallel/
-```bash
-apt install parallel #linux or WSL windows
-brew install parallel #macos
-```
 ### Input file format
 - **Data Files:** Plink https://www.cog-genomics.org/plink/1.9/  format genotyped BIM, BED & FAM files [!required]
 - Multi-omics **Bridge weights.csv** file (SNP_ID,Chromosome,Position,Weight) [!required for moka]
-- Gene regions file provied in GRCh38 or hg38. (Genome Research Consortium Human Build 38)
+- Gene regions file (provided in GRCh38 or hg38) is generated from Ensembl GFF3 annotation files, e.g., Homo_sapiens.GRCh38.115.gff3.gz from Ensembl release 115.
 - DisGeNET gene disease database reference file ( If disease external validation needed)
 
 ### Liftover protocol 
