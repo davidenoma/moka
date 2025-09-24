@@ -45,7 +45,7 @@ cd moka
 - **Input:** Preprocessed genotype data and weight files.
 - **Output:** Results of association tests.
 ```bash
-snakemake --cores <num_cores>
+snakemake --cores <num_cores> --use-conda
 ```
     <num_cores> are the number of cores to use
 You can automatically install the software dependencies environment using: 
@@ -57,9 +57,8 @@ You can automatically install the software dependencies environment using:
 ### Rule: merge_results
 - **Input:** Individual association test results.
 - **Output:** Merged association test results.
-- 
 ```bash
-snakemake --cores 1 merge_moka_results
+snakemake --cores 1 merge_moka_results --use-conda
 ```
 
 ### Rule: visualize_results
@@ -67,7 +66,7 @@ snakemake --cores 1 merge_moka_results
 - **Output:** Manhattan plots with visual representations of association test results.
 
 ```bash
-snakemake --cores 1 manhattan_plots
+snakemake --cores 1 manhattan_plots --use-conda
 ```
 
 ### Rule: go_analysis
@@ -75,7 +74,7 @@ snakemake --cores 1 manhattan_plots
 - **Output:** GO analysis results.
 
 ```bash
-snakemake --cores 1 go_analysis
+snakemake --cores 1 go_analysis --use-conda
 ```
 
 ### Rule: kegg_pathway_analysis
@@ -83,7 +82,7 @@ snakemake --cores 1 go_analysis
 - **Output:** KEGG pathway analysis results.
 
 ```bash
-snakemake --cores 1 kegg_pathway_analysis
+snakemake --cores 1 kegg_pathway_analysis --use-conda
 ```
 
 ### Rule: annotate_results
@@ -91,7 +90,7 @@ snakemake --cores 1 kegg_pathway_analysis
 - **Output:** Annotated association test results with DisGeNet database
 
 ```bash
-snakemake --cores 1 disgenet_annotation_005
+snakemake --cores 1 disgenet_annotation_005 --use-conda
 ```
 
 
@@ -99,9 +98,17 @@ snakemake --cores 1 disgenet_annotation_005
 - **Input:** Genotype
 - **Output:** results for association mapping, folder: output_association/
 ```bash
-snakemake --cores 22 skat
-
+snakemake --cores 22 skat --use-conda
 ```
+
+### Rule: generate_gene_regions
+- **Documentation:** Generates gene region files with specified flanking size from GFF3 annotation for gene-based association testing. Uses `config.flank_size` from the config file.
+
+**How to execute:**
+```bash
+snakemake --cores 1 generate_gene_regions --use-conda
+```
+
 ## Dependencies
 
 ### Software
@@ -166,4 +173,14 @@ david.enoma@ucalgary.ca
 
 ## Publication reference 
 MOKA: A pipeline for multi-omics bridged SNP-set kernel association test
-https://www.medrxiv.org/content/10.1101/2025.07.06.25330974v1 
+https://www.medrxiv.org/content/10.1101/2025.07.06.25330974v1
+
+## 🐳 Docker
+
+You can run the MOKA pipeline using the official Docker image:
+
+```bash
+docker pull davidenoma/moka-gwas
+```
+
+For usage instructions and examples, see [https://hub.docker.com/r/davidenoma/moka-gwas](https://hub.docker.com/r/davidenoma/moka-gwas).
