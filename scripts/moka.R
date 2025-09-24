@@ -2,7 +2,7 @@
 library(SKAT)
 library(parallel)
 # import
-# Define the function to perform the moka using SKAT libraries. test
+# Define the function to perform the SKAT test
 perform_skat_test <- function(gene_name, gene_chromosome, region_start, region_end, gene_snps, genotype_prefix, result_folder, result_file, is_binary = TRUE) {
   tryCatch({
     genotype_prefix <- paste0(genotype_path, genotype_prefix)
@@ -68,7 +68,6 @@ perform_skat_test <- function(gene_name, gene_chromosome, region_start, region_e
     cat("Error message:", e$message, "\n")
   })
 }
-# Define the function to perform the moka using SKAT libraries with GRM decomposition.
 perform_skat_test_decomposition <- function(
   gene_name, gene_chromosome, region_start, region_end, gene_snps,
   genotype_prefix, genotype_path, result_folder, result_file, D, is_binary = TRUE
@@ -96,6 +95,7 @@ perform_skat_test_decomposition <- function(
       "--allow-no-sex "
     ))
     print('raw file generated')
+
 
 
     # ----- Step 3: Read genotype matrix -----
@@ -131,28 +131,61 @@ perform_skat_test_decomposition <- function(
   fam <- read.table(paste0(genotype_prefix, ".fam"), header = FALSE)
   fam_pheno <- fam[, c(1, 2, 6)]  # FID, IID, PHENO
   write.table(fam_pheno, file = pheno_file, quote = FALSE, row.names = FALSE, col.names = FALSE, sep = "\t")
-  cat('Reading GRM\n')
-  X <- genotype_matrix
-  cat('Done decomposition\n')
-  Y_star <- D %*% Y
-  cat(str(Y_star), "\n")
-  X_star <- D %*% X
-  cat(str(X_star), "\n")
-  # intercept <- D %*% rep(1, length(Y_star))
-  # cat(str(intercept), "\n")
+  # Step 3: Estimate h² using GCTA REML
+#   system(paste(
+#     "gcta64 --grm", prefix_skat,
+#     "--pheno", pheno_file, "--thread-num", 22,
+#     "--reml --out", prefix_skat
+#   ))
+#   h2_file <- paste0(prefix_skat, ".hsq")
+# # # Read the hsq file with header set to TRUE and fill parameter for safety
+# h2_data <- read.table(h2_file, header = TRUE, sep = "\t", stringsAsFactors = FALSE, fill = TRUE)
+# # # Extract the row for 'V(G)/Vp'
+# h2_line <- h2_data[h2_data$Source == "V(G)/Vp", ]
+# # # Convert the Variance column value to numeric
+# h2 <- as.numeric(h2_line$Variance)
+# cat(h2)
 
-  # ----- Step 9: Run SKAT -----
-  obj <- SKAT_Null_Model(Y_star ~ 1,out_type="C")
-  skat_result <- SKAT(X_star, obj, kernel = "linear.weighted", weights = gene_snps$Weight)
-  # cat(skat_result$Q, skat_result$p.value, "\n")
-  # ----- Step 10: Write result -----
-  ss2 <- c(gene_name, gene_chromosome, region_start, region_end,
-           toString(skat_result$Q), toString(skat_result$p.value))
-  write(ss2, file = result_file, append = TRUE, ncol = 6, sep = "\t")
 
-  files_to_remove <- Sys.glob(file.path(genotype_path, paste0(prefix_skat, ".*")))
-  files_to_remove <- files_to_remove[!grepl("\\.(rel|grm|grm\\.bin|grm\\.id|grm\\.N\\.bin)$", files_to_remove)]
-  unlink(files_to_remove)
+
+    cat('Reading GRM\n')
+    X <- genotype_matrix
+    # cat(str(X), "\n")
+    # G <- grm
+    # # G <- read_grm_plink(prefix_skat)
+    #
+    # # cat(str(G))
+    # cat('Decomposing GRM\n')
+    # # ----- Step 8: Decorrelate using GRM -----
+    # eig <- eigen(G, symmetric = TRUE)
+    #
+    # U <- unname(eig$vectors)
+    # S <- eig$values
+    # D <- U %*% diag(1 / sqrt(h2 * S + 1))
+    # cat(str(D), "\n")
+    cat('Done decomposition\n')
+    Y_star <- D %*% Y
+    cat(str(Y_star), "\n")
+    X_star <- D %*% X
+    cat(str(X_star), "\n")
+    # intercept <- D %*% rep(1, length(Y_star))
+    # cat(str(intercept), "\n")
+
+    # ----- Step 9: Run SKAT -----
+    obj <- SKAT_Null_Model(Y_star ~ 1,out_type="C")
+    skat_result <- SKAT(X_star, obj, kernel = "linear.weighted", weights = gene_snps$Weight)
+    # cat(skat_result$Q, skat_result$p.value, "\n")
+    # ----- Step 10: Write result -----
+    ss2 <- c(gene_name, gene_chromosome, region_start, region_end,
+             toString(skat_result$Q), toString(skat_result$p.value))
+    write(ss2, file = result_file, append = TRUE, ncol = 6, sep = "\t")
+    # cat('Written association result for gene:')
+    # ----- Step 11: Clean up -----
+# Remove SKAT temporary files, excluding the .rel file
+# Remove SKAT temporary files, excluding .rel and GRM files created by PLINK (e.g., .grm, .grm.bin, .grm.id, .grm.N.bin)
+files_to_remove <- Sys.glob(file.path(genotype_path, paste0(prefix_skat, ".*")))
+files_to_remove <- files_to_remove[!grepl("\\.(rel|grm|grm\\.bin|grm\\.id|grm\\.N\\.bin)$", files_to_remove)]
+unlink(files_to_remove)
 
 raw_files <- Sys.glob(file.path(genotype_path, paste0(genotype_prefix, "*.raw")))
 unlink(raw_files)
@@ -164,7 +197,11 @@ unlink(raw_files)
   })
 }
 
-# Define a function to extract weights for SNVs and perform MOKA for a specific chromosome
+
+
+
+
+# Define a function to extract weights for SNVs and perform SKAT for a specific chromosome
 extract_weights_for_snvs_and_skat_chr <- function(genotype_prefix, gene_regions_file, weights_file, genotype_path, weights_type, result_folder, chr, D,is_binary = TRUE) {
   # Read the weights vector file
   weights_vector <- read.csv(weights_file, sep = ",", header = TRUE)
@@ -213,8 +250,6 @@ extract_weights_for_snvs_and_skat_chr <- function(genotype_prefix, gene_regions_
 
   print(paste("Done with SKAT analysis for chromosome", chr))
 }
-
-# Function to read GRM from  binary files
 read_grm <- function(prefix) {
       grm_bin <- paste0(prefix, ".grm.bin")
       grm_id <- paste0(prefix, ".grm.id")
