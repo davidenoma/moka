@@ -95,15 +95,11 @@ perform_skat_test_decomposition <- function(
       "--allow-no-sex "
     ))
     print('raw file generated')
-
-
-
     # ----- Step 3: Read genotype matrix -----
     raw_file <- paste0(prefix_skat, ".raw")
     if (!file.exists(raw_file)) stop("No .raw file found.") else (print("raw file found"))
 # Read the genotype data
   geno_df <- read.table(raw_file, header = TRUE, sep = " ")
-
   all_cols <- colnames(geno_df)
   snp_indices <- which(sapply(all_cols, function(cn) {
     any(startsWith(cn, paste0(gene_snps$SNP, "_")))
@@ -113,9 +109,7 @@ perform_skat_test_decomposition <- function(
     warning("No SNPs matched for gene: ", gene_name)
     return(NULL)
   }
-
     genotype_matrix <- as.matrix(geno_df[, snp_indices])
-
     # ----- Step 4: Read phenotype -----
     # fam_file <- file.path(genotype_path, paste0(genotype_prefix, ".fam"))
     fam <- read.table(paste0(genotype_prefix, ".fam"), header = FALSE)
@@ -127,10 +121,10 @@ perform_skat_test_decomposition <- function(
     #   "--make-grm-bin --out", prefix_skat
     # ))
     # ----- Step 2.5: Generate GCTA-compatible .pheno file from .fam -----
-  pheno_file <- paste0(prefix_skat, ".pheno")
-  fam <- read.table(paste0(genotype_prefix, ".fam"), header = FALSE)
-  fam_pheno <- fam[, c(1, 2, 6)]  # FID, IID, PHENO
-  write.table(fam_pheno, file = pheno_file, quote = FALSE, row.names = FALSE, col.names = FALSE, sep = "\t")
+  # pheno_file <- paste0(prefix_skat, ".pheno")
+  # fam <- read.table(paste0(genotype_prefix, ".fam"), header = FALSE)
+  # fam_pheno <- fam[, c(1, 2, 6)]  # FID, IID, PHENO
+  # write.table(fam_pheno, file = pheno_file, quote = FALSE, row.names = FALSE, col.names = FALSE, sep = "\t")
   # Step 3: Estimate h² using GCTA REML
 #   system(paste(
 #     "gcta64 --grm", prefix_skat,
@@ -145,9 +139,6 @@ perform_skat_test_decomposition <- function(
 # # # Convert the Variance column value to numeric
 # h2 <- as.numeric(h2_line$Variance)
 # cat(h2)
-
-
-
     cat('Reading GRM\n')
     X <- genotype_matrix
     # cat(str(X), "\n")
@@ -170,7 +161,6 @@ perform_skat_test_decomposition <- function(
     cat(str(X_star), "\n")
     # intercept <- D %*% rep(1, length(Y_star))
     # cat(str(intercept), "\n")
-
     # ----- Step 9: Run SKAT -----
     obj <- SKAT_Null_Model(Y_star ~ 1,out_type="C")
     skat_result <- SKAT(X_star, obj, kernel = "linear.weighted", weights = gene_snps$Weight)
@@ -212,11 +202,16 @@ extract_weights_for_snvs_and_skat_chr <- function(genotype_prefix, gene_regions_
   weights_vector <- subset(weights_vector, Chr == chr)
 
   # Create results folder
-  system("mkdir -p result_folder")
+# Create result folder if it does not exist
+  if (!dir.exists(result_folder)) {
+    dir.create(result_folder, showWarnings = FALSE, recursive = TRUE)
+  }
+
   result_file <- file.path(result_folder, paste0(genotype_prefix, "_", weights_type, "_result_chr_", chr, ".txt"))
 
   ss <- c("Gene_name", "Gene_chromosome", "Region_start", "Region_end", "Q_test", "pvalue")
   write(ss, file = result_file, ncol = 6, sep = '\t')
+
 
   gene_count <- 0
   gene_regions <- subset(gene_regions, Chromosome == chr)

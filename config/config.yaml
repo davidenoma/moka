@@ -10,5 +10,5 @@ gene_regions_file: "helper/gene_regions.csv"
 disgenet_reference_file: "disease_database/{}.tsv"
 plink_path: "helper/" #Path to plink binary update if you have plink installed elsewhere
 is_binary: "TRUE"
-spectral_decorrelated: "FALSE"
+spectral_decorrelated: "TRUE"
 flank_size: 500000
