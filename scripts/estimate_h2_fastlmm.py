@@ -1,5 +1,4 @@
-import os
-import sys
+
 import pandas as pd
 from pysnptools.snpreader import Bed
 from pysnptools.snpreader import Pheno
@@ -39,6 +38,8 @@ def main():
     h2 = results_df['Nullh2'].iloc[0]
     if pd.isna(h2):
         h2 = 0.5
-    print(f"{h2:.15f}")
+    out_file = snp_data_loc + "_h2.txt"
+    with open(out_file, "w") as f:
+        f.write(f"{h2:.15f}\n")
 if __name__ == "__main__":
     main()

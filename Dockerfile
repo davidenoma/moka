@@ -72,3 +72,6 @@ RUN printf '%s\n' '#!/usr/bin/env bash' \
 
 ENTRYPOINT ["/usr/local/bin/snakemake-entry.sh"]
 CMD ["--help"]
+
+#Build with:
+##docker buildx build --platform linux/amd64   -t davidenoma/moka-gwas:${TAG}   --build-arg REPO_REF=main   --build-arg ENV_FILE=docker_environment.yml   --build-arg PLINK_URL="https://s3.amazonaws.com/plink1-assets/plink_linux_x86_64_20231211.zip"   .

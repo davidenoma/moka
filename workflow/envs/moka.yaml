@@ -11,4 +11,6 @@ dependencies:
  - pip
  - pip:
    - fastlmm
+   - pandas
    - pysnptools
+   - numpy

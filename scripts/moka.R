@@ -359,23 +359,19 @@ spectral_decorrelated <- ifelse(length(args) >= 8, as.logical(args[8]), TRUE)
 # First check if h2 file exists
 h2_file <- paste0(genotype_path, genotype_prefix, "_h2.txt")
 if (!file.exists(h2_file)) {
-  # Run FastLMM and save h2
-  print("Calculating heritability using FastLMM...")
-  # Ensure the script path is correct
-  h2_raw <- system(
+  cat("Calculating heritability using FastLMM...\n")
+  system(
     paste("python", "scripts/estimate_h2_fastlmm.py", "--snp_prefix", paste0(genotype_path, genotype_prefix)),
-    intern = TRUE
+    intern = FALSE
   )
-  h2_numeric <- as.numeric(trimws(h2_raw))
-  h2 <- h2_numeric[which.max(!is.na(h2_numeric))]  # Take last non-NA
-  # Write h2 to file
-  write(sprintf("%.15f", h2), file = h2_file)
+  # The Python script writes the result to h2_file
+  h2 <- as.numeric(readLines(h2_file))
   cat(sprintf("Calculated and saved h²: %.15f\n", h2))
 } else {
-  # Read existing h2
   h2 <- as.numeric(readLines(h2_file))
   cat(sprintf("Loaded existing h²: %.15f\n", h2))
 }
+
 
 # Check for GRM file
 grm_file <- paste0(genotype_path, genotype_prefix, ".grm.bin")
