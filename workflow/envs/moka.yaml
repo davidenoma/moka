@@ -1,11 +1,10 @@
 channels:
- - r
  - conda-forge
  - bioconda
  - defaults
 dependencies:
  - r-essentials
- - r-base
+ - r-base>=4.2
  - r-parallelly
  - r-skat
  - python

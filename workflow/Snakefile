@@ -206,3 +206,13 @@ rule unweighted_disgenet_annotation_005:
         """
         Rscript scripts/obtain_genes_in_DGN.R {input.merged_unweighted_results} {params.gene_annotation} 0.05
         """
+
+rule generate_gene_regions:
+    params:
+        flank_size=config["flank_size"]
+    conda:
+        "envs/annotation.yaml"
+    shell:
+        """
+        Rscript scripts/generate_gene_regions.R {params.flank_size}
+        """

@@ -1,13 +1,14 @@
 # config.yaml
-#Replace with your configuration
+# 1. Replace with your configuration
 genotype_prefix: "test_geno"
+#2. Short identifier for your multi-omics weights for each variant
 weights_type: "neg_phylo"
-#Short identifier for your bridge weights
 genotype_file_path: "genotype_data/"
-#Your weights file must follow the format of the sample
+#3. Your weights file for multi-omics weights for each variant
 weights_file: "weights/test_geno_weights.csv"
 gene_regions_file: "helper/gene_regions.csv"
 disgenet_reference_file: "disease_database/{}.tsv"
-plink_path: "helper/" #Path to plink binary
+plink_path: "helper/" #Path to plink binary update if you have plink installed elsewhere
 is_binary: "TRUE"
-spectral_decorrelated: "FALSE"
+spectral_decorrelated: "TRUE"
+flank_size: 500000

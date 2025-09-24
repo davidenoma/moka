@@ -11,6 +11,14 @@
             </PendingDiffInfo>
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/workflow/envs/annotation.yaml">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/workflow/envs/annotation.yaml" />
+              <option name="updatedContent" value="channels:&#10;  - conda-forge&#10;  - bioconda&#10;  - defaults&#10;dependencies:&#10;  - r-base&#10;  - r-rtracklayer&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
       </map>
     </option>
   </component>
