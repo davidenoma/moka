@@ -47,12 +47,10 @@ cd moka
 ```bash
 snakemake --cores <num_cores> --use-conda
 ```
-    <num_cores> are the number of cores to use
-You can automatically install the software dependencies environment using: 
+    <num_cores> are the number of cores to use e.g. 8 
 
-   ```bash
-   snakemake --cores <num_cores> --use-conda
-   ```
+### Note that the initial run would take some time as the software installs the core dependencies requires from workflow/envs/moka.yaml.
+
 
 ### Rule: merge_results
 - **Input:** Individual association test results.
