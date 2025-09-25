@@ -49,7 +49,8 @@ snakemake --cores <num_cores> --use-conda
 ```
     <num_cores> are the number of cores to use e.g. 8 
 
-### Note that the initial run would take some time as the software installs the core dependencies requires from workflow/envs/moka.yaml.
+### Note
+The initial run would take some time as the software installs the core dependencies requires from workflow/envs/moka.yaml.
 
 
 ### Rule: merge_results
