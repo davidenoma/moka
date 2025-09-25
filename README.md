@@ -98,7 +98,7 @@ snakemake --cores 1 disgenet_annotation_005 --use-conda
 - **Input:** Genotype
 - **Output:** results for association mapping, folder: output_association/
 ```bash
-snakemake --cores 22 skat --use-conda
+snakemake --cores 22 unweighted_skat --use-conda
 ```
 
 ### Rule: generate_gene_regions
