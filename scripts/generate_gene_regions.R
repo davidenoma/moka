@@ -1,18 +1,18 @@
-install_and_load <- function(pkg, bioc = FALSE) {
-  if (!requireNamespace(pkg, quietly = TRUE)) {
-    if (bioc) {
-      if (!requireNamespace("BiocManager", quietly = TRUE)) {
-        install.packages("BiocManager", repos = "https://cloud.r-project.org")
-      }
-      BiocManager::install(pkg)
-    } else {
-      install.packages(pkg, repos = "https://cloud.r-project.org")
-    }
-  }
-  suppressPackageStartupMessages(library(pkg, character.only = TRUE))
-}
-
-install_and_load("rtracklayer", bioc = TRUE)
+# install_and_load <- function(pkg, bioc = FALSE) {
+#   if (!requireNamespace(pkg, quietly = TRUE)) {
+#     if (bioc) {
+#       if (!requireNamespace("BiocManager", quietly = TRUE)) {
+#         install.packages("BiocManager", repos = "https://cloud.r-project.org")
+#       }
+#       BiocManager::install(pkg)
+#     } else {
+#       install.packages(pkg, repos = "https://cloud.r-project.org")
+#     }
+#   }
+#   suppressPackageStartupMessages(library(pkg, character.only = TRUE))
+# }
+#
+# install_and_load("rtracklayer", bioc = TRUE)
 
 
 # Function to load GFF and extract gene features
