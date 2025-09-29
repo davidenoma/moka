@@ -28,7 +28,6 @@ rule moka_test:
     shell:
         """
         # Install dependencies if missing
-        command -v parallel >/dev/null || (apt update && apt install -y parallel) || brew install parallel
         if ! command -v plink >/dev/null && [ ! -f "{params.plink_path}/plink" ]; then
             mkdir -p {params.plink_path} && cd {params.plink_path} || exit 1
             wget -q https://s3.amazonaws.com/plink1-assets/plink_linux_x86_64_20250819.zip
@@ -134,10 +133,6 @@ rule go_analysis:
         Rscript scripts/GO_analysis.R {input.merged_moka_results} {params.pval_thresh}
         > {log.stdout} 2> {log.stderr}"""
 
-
-
-
-
 rule unweighted_skat:
     input:
         gene_regions="helper/gene_regions.csv"
@@ -155,7 +150,7 @@ rule unweighted_skat:
     shell:
         """
         # Install dependencies if missing
-        command -v parallel >/dev/null || (apt update && apt install -y parallel) || brew install parallel
+
         if ! command -v plink >/dev/null && [ ! -f "{params.plink_path}/plink" ]; then
             mkdir -p $( {params.plink_path}) && cd $( {params.plink_path})
             wget -q https://s3.amazonaws.com/plink1-assets/plink_linux_x86_64_20250819.zip
