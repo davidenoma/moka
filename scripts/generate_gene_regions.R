@@ -1,11 +1,19 @@
-# Install and load rtracklayer if not available
-if (!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
+install_and_load <- function(pkg, bioc = FALSE) {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
+    if (bioc) {
+      if (!requireNamespace("BiocManager", quietly = TRUE)) {
+        install.packages("BiocManager", repos = "https://cloud.r-project.org")
+      }
+      BiocManager::install(pkg)
+    } else {
+      install.packages(pkg, repos = "https://cloud.r-project.org")
+    }
+  }
+  suppressPackageStartupMessages(library(pkg, character.only = TRUE))
+}
 
-if (!requireNamespace("rtracklayer", quietly = TRUE))
-    BiocManager::install("rtracklayer")
+install_and_load("rtracklayer", bioc = TRUE)
 
-library(rtracklayer)
 
 # Function to load GFF and extract gene features
 get_gene_features <- function(gff_path) {
