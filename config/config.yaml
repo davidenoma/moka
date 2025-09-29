@@ -8,7 +8,7 @@ genotype_file_path: "genotype_data/"
 #3. Your weights file for multi-omics weights for each variant
 weights_file: "weights/test_geno_weights.csv"
 gene_regions_file: "helper/gene_regions.csv"
-disgenet_reference_file: "disease_database/{}.tsv"
+disgenet_reference_file: "disease_database/test_database.tsv"
 plink_path: "helper/" #Path to plink binary update if you have plink installed elsewhere
 is_binary: "TRUE"
 spectral_decorrelated: "FALSE"
