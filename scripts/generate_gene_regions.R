@@ -24,7 +24,7 @@ get_gene_features <- function(gff_path) {
     download.file(gff_url, destfile = gff_path, mode = "wb")
   }
   gff <- readGFF(gff_path)
-  gene_features <- subset(gff, type == "gene" & seqid %in% paste0("chr", 1:22))
+  gene_features <- subset(gff, type == "gene" & seqid %in% paste0( 1:22))
   gene_features <- gene_features[complete.cases(gene_features$Name), ]
   return(gene_features)
 }
