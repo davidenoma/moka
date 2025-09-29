@@ -1,12 +1,11 @@
 channels:
- - r
  - conda-forge
- - bioconda
  - defaults
 
 dependencies:
+ - r-essentials
+ - r-base
  - r-cairo
- - r-base=4.2.0
  - r-ggplot2
  - r-qqman
 

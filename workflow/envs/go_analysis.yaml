@@ -1,9 +1,8 @@
 channels:
-  - r
   - conda-forge
-  - bioconda
   - defaults
 dependencies:
   - r-base
+  - r-essentials
   - r-gprofiler2
   - r-cairo
