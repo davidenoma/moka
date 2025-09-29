@@ -308,7 +308,7 @@ remove_SKAT_files_per_chr <- function(genotype_path, genotype_prefix)  {
   old_file_name_fam <- paste0(genotype_path, genotype_prefix, ".fam")
   system(paste("rm ", old_file_name_fam))
 
-  new_file_name_log <- paste0(genotype_path, genotype_prefix, "_", "SKAT", ".log")
+  new_file_name_log <- paste0(genotype_path, genotype_prefix, ".log")
   system(paste("rm ", new_file_name_log))
 }
 
