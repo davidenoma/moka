@@ -8,6 +8,7 @@ dependencies:
  - r-base
  - r-parallelly
  - r-skat
+ - unzip
  - python
  - pip
  - pip:
