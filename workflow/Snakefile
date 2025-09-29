@@ -5,8 +5,6 @@ from snakemake.io import expand
 
 configfile: "config/config.yaml"
 
-
-    # Rule 3: Perform MOKA test on the genotype
 # Rule 3: Perform MOKA test on the genotype
 rule moka_test:
     input:
