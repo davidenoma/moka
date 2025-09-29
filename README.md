@@ -92,14 +92,6 @@ snakemake --cores 1 kegg_pathway_analysis --use-conda
 snakemake --cores 1 disgenet_annotation_005 --use-conda
 ```
 
-
-### Rule:  Skat test with linear kernel
-- **Input:** Genotype
-- **Output:** results for association mapping, folder: output_association/
-```bash
-snakemake --cores 22 unweighted_skat --use-conda
-```
-
 ### Rule: generate_gene_regions
 - **Documentation:** Generates gene region files with specified flanking size from GFF3 annotation for gene-based association testing. Uses `config.flank_size` from the config file.
 
