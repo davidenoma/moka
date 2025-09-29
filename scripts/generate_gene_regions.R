@@ -13,6 +13,7 @@
 # }
 #
 # install_and_load("rtracklayer", bioc = TRUE)
+library("rtracklayer")
 
 
 # Function to load GFF and extract gene features
