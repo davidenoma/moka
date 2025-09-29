@@ -1,7 +1,10 @@
 # Install and load rtracklayer if not available
-if (!requireNamespace("rtracklayer", quietly = TRUE)) {
-  install.packages("rtracklayer", repos = "https://cloud.r-project.org")
-}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+if (!requireNamespace("rtracklayer", quietly = TRUE))
+    BiocManager::install("rtracklayer")
+
 library(rtracklayer)
 
 # Function to load GFF and extract gene features
