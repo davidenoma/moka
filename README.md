@@ -9,9 +9,14 @@
 MOKA implements a Snakemake pipeline to automate data bridge kernel-based association tests.  
 This pipeline offers flexibility of GWAS analysis & visualizations with different multi-omics variant-specific weights.
 
+
+
 <div align="center"> 
-<img width="700" height="700" alt="moka-figure" src="https://github.com/user-attachments/assets/253b74bd-435e-4405-97b2-cf63ad73a3ef" />
-</div>
+<img width="700" height="700" alt="moka-figure" src="https://github.com/user-attachments/assets/e9be1f99-1000-4cdc-a7c7-4acf13890bc0" />
+</div
+
+
+
 
 ## 🚀 Usage
 ### 1. Prepare data inputs
