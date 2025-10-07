@@ -4,97 +4,123 @@
   <img src="https://github.com/user-attachments/assets/6d7d5099-aac4-44e2-a3d2-eacf6921a395" alt="image" width="500">
 </div>
 
-# 🌉 Multi-omics bridged Kernel Association test (MOKA) Pipeline
-MOKA implements a Snakemake pipeline to automate data bridge kernel-based association tests. 
-This pipeline offers flexibility of GWAS analysis & visualizations with different multi-omics variant specific weights.
-<div align="center"> 
-<!-- <img width="700" height="700" alt="moka-figure" src="https://github.com/user-attachments/assets/253b74bd-435e-4405-97b2-cf63ad73a3ef" />src="https://github.com/user-attachments/assets/1e833aa4-86db-4ed9-ba5b-78f7fa9c5169"src="https://github.com/user-attachments/assets/1e833aa4-86db-4ed9-ba5b-78f7fa9c5169" -->
-<img width="800" height="800" alt="moka-minimal" src="https://github.com/user-attachments/assets/6399a151-4562-4ab4-ac5f-374485dfcd54" />
 
+
+# 🌉 Multi-omics bridged Kernel Association test (MOKA) Pipeline
+MOKA implements a Snakemake pipeline to automate data bridge kernel-based association tests.  
+This pipeline offers flexibility of GWAS analysis & visualizations with different multi-omics variant-specific weights.
+
+<div align="center"> 
+<img width="700" height="700" alt="moka-figure" src="https://github.com/user-attachments/assets/253b74bd-435e-4405-97b2-cf63ad73a3ef" />
 </div>
-Publication available at: https://www.medrxiv.org/content/10.1101/2025.07.06.25330974v1 
 
 ## 🚀 Usage
-To run the moka pipeline:
+### 1. Prepare data inputs
+- **GWAS genotype files** in **PLINK format** (`.bed`, `.bim`, `.fam`) [!required]
+- **Variant-specific weights** in CSV format (SNP_ID,Chromosome,Position,Weight) [!required for moka]
+- **Gene regions file** (provided in GRCh38 or hg38) , generated from Ensembl GFF3 annotations (e.g., Homo_sapiens.GRCh38.115.gff3.gz, Ensembl Release 115).
+- **DisGeNET gene disease database** reference file ( If disease external validation needed)
 
-1.Minimal data inputs
+### 2. Install **Snakemake**
+Follow the [Snakemake Installation Guide](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html):
+```bash
+conda create -c conda-forge -c bioconda -c nodefaults -n snakemake snakemake
+conda activate snakemake
+snakemake --help
+```
 
--GWAS genotype files in PLINK format (bed, bim & fam)
-
--Variant specific weights for each SNP ('SNP_ID, CHROMOSOME, POSITION, WEIGHT)
-
-2. Install **Snakemake**
-   
-   - [Snakemake Installation Guide](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html)
-     ```bash
-      conda create -c conda-forge -c bioconda -c nodefaults -n snakemake snakemake
-      conda activate snakemake
-      snakemake --help
-     ```
-3. Download and install moka
-
+### 3. Download and install **moka**
 ```bash
 git clone https://github.com/davidenoma/moka
 cd moka
 ```
 
-4. Configure the pipeline parameters in the `config.yaml` file.
+### 4. Configure the pipeline parameters in the `config.yaml` file
+This configuration controls paths to inputs and analysis settings:
+- ***genotype_prefix:*** Prefix for the genotype data files (without file extensions).
+- ***weights_type:*** Text descriptor indicating the source or type of biologically informed functional weights used in the analysis.
+- ***genotype_file_path:*** Directory path to the genotype data files.
+- ***weight_file:*** File path to the functional weight file applied in the association tests.
+- ***disgenet_reference_file:*** Path to the DisGeNET reference file containing disease-specific gene–disease associations https://disgenet.org [For gene disease associations only!].
+- ***spectral decomposition:*** Boolean flag to enable spectral (eigenvalue) decomposition and transformation of genotype and phenotype matrices. Default: TRUE.
+- ***is_binary:*** Boolean flag specifying the phenotype type (TRUE for binary traits; FALSE for quantitative traits). Default: TRUE. 
+- ***Plink:*** Path to the PLINK executable, e.g."~/software/plink".
 
-## 📚 Rules
+### 5. Running MOKA
+We provide a demo example with configuration located at ./config/config.yaml. The pipeline executes the following steps:
 
-### Rule: moka association_test
-- **Input:** Preprocessed genotype data and weight files.
-- **Output:** Results of association tests.
+**Step 1. Kernel-based association testing**    
+  - Integrates GWAS genotype data with the provided weights.
+  - For the weight file, supports diverse data sources derived SNP-level weights. 
+  - Performs SNP-set kernel-based association tests to model the **joint effect of multiple variants**.
+  - Execute one chromosome at a time.
+  - Optionally applies **decorrelation** to account for population structure or relatedness.
+  
+***Note:*** The initial run would take some time as the software installs the core dependencies requires from workflow/envs/moka.yaml. 
+
+**Input:** Preprocessed genotype data (./genotype_data/test_geno.fam test_geno.bim test_geno.bed ) and weight files (./weights/test_geno_weights.csv).
+
+**Output:** Results of association tests under ./result_folder/
+  
 ```bash
 snakemake --cores <num_cores> --use-conda
 ```
     <num_cores> are the number of cores to use e.g. 8 
 
-### Note
-The initial run would take some time as the software installs the core dependencies requires from workflow/envs/moka.yaml.
+**Step 2. Merge results from all chromosomes to a single file**  
+**Input:** Individual association test results.
 
-
-### Rule: merge_results
-- **Input:** Individual association test results.
-- **Output:** Merged association test results.
+**Output:** Merged association test results under ./result_folder/
+  
 ```bash
 snakemake --cores 1 merge_moka_results --use-conda
 ```
 
-### Rule: visualize_results
-- **Input:** Merged association test results.
-- **Output:** Manhattan plots with visual representations of association test results.
+**Step 3. Functional enrichment analysis**  
+- Significant genes from association testing are assessed for:  
+  - **KEGG pathway enrichment**  
+  - **Gene Ontology (GO) enrichment**  
+- Helps identify biological processes and pathways underlying GWAS signals.
 
-```bash
-snakemake --cores 1 manhattan_plots --use-conda
-```
+**Input:** Merged association test results.
 
-### Rule: go_analysis
-- **Input:** Merged association test results.
-- **Output:** GO analysis results.
+**Output:** GO analysis results under ./output_plots/
 
 ```bash
 snakemake --cores 1 go_analysis --use-conda
 ```
 
-### Rule: kegg_pathway_analysis
-- **Input:** Merged association test results.
-- **Output:** KEGG pathway analysis results.
+**Output:** KEGG pathway analysis results under ./output_plots/
 
 ```bash
 snakemake --cores 1 kegg_pathway_analysis --use-conda
 ```
 
-### Rule: annotate_results
-- **Input:** Merged association test results.
-- **Output:** Annotated association test results with DisGeNet database
+**Step 4. Visualization**  
+- Generates publication-ready visual summaries: **Manhattan plots**  
+
+**Input:** Merged association test results.
+
+**Output:** Manhattan plots with visual representations of association test results under ./output_plots/
+  
+```bash
+snakemake --cores 1 manhattan_plots --use-conda
+```
+
+**Step 5. External validation**  
+- Cross-references significant genes against the **DisGeNET database**.  
+- Reports a **validation ratio** of overlapping associated genes, strengthening interpretation of GWAS findings.  
+
+**Input:** Merged association test results.
+
+**Output:** Annotated association test results with DisGeNet database under ./output_plots/
 
 ```bash
 snakemake --cores 1 disgenet_annotation_005 --use-conda
 ```
 
-### Rule: generate_gene_regions
-- **Documentation:** Generates gene region files with specified flanking size from GFF3 annotation for gene-based association testing. Uses `config.flank_size` from the config file.
+**Additional function: generate_gene_regions**  
+- Generates gene region files with specified flanking size from GFF3 annotation for gene-based association testing. Uses `config.flank_size` from the config file.
 
 **How to execute:**
 ```bash
@@ -106,26 +132,10 @@ All required Python and R packages, as well as other software dependencies, are 
 
 For more details, see the environment YAML files in `workflow/envs/`.
 
-
-### Input file format
-- **Data Files:** Plink https://www.cog-genomics.org/plink/1.9/  format genotyped BIM, BED & FAM files [!required]
-- Multi-omics **Bridge weights.csv** file (SNP_ID,Chromosome,Position,Weight) [!required for moka]
-- Gene regions file (provided in GRCh38 or hg38) is generated from Ensembl GFF3 annotation files, e.g., Homo_sapiens.GRCh38.115.gff3.gz from Ensembl release 115.
-- DisGeNET gene disease database reference file ( If disease external validation needed)
-
 ### Liftover protocol 
 You much lift over to GRCh38 format check here: Liftover GWAS: [https://github.com/davidenoma/LiftOver] 
 
-## 📋 Configuration
-- **genotype_prefix:** Prefix for genotype data files.
-- **weights_type:** Text string for type of bridge weights to be used e.g. "eqtl", "imaging"
-- **genotype_file_path:** Path to genotype data files.
-- **weight_file:** Path to weight files used for association tests.
-- **disgenet_reference_file:** External disease database specific gene-disease associations from https://disgenet.org [For gene disease associations only!]
-- **spectral decomposition:** Flag for performation decomposition and transformation of genotype and phenotype, default: TRUE
-- **is_binary:** Flag for binary/ quantitative trait, default: TRUE 
-- **Plink:** Path to plink installation e.g. "~/software/plink"
-  
+
 ## 📖 Additional Information
 For more information on the MOKA pipeline and its usage, refer to the documentation provided in the repository or contact the project maintainers.
 david.enoma@ucalgary.ca 
