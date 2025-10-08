@@ -157,3 +157,9 @@ docker pull davidenoma/moka-gwas
 ```
 
 For usage instructions and examples, see [https://hub.docker.com/r/davidenoma/moka-gwas](https://hub.docker.com/r/davidenoma/moka-gwas).
+
+### Running on HPC Clusters with Restricted Conda
+See [docs/README_Snakemake_ARC.md](docs/README_Snakemake_ARC.md) for detailed setup
+instructions and ready-to-use scripts (`run_smk.sh`, `run_smk.sbatch`)
+to run Snakemake safely on clusters without admin privileges.
+
