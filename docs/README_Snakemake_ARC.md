@@ -3,7 +3,7 @@
 This guide shows you how to run:
 
 ```bash
-snakemake -j22 --use-conda
+snakemake -c 22 --use-conda
 ```
 
 on a cluster where the **system conda is too old** (e.g., 23.9.0) and you **can’t** update it.
@@ -45,7 +45,7 @@ conda-prefix: /home/'$USER'/.snakemake/conda
 YAML
 
 # 4) Run your workflow
-snakemake -j22 --use-conda
+snakemake -c 22 --use-conda
 ```
 
 If you **haven’t** downloaded micromamba yet, see Step A below.
@@ -113,7 +113,7 @@ Now you can simply run:
 
 ```bash
 micromamba activate snk
-snakemake -j22 --use-conda
+snakemake -c 22 --use-conda
 ```
 
 **Why:**
@@ -139,7 +139,7 @@ eval "$($MAMBA_EXE shell hook --shell bash --root-prefix "$MAMBA_ROOT_PREFIX")"
 micromamba activate snk
 
 # Run your pipeline
-snakemake -j22 --use-conda
+snakemake -c 22 --use-conda
 ```
 
 Common flags you might add:
@@ -177,14 +177,14 @@ micromamba activate snk
 mkdir -p "$SNAKE_CONDA_PREFIX"
 
 # Run Snakemake (forward any extra args)
-snakemake -j"$J" --use-conda --conda-prefix "$SNAKE_CONDA_PREFIX" "$@"
+snakemake -c "$J" --use-conda --conda-prefix "$SNAKE_CONDA_PREFIX" "$@"
 ```
 
 ### `run_smk.sbatch` (submit with `sbatch run_smk.sbatch`)
 
 ```bash
 #!/bin/bash
-#SBATCH --job-name=snakemake
+#SBATCH --c ob-name=snakemake
 #SBATCH --cpus-per-task=22
 #SBATCH --mem=32G
 #SBATCH --time=24:00:00
@@ -227,7 +227,7 @@ sbatch run_smk.sbatch
 You’re still picking up the system `conda`. Fix:
 1. `micromamba activate snk`
 2. `conda --version` (verify ≥ 24.7.1)
-3. Run `snakemake -j22 --use-conda` again.
+3. Run `snakemake -c 22 --use-conda` again.
 
 If it persists on compute nodes, ensure your batch job initializes micromamba (the wrapper and sbatch do this explicitly).
 
@@ -278,7 +278,7 @@ rerun-incomplete: true
 Run:
 ```bash
 micromamba activate snk
-snakemake -j22 --use-conda
+snakemake -c 22 --use-conda
 ```
 
 ---
