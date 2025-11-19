@@ -1,4 +1,4 @@
-SNP_ID,Chromosome,Position,Score
+SNP_ID,Chromosome,Position,Weight
 rs885593,10,494221,1.235
 rs1581843,10,706253,0.456
 rs816306,10,711056,0.457
