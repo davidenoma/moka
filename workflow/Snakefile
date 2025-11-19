@@ -9,7 +9,7 @@ configfile: "config/config.yaml"
 rule moka_test:
     input:
         merged_weights=config["weights_file"],
-        gene_regions = "helper/gene_regions.csv"
+        gene_regions = config["gene_regions_file"]
     params:
         genotype = config["genotype_prefix"],
         weights_source = config["weights_type"],
