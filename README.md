@@ -146,7 +146,7 @@ david.enoma@ucalgary.ca
 
 ## Publication reference 
 MOKA: A pipeline for multi-omics bridged SNP-set kernel association test
-https://www.medrxiv.org/content/10.1101/2025.07.06.25330974v1
+https://academic.oup.com/g3journal/advance-article/doi/10.1093/g3journal/jkaf296/8384368 
 
 ## 🐳 Docker
 
